@@ -29,8 +29,11 @@ def build_heatmap() -> None:
 
 def build_regression() -> None:
     frame = read_csv(FINAL)
+    accessibility = read_csv(DATA_DIR / "accessibility_score.csv")
+    distance_column = "도로거리_km" if "도로거리_km" in accessibility.columns else "직선거리_km"
+    accessibility = accessibility[["시군구코드", distance_column]].rename(columns={distance_column: "접근거리_km"})
     frame = frame.merge(
-        read_csv(DATA_DIR / "accessibility_score.csv")[["시군구코드", "직선거리_km"]],
+        accessibility,
         on="시군구코드", how="left",
     ).merge(
         read_csv(DATA_DIR / "population_bed_score.csv")[["시군구코드", "인구대비병상비율"]],
@@ -40,7 +43,7 @@ def build_regression() -> None:
         on="시군구코드", how="left",
     )
     frame = frame.rename(columns={"병상포화도점수": "포화율_원천"})
-    features = ["포화율_원천", "직선거리_km", "인구대비병상비율", "병상대비전문의부족비율"]
+    features = ["포화율_원천", "접근거리_km", "인구대비병상비율", "병상대비전문의부족비율"]
     model_data = frame.dropna(subset=features + ["regionRisk"])
     output = DATA_DIR / "regression_result.csv"
     metrics_path = DATA_DIR / "regression_metrics.json"

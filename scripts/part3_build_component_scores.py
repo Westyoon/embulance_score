@@ -10,6 +10,7 @@ BED_STATUS = DATA_DIR / "bed_status.csv"
 CENTROIDS = DATA_DIR / "region_centroids.csv"
 POPULATION_SOURCE = DATA_DIR / "population_source.csv"
 DOCTOR_SOURCE = DATA_DIR / "doctor_source.csv"
+KAKAO_ROUTES = DATA_DIR / "kakao_route_accessibility.csv"
 
 
 def region_code(frame: pd.DataFrame) -> pd.Series:
@@ -40,6 +41,19 @@ def haversine_vector(lat, lon, hospital_lat, hospital_lon):
 
 
 def build_accessibility(master: pd.DataFrame) -> pd.DataFrame:
+    if KAKAO_ROUTES.exists():
+        routes = read_csv(KAKAO_ROUTES)
+        required = {"시군구코드", "병원명", "직선거리_km", "도로거리_km", "예상시간_분", "중심점방법"}
+        if not required.issubset(routes.columns):
+            raise ValueError(f"{KAKAO_ROUTES} 필수 컬럼: {sorted(required)}")
+        result = routes[
+            ["시군구코드", "병원명", "직선거리_km", "도로거리_km", "예상시간_분", "중심점방법", "수집시각"]
+        ].rename(columns={"병원명": "최근접병원", "수집시각": "경로수집시각"})
+        result["접근성점수"] = percentile_score(result["도로거리_km"], higher_is_risk=True)
+        result["거리기준"] = "카카오자동차추천경로"
+        save_csv(result, DATA_DIR / "accessibility_score.csv")
+        return result
+
     hospitals = master.dropna(subset=["위도", "경도"]).copy()
     eligible = hospitals[hospitals["등급"].astype(str).str.contains("권역|지역응급의료센터", regex=True)]
     if eligible.empty:
@@ -69,6 +83,7 @@ def build_accessibility(master: pd.DataFrame) -> pd.DataFrame:
         })
     result = pd.DataFrame(rows)
     result["접근성점수"] = percentile_score(result["직선거리_km"], higher_is_risk=True)
+    result["거리기준"] = "하버사인직선거리"
     save_csv(result, DATA_DIR / "accessibility_score.csv")
     return result
 

@@ -10,12 +10,12 @@
 |---|---|---|
 | PART 1 병원 마스터 | 완료 | 전국 응급의료기관 534개 |
 | PART 2 실시간 병상 | 완료 | API 매칭 415개, 유효 포화율 392개 |
-| PART 3 접근성 | 완료 | 219개 시군구 |
+| PART 3 접근성 | 완료 | 219개 시군구, 카카오 자동차 경로 215개·직선거리 대체 4개 |
 | PART 3 인구 대비 병상 | 완료 | KOSIS 2024 인구 기준, 215개 지역 매칭 |
 | PART 3 의료진 부족 | 부분 완료 | HIRA 병원 415개 자동매칭, 144개 지역 사용 가능 |
 | PART 3 최종 regionRisk | 부분 완료 | 219개 중 124개 지역 산출 완료 |
 | PART 4 상관관계·VIF | 완료 | 최종 점수가 완성된 지역 대상 |
-| PART 4 원천값 회귀 | 완료 | 79개 지역, R² 0.833, MAE 2.70 |
+| PART 4 원천값 회귀 | 완료 | 79개 지역, R² 0.900, MAE 2.32 |
 | PART 4 K-Means | 완료 | 124개 지역, 최적 k=2 |
 | PART 4 과거 시간대 분석 | 미완료 | 2024년 병상 이력 원자료 필요 |
 
@@ -75,6 +75,7 @@ python -m pip install -r requirements.txt
 ```env
 DATA_GO_KR_API_KEY=NEMC_API_DECODING_KEY
 HIRA_API_KEY=HIRA_API_DECODING_KEY
+KAKAO_REST_API_KEY=KAKAO_DEVELOPERS_REST_API_KEY
 ```
 
 `.env`는 Git에서 제외됩니다. 스크립트가 파일을 직접 읽으므로 VS Code의 `python.terminal.useEnvFile` 설정은 필요하지 않습니다.
@@ -94,6 +95,7 @@ python scripts\part1_collect_hospital_master.py
 python scripts\part2_collect_bed_status.py
 python scripts\part3_prepare_population.py
 python scripts\part3_collect_hira_doctors.py
+python scripts\part3_collect_kakao_routes.py
 python scripts\part3_build_component_scores.py
 python scripts\part3_calculate_region_risk.py
 python scripts\part4_analyze.py
@@ -140,15 +142,17 @@ regionRisk =
 가중합을 그대로 역추정하는 순환 회귀를 피하기 위해 점수 대신 다음 원천값을 사용합니다.
 
 ```text
-X = 포화율, 직선거리_km, 인구대비병상비율, 병상대비전문의부족비율
+X = 포화율, 접근거리_km, 인구대비병상비율, 병상대비전문의부족비율
 y = regionRisk
 ```
 
 현재 결과:
 
 - 분석 지역: 79개
-- R²: 0.833
-- MAE: 2.70
+- R²: 0.900
+- MAE: 2.32
+
+접근거리에는 카카오 자동차 추천 경로의 도로거리를 우선 사용하고, 카카오 경로를 계산할 수 없는 지역만 명시적인 직선거리 대체값을 사용합니다.
 
 `regionRisk` 자체가 원천값을 정규화해 만든 지표이므로 이 회귀는 인과분석이 아니라 위험도 산식의 민감도 분석으로 해석해야 합니다. 실제 정책 효과를 분석하려면 이송 거절, 재이송, 장기 체류 등 외부 결과변수가 필요합니다.
 
@@ -158,8 +162,8 @@ k=2~8의 실루엣 점수를 비교했으며 현재 최적값은 k=2입니다.
 
 | 클러스터 | 지역 수 | 해석 | 평균 regionRisk |
 |---|---:|---|---:|
-| 0 | 55 | 접근성·의료진 취약형 | 47.94 |
-| 1 | 69 | 도시형·인구 대비 병상 부담형 | 25.95 |
+| 0 | 55 | 접근성·의료진 취약형 | 47.80 |
+| 1 | 69 | 도시형·인구 대비 병상 부담형 | 26.20 |
 
 클러스터 번호는 위험등급이나 순위를 의미하지 않습니다. 군집별 평균 특성을 확인한 뒤 붙인 설명입니다.
 
@@ -218,3 +222,28 @@ NEMC의 `hpid`와 HIRA의 암호화 요양기호는 서로 다른 코드입니�
 ```csv
 시도,시군구,위도,경도
 ```
+
+### 카카오 자동차 길찾기 거리
+
+`scripts/part3_collect_kakao_routes.py`는 각 시군구 중심점에서 직선거리 기준으로 가까운 권역·지역응급의료센터 3개를 후보로 선정한 뒤, 카카오모빌리티 자동차 길찾기 API로 실제 도로거리를 조회합니다. 후보 중 추천 경로의 도로거리가 가장 짧은 병원을 접근성 기준 병원으로 선택합니다.
+
+결과 파일:
+
+- `data/kakao_route_candidates.csv`: 지역별 후보 3개와 모든 경로 조회 결과
+- `data/kakao_route_accessibility.csv`: 지역별 최종 선택 경로
+- `data/accessibility_score.csv`: 카카오 도로거리 기준으로 재계산된 접근성 점수
+
+응답에서 도로거리, 예상시간, 통행료와 택시비를 저장합니다. `KAKAO_REST_API_KEY`가 없거나 카카오 경로 파일이 없으면 기존 하버사인 직선거리 방식으로 자동 대체합니다. API 호출은 서버 측 Python에서 수행하며 REST API 키를 브라우저 코드에 노출하지 않습니다.
+
+현재 수집 결과:
+
+- 후보 경로 요청: 657개
+- 일반 경로 성공: 628개
+- 출발·도착 5m 이내로 0km 처리: 17개
+- 지역별 최종 카카오 경로: 215개
+- 출발점 주변 도로 탐색 실패로 직선거리 대체: 4개
+- 도로거리 중앙값: 4.87km
+- 도로거리 평균: 17.58km
+- 최대 도로거리: 226.35km
+
+직선거리 대체 지역은 `경상남도 사천시`, `경상남도 양산시`, `전남광주통합특별시 완도군`, `전남광주통합특별시 해남군`입니다. 이 네 지역은 공식 행정구역 중심점을 추가한 뒤 재호출하는 것이 권장됩니다.
