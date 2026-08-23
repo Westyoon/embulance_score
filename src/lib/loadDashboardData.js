@@ -129,7 +129,7 @@ function buildRegression() {
   const coefRows = readCsv("regression_result.csv");
   const metrics = readJson("regression_metrics.json");
   if (coefRows.length === 0 || metrics.status !== "complete") {
-    return { coef: [], scatter: [], r2: null, mae: null, rows: 0 };
+    return { coef: [], r2: null, mae: null, rows: 0 };
   }
   const coefByName = new Map(coefRows.map((r) => [r["변수명"], r["회귀계수"]]));
   const coef = [
@@ -139,30 +139,7 @@ function buildRegression() {
     { name: "전문의부족비율", value: coefByName.get("병상대비전문의부족비율") },
   ];
 
-  const riskRows = readCsv("region_risk_final.csv");
-  const access = new Map(readCsv("accessibility_score.csv").map((r) => [r["시군구코드"], r["직선거리_km"]]));
-  const popBed = new Map(readCsv("population_bed_score.csv").map((r) => [r["시군구코드"], r["인구대비병상비율"]]));
-  const doctor = new Map(readCsv("doctor_score.csv").map((r) => [r["시군구코드"], r["병상대비전문의부족비율"]]));
-
-  const scatter = [];
-  for (const row of riskRows) {
-    const key = row["시군구코드"];
-    const bed = row["병상포화도점수"];
-    const dist = access.get(key);
-    const pb = popBed.get(key);
-    const doc = doctor.get(key);
-    const actual = row["regionRisk"];
-    if ([bed, dist, pb, doc, actual].some((v) => v == null || Number.isNaN(v))) continue;
-    const predicted =
-      metrics.intercept +
-      coefByName.get("포화율_원천") * bed +
-      coefByName.get("직선거리_km") * dist +
-      coefByName.get("인구대비병상비율") * pb +
-      coefByName.get("병상대비전문의부족비율") * doc;
-    scatter.push({ actual, predicted });
-  }
-
-  return { coef, scatter, r2: metrics.r2, mae: metrics.mae, rows: metrics.rows };
+  return { coef, r2: metrics.r2, mae: metrics.mae, rows: metrics.rows };
 }
 
 function latestTimestamp(bedStatus) {

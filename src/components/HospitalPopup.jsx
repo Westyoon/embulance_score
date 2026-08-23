@@ -24,8 +24,7 @@ export default function HospitalPopup({ hospital, region, onClose, onBack }) {
   const updatedLabel = formatUpdatedAt(hospital.updatedAt);
 
   return (
-    <div style={{ position: "absolute", inset: 0, background: "#00000090", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 35 }} onClick={onClose}>
-      <div style={{ ...cardStyle, width: 420, maxWidth: "92%", maxHeight: "88%", overflowY: "auto", padding: 20 }} onClick={(e) => e.stopPropagation()}>
+    <div style={{ ...cardStyle, padding: 20, maxHeight: 560, overflowY: "auto" }}>
         <div className="flex items-start justify-between">
           <div>
             {onBack && (
@@ -35,7 +34,7 @@ export default function HospitalPopup({ hospital, region, onClose, onBack }) {
             )}
             <div className="flex items-center gap-2">
               <Building2 size={16} color={bedStatusColor[hospital.status]} />
-              <span style={{ fontSize: 16, fontWeight: 700 }}>{hospital.name}</span>
+              <span style={{ fontSize: 15, fontWeight: 700 }}>{hospital.name}</span>
             </div>
             <div className="flex items-center" style={{ marginTop: 6, gap: 6 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b", background: "#f1f5f9", padding: "3px 8px", borderRadius: 999 }}>{hospital.grade}</span>
@@ -45,7 +44,7 @@ export default function HospitalPopup({ hospital, region, onClose, onBack }) {
               </span>
             </div>
           </div>
-          <button onClick={onClose} style={{ color: "#64748b", background: "none", border: "none", cursor: "pointer" }}><X size={18} /></button>
+          <button onClick={onClose} className="flex items-center gap-1" style={{ color: "#64748b", background: "none", border: "none", cursor: "pointer", fontSize: 10.5 }}>목록으로 <X size={15} /></button>
         </div>
 
         {/* HD-01 기본정보 */}
@@ -129,7 +128,6 @@ export default function HospitalPopup({ hospital, region, onClose, onBack }) {
             ))}
           </div>
         )}
-      </div>
     </div>
   );
 }

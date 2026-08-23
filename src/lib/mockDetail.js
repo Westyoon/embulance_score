@@ -4,12 +4,12 @@
 // 시군구 단위 병상 상태·포화율, 위험도 구성점수)는 이 파일을 거치지 않는다.
 // 실데이터 연동 시 이 파일의 함수만 실제 API/CSV 집계로 교체하면 된다.
 
-function hashCode(str) {
+export function hashCode(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) { h = (h << 5) - h + str.charCodeAt(i); h |= 0; }
   return h;
 }
-function seededRandom(seed) {
+export function seededRandom(seed) {
   let t = (seed += 0x6d2b79f5);
   t = Math.imul(t ^ (t >>> 15), t | 1);
   t ^= t + Math.imul(t ^ (t >>> 7), t | 61);

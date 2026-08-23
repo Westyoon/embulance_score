@@ -1,12 +1,32 @@
 "use client";
 import { useState } from "react";
-import { Map as MapIcon, Activity, AlertTriangle, ChevronRight } from "lucide-react";
+import { Map as MapIcon, Activity, AlertTriangle, ChevronRight, Search, X } from "lucide-react";
 import { riskColor, riskTextColor, riskLabel, bedStatusColor } from "@/lib/riskScale";
 import { enrichHospital } from "@/lib/mockDetail";
 import { cardStyle, mutedText, TabGroup, KpiCard, RiskLegendStrip } from "./shared";
 import KoreaMap from "./KoreaMap";
 import RegionPopup from "./RegionPopup";
 import HospitalPopup from "./HospitalPopup";
+
+const searchInputStyle = {
+  width: "100%", fontSize: 12.5, padding: "8px 10px", borderRadius: 8,
+  border: "1px solid #e2e8f0", outline: "none", color: "#0f172a", background: "#f8fafc",
+};
+
+function SearchBox({ value, onChange, placeholder }) {
+  return (
+    <div className="flex items-center" style={{ position: "relative", marginBottom: 8 }}>
+      <Search size={13} color="#94a3b8" style={{ position: "absolute", left: 9 }} />
+      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
+        style={{ ...searchInputStyle, paddingLeft: 28 }} />
+      {value && (
+        <button onClick={() => onChange("")} style={{ position: "absolute", right: 8, background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }}>
+          <X size={13} />
+        </button>
+      )}
+    </div>
+  );
+}
 
 // 사이드바 "병원 리스트"에서 들어온 병원은 시도+시군구명으로만 지역을 알기
 // 때문에, 지도용 regionsByKey를 직접/부모도시 순으로 역참조한다. 지역 팝업
@@ -26,6 +46,8 @@ export default function MapTab({ data }) {
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [highlightCode, setHighlightCode] = useState(null);
   const [sidePanel, setSidePanel] = useState("summary");
+  const [regionQuery, setRegionQuery] = useState("");
+  const [hospitalQuery, setHospitalQuery] = useState("");
 
   const openRegion = (r) => { setHighlightCode(r.code ?? null); setSelected(r); setSelectedHospital(null); };
   const openHospital = (h) => {
@@ -41,6 +63,13 @@ export default function MapTab({ data }) {
   };
   const hospitalRegion = selectedHospital ? findRegionForHospital(regionsByKey, selectedHospital) : null;
 
+  // 탭을 클릭하면 열려있던 상세 패널을 닫고 해당 리스트로 전환한다.
+  const changeSidePanel = (key) => { setSidePanel(key); setSelected(null); setSelectedHospital(null); };
+
+  const filteredRanked = regionQuery.trim() ? ranked.filter((r) => r.name.includes(regionQuery.trim())) : ranked;
+  const hq = hospitalQuery.trim();
+  const filteredHospitals = hq ? allHospitals.filter((h) => h.name.includes(hq) || h.region.includes(hq)) : allHospitals;
+
   return (
     <div className="grid" style={{ gridTemplateColumns: "1fr 320px", gap: 16, height: "100%" }}>
       <div style={{ ...cardStyle, padding: 16, position: "relative", display: "flex", flexDirection: "column" }}>
@@ -51,20 +80,21 @@ export default function MapTab({ data }) {
           </div>
           <span style={{ fontSize: 10.5, ...mutedText }}>휠로 확대/축소 · 드래그로 이동 · 지역 클릭 시 상세</span>
         </div>
-        <KoreaMap geo={geo} regionIndex={regionIndex} onSelect={openRegion} highlightCode={highlightCode} />
-        {selected && <RegionPopup region={selected} onClose={() => setSelected(null)} onSelectHospital={openHospital} />}
-        {selectedHospital && (
-          <HospitalPopup hospital={selectedHospital} region={hospitalRegion}
-            onClose={() => setSelectedHospital(null)} onBack={hospitalRegion ? backToRegion : undefined} />
-        )}
+        <KoreaMap geo={geo} regionIndex={regionIndex} onSelect={openRegion} highlightCode={highlightCode}
+          selectedHospital={selectedHospital} hospitalRegionCode={hospitalRegion?.code ?? null} />
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <TabGroup
           options={[{ key: "summary", label: "핵심 지표" }, { key: "hospitals", label: "병원 리스트" }]}
-          active={sidePanel} onChange={setSidePanel} />
+          active={sidePanel} onChange={changeSidePanel} />
 
-        {sidePanel === "summary" ? (
+        {selected ? (
+          <RegionPopup region={selected} onClose={() => setSelected(null)} onSelectHospital={openHospital} />
+        ) : selectedHospital ? (
+          <HospitalPopup hospital={selectedHospital} region={hospitalRegion}
+            onClose={() => setSelectedHospital(null)} onBack={hospitalRegion ? backToRegion : undefined} />
+        ) : sidePanel === "summary" ? (
           <>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               <KpiCard label="평균 위험도" value={kpi.avg.toFixed(1)} accent="#38bdf8" icon={Activity} />
@@ -73,12 +103,14 @@ export default function MapTab({ data }) {
             <div style={{ ...cardStyle, padding: "10px 12px", flex: 1, overflowY: "auto", maxHeight: 380 }}>
               <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
                 <span style={{ fontWeight: 700, fontSize: 12.5 }}>지역별 위험도</span>
-                <span style={{ fontSize: 10, ...mutedText }}>{ranked.length}개 지역 · 클릭 시 지도 연동</span>
+                <span style={{ fontSize: 10, ...mutedText }}>{filteredRanked.length}개 지역 · 클릭 시 지도 연동</span>
               </div>
+              <SearchBox value={regionQuery} onChange={setRegionQuery} placeholder="지역명 검색 (예: 고령군)" />
               <div style={{ display: "grid", gridTemplateColumns: "1fr 62px 42px", gap: 4, fontSize: 9.5, ...mutedText, padding: "0 6px 6px", borderBottom: "1px solid #e2e8f0", position: "sticky", top: 0, background: "#ffffff" }}>
                 <span>지역</span><span style={{ textAlign: "center" }}>등급</span><span style={{ textAlign: "right" }}>점수</span>
               </div>
-              {ranked.map((r) => {
+              {filteredRanked.length === 0 && <div style={{ fontSize: 11.5, ...mutedText, padding: "14px 4px", textAlign: "center" }}>검색 결과가 없습니다</div>}
+              {filteredRanked.map((r) => {
                 const active = r.code != null && highlightCode === r.code;
                 return (
                   <div key={r.key} onClick={() => openRegion(r)}
@@ -101,8 +133,13 @@ export default function MapTab({ data }) {
           </>
         ) : (
           <div style={{ ...cardStyle, padding: 14, flex: 1, overflowY: "auto", maxHeight: 500 }}>
-            <div style={{ fontWeight: 700, fontSize: 12.5, marginBottom: 10 }}>전체 의료기관 ({allHospitals.length})</div>
-            {allHospitals.map((h, i) => (
+            <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
+              <span style={{ fontWeight: 700, fontSize: 12.5 }}>전체 의료기관</span>
+              <span style={{ fontSize: 10, ...mutedText }}>{filteredHospitals.length}곳</span>
+            </div>
+            <SearchBox value={hospitalQuery} onChange={setHospitalQuery} placeholder="병원명 또는 지역명 검색 (예: 성모병원, 포항)" />
+            {filteredHospitals.length === 0 && <div style={{ fontSize: 11.5, ...mutedText, padding: "14px 4px", textAlign: "center" }}>검색 결과가 없습니다</div>}
+            {filteredHospitals.map((h, i) => (
               <div key={h.name + i} className="flex items-center justify-between gap-2" onClick={() => openHospital(h)}
                 style={{ padding: "8px 0", borderTop: i ? "1px solid #e2e8f0" : "none", cursor: "pointer" }}>
                 <div style={{ minWidth: 0 }}>

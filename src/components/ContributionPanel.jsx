@@ -1,10 +1,19 @@
 "use client";
-import { useState } from "react";
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-} from "recharts";
+import { useState, Fragment } from "react";
 import { ChevronDown } from "lucide-react";
 import { cardStyle, mutedText } from "./shared";
+
+// 원천값 회귀계수는 변수마다 단위(km, %, 비율)가 달라 막대 길이로 비교하면
+// 오해를 준다 — 막대그래프 대신 산식 한 줄 + 표로만 값을 그대로 보여준다.
+function formatFormulaCoef(v) {
+  return Math.abs(v) < 0.01 ? v.toFixed(4) : v.toFixed(3);
+}
+function formatTableCoef(v) {
+  return Math.abs(v) < 0.001 ? v.toFixed(6) : v.toFixed(4);
+}
+function shortLabel(name) {
+  return name.replace(/\(.*?\)/, "");
+}
 
 // 위험도 산식의 가중치. 0~100으로 이미 정규화된 점수에 곱해지므로 단위 문제
 // 없이 그대로 비교 가능하다 (원천값 회귀계수와 달리).
@@ -14,9 +23,6 @@ const WEIGHT_ITEMS = [
   { key: "popBed", label: "인구대비병상", weight: 0.20, color: "#14b8a6" },
   { key: "doc", label: "의료진부족", weight: 0.15, color: "#fb7185" },
 ];
-
-const tooltipStyle = { background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12 };
-const axisTick = { fill: "#64748b", fontSize: 10 };
 
 export default function ContributionPanel({ avgBed, avgAccess, avgPopBed, avgDoc, avgRisk, regression }) {
   const [expanded, setExpanded] = useState(false);
@@ -72,19 +78,30 @@ export default function ContributionPanel({ avgBed, avgAccess, avgPopBed, avgDoc
       </button>
       {expanded && (
         <div style={{ marginTop: 12 }}>
-          <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 8 }}>종속변수 regionRisk · {regression.rows}개 지역 · R² = {regression.r2?.toFixed(3)} · MAE = {regression.mae?.toFixed(2)}</div>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={regression.coef} layout="vertical" margin={{ left: 10, right: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
-              <XAxis type="number" tick={axisTick} axisLine={false} tickLine={false} />
-              <YAxis type="category" dataKey="name" width={98} tick={{ fill: "#0f172a", fontSize: 10.5 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={tooltipStyle} formatter={(v) => v.toFixed(4)} />
-              <Bar dataKey="value" fill="#a78bfa" radius={[0, 6, 6, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-          <div style={{ fontSize: 10, ...mutedText, marginTop: 4 }}>
-            * 변수마다 단위가 달라(km, %, 비율) 계수 크기를 직접 비교하면 안 됩니다. 위쪽 "산식 가중치"가 실제로 비교 가능한 값이에요.
-          </div>
+          {regression.coef.length === 0 ? (
+            <div style={{ fontSize: 11, ...mutedText }}>회귀계수 산출 데이터가 아직 없습니다.</div>
+          ) : (
+            <>
+              <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 8 }}>종속변수 regionRisk · {regression.rows}개 지역 · R² = {regression.r2?.toFixed(3)} · MAE = {regression.mae?.toFixed(2)}</div>
+              <div style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 11, background: "#f8fafc", border: "1px solid #e2e8f0",
+                borderRadius: 8, padding: "10px 12px", lineHeight: 1.7, color: "#334155", overflowX: "auto", whiteSpace: "nowrap" }}>
+                regionRisk ≈ {regression.coef.map((c) => `${formatFormulaCoef(c.value)}×${shortLabel(c.name)}`).join(" + ")}
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 90px", gap: 0, marginTop: 10, fontSize: 11.5, border: "1px solid #e2e8f0", borderRadius: 8, overflow: "hidden" }}>
+                <div style={{ fontWeight: 700, padding: "6px 10px", background: "#f1f5f9", color: "#475569" }}>변수</div>
+                <div style={{ fontWeight: 700, padding: "6px 10px", background: "#f1f5f9", color: "#475569", textAlign: "right" }}>계수</div>
+                {regression.coef.map((c) => (
+                  <Fragment key={c.name}>
+                    <div style={{ padding: "7px 10px", borderTop: "1px solid #e2e8f0" }}>{c.name}</div>
+                    <div style={{ padding: "7px 10px", borderTop: "1px solid #e2e8f0", textAlign: "right", fontWeight: 700, color: "#0f172a" }}>{formatTableCoef(c.value)}</div>
+                  </Fragment>
+                ))}
+              </div>
+              <div style={{ fontSize: 10, ...mutedText, marginTop: 8 }}>
+                * 변수마다 단위가 달라(km, %, 비율) 계수 크기를 직접 비교하면 안 됩니다. 위쪽 "산식 가중치"가 실제로 비교 가능한 값이에요.
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

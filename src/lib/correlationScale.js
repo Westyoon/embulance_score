@@ -1,11 +1,11 @@
 // 상관계수(r)를 그대로 보여주지 않고 5단계 강도 라벨 + 퍼센트로 변환한다.
-// 빨강 계열 그라데이션 — 연할수록 약함, 진할수록(적갈색) 강함.
+// 보라 계열 그라데이션 — 연할수록 약함, 진할수록 강함.
 export const CORR_LEVELS = [
-  { label: "매우 약함", min: 0, color: "#fca5a5" },
-  { label: "약함", min: 0.2, color: "#f87171" },
-  { label: "보통", min: 0.4, color: "#ef4444" },
-  { label: "강함", min: 0.6, color: "#b91c1c" },
-  { label: "매우 강함", min: 0.8, color: "#7f1d1d" },
+  { label: "매우 약함", min: 0, color: "#c4b5fd" },
+  { label: "약함", min: 0.2, color: "#a78bfa" },
+  { label: "보통", min: 0.4, color: "#8b5cf6" },
+  { label: "강함", min: 0.6, color: "#6d28d9" },
+  { label: "매우 강함", min: 0.8, color: "#4c1d95" },
 ];
 
 export function corrLevel(r) {

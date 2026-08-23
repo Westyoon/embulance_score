@@ -15,20 +15,18 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
 
   if (region.missing) {
     return (
-      <div style={{ position: "absolute", inset: 0, background: "#00000090", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 30 }} onClick={onClose}>
-        <div style={{ ...cardStyle, width: 320, padding: 20 }} onClick={(e) => e.stopPropagation()}>
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-2">
-              <MapPin size={16} color={MISSING_COLOR} />
-              <span style={{ fontSize: 17, fontWeight: 700 }}>{region.name}</span>
-            </div>
-            <button onClick={onClose} style={{ color: "#64748b", background: "none", border: "none", cursor: "pointer" }}><X size={18} /></button>
+      <div style={{ ...cardStyle, padding: 20 }}>
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-2">
+            <MapPin size={16} color={MISSING_COLOR} />
+            <span style={{ fontSize: 16, fontWeight: 700 }}>{region.name}</span>
           </div>
-          <div style={{ fontSize: 12, ...mutedText, marginTop: 14, lineHeight: 1.6, background: "#f8fafc", border: "1px solid #e2e8f0", padding: "12px 14px", borderRadius: 10 }}>
-            {region.key
-              ? <>구성점수 중 일부(주로 의료진부족점수)가 HIRA 매칭 기준을 충족하지 못해 최종 위험도가 <b style={{ color: "#0f172a" }}>산출되지 않은 지역</b>입니다. "의료진 부족 0점"이 아니라 <b style={{ color: "#0f172a" }}>"데이터 부족으로 미산출"</b>로 표시해야 합니다.</>
-              : <>이 경계 데이터셋(2013 KOSTAT 단순화)에 대응하는 <b style={{ color: "#0f172a" }}>원천 데이터가 없는 지역</b>입니다. 최근 행정구역 개편이나 데이터 매칭 누락으로 아직 위험도가 연결되지 않았습니다.</>}
-          </div>
+          <button onClick={onClose} className="flex items-center gap-1" style={{ color: "#64748b", background: "none", border: "none", cursor: "pointer", fontSize: 10.5 }}>목록으로 <X size={15} /></button>
+        </div>
+        <div style={{ fontSize: 12, ...mutedText, marginTop: 14, lineHeight: 1.6, background: "#f8fafc", border: "1px solid #e2e8f0", padding: "12px 14px", borderRadius: 10 }}>
+          {region.key
+            ? <>구성점수 중 일부(주로 의료진부족점수)가 HIRA 매칭 기준을 충족하지 못해 최종 위험도가 <b style={{ color: "#0f172a" }}>산출되지 않은 지역</b>입니다. "의료진 부족 0점"이 아니라 <b style={{ color: "#0f172a" }}>"데이터 부족으로 미산출"</b>로 표시해야 합니다.</>
+            : <>이 경계 데이터셋(2013 KOSTAT 단순화)에 대응하는 <b style={{ color: "#0f172a" }}>원천 데이터가 없는 지역</b>입니다. 최근 행정구역 개편이나 데이터 매칭 누락으로 아직 위험도가 연결되지 않았습니다.</>}
         </div>
       </div>
     );
@@ -41,13 +39,12 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
   const hospitals = region.hospitals?.length ? region.hospitals : null;
 
   return (
-    <div style={{ position: "absolute", inset: 0, background: "#00000090", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 30 }} onClick={onClose}>
-      <div style={{ ...cardStyle, width: 380, maxWidth: "90%", padding: 20, maxHeight: "85%", overflowY: "auto" }} onClick={(e) => e.stopPropagation()}>
+    <div style={{ ...cardStyle, padding: 20, maxHeight: 560, overflowY: "auto" }}>
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-2">
               <MapPin size={16} color={riskColor(region.risk)} />
-              <span style={{ fontSize: 17, fontWeight: 700 }}>{region.name}</span>
+              <span style={{ fontSize: 16, fontWeight: 700 }}>{region.name}</span>
             </div>
             {region.clusterLabel && (
               <div style={{ marginTop: 6 }}>
@@ -57,7 +54,7 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
               </div>
             )}
           </div>
-          <button onClick={onClose} style={{ color: "#64748b", background: "none", border: "none", cursor: "pointer" }}><X size={18} /></button>
+          <button onClick={onClose} className="flex items-center gap-1" style={{ color: "#64748b", background: "none", border: "none", cursor: "pointer", fontSize: 10.5 }}>목록으로 <X size={15} /></button>
         </div>
 
         <div className="flex items-end gap-2" style={{ marginTop: 14 }}>
@@ -107,7 +104,6 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
             <div style={{ fontSize: 11.5, ...mutedText }}>등록된 의료기관 정보가 없습니다.</div>
           )}
         </div>
-      </div>
     </div>
   );
 }
