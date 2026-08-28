@@ -1,5 +1,7 @@
 "use client";
+import { useState } from "react";
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { Search, X } from "lucide-react";
 import { cardStyle, mutedText } from "./shared";
 
 const axisTick = { fill: "#64748b", fontSize: 9.5 };
@@ -24,6 +26,9 @@ function topFactors(clusterProfile, id) {
 
 export default function ClusterTypePanel({ ranked, clusterProfile, clusterIds, clusterMetaById }) {
   const clustered = ranked.filter((r) => clusterMetaById[r.cluster]);
+  const [query, setQuery] = useState("");
+  const q = query.trim();
+  const hasMatch = q ? clustered.some((r) => r.name.includes(q)) : true;
 
   return (
     <div style={{ ...cardStyle, padding: 16 }}>
@@ -52,14 +57,36 @@ export default function ClusterTypePanel({ ranked, clusterProfile, clusterIds, c
       </div>
 
       <div style={{ fontSize: 10.5, fontWeight: 600, marginBottom: 4 }}>지역별 실제 분포</div>
+      <div className="flex items-center" style={{ position: "relative", marginBottom: 10 }}>
+        <Search size={13} color="#94a3b8" style={{ position: "absolute", left: 9 }} />
+        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="지역명 검색 (예: 안동시)"
+          style={{ width: "100%", fontSize: 12.5, padding: "8px 10px 8px 28px", borderRadius: 8, border: "1px solid #e2e8f0", outline: "none", color: "#0f172a", background: "#f8fafc" }} />
+        {query && (
+          <button onClick={() => setQuery("")} style={{ position: "absolute", right: 8, background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }}>
+            <X size={13} />
+          </button>
+        )}
+      </div>
+      {q && (
+        <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 6 }}>
+          {hasMatch ? `"${q}" 포함 지역을 진하게 강조 표시했어요` : "일치하는 지역이 없습니다"}
+        </div>
+      )}
       <ResponsiveContainer width="100%" height={150}>
         <ScatterChart margin={{ left: 0, right: 10, top: 4, bottom: 0 }}>
           <CartesianGrid stroke="#e2e8f0" />
           <XAxis type="number" dataKey="access" name="접근성" domain={[0, 100]} tick={axisTick} />
           <YAxis type="number" dataKey="doc" name="의료진부족" domain={[0, 100]} tick={axisTick} />
           <Tooltip cursor={{ strokeDasharray: "3 3" }} content={<ClusterScatterTooltip />} />
-          <Scatter data={clustered} fillOpacity={0.65}>
-            {clustered.map((r, i) => <Cell key={i} fill={clusterMetaById[r.cluster].color} />)}
+          <Scatter data={clustered}>
+            {clustered.map((r, i) => {
+              const isMatch = q && r.name.includes(q);
+              const dim = q && !isMatch;
+              return (
+                <Cell key={i} fill={clusterMetaById[r.cluster].color} fillOpacity={dim ? 0.12 : isMatch ? 1 : 0.65}
+                  stroke={isMatch ? "#0f172a" : "none"} strokeWidth={isMatch ? 2 : 0} />
+              );
+            })}
           </Scatter>
         </ScatterChart>
       </ResponsiveContainer>
