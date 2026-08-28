@@ -1,7 +1,10 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { riskColor, riskTextColor } from "@/lib/riskScale";
+import { SIDO_SHORT_LABELS } from "@/lib/sido";
 import { cardStyle, mutedText, RiskLegendStrip } from "./shared";
+
+const DEFAULT_SIDO = "경상북도";
 
 const COLS = [
   { key: "bed", label: "병상포화도" },
@@ -74,12 +77,25 @@ function squarify(items, x, y, w, h) {
 // 위치로 스크롤한다 — highlightKey 하나를 양쪽이 같이 읽고 쓴다.
 export default function TreemapHeatmapPanel({ data }) {
   const [highlightKey, setHighlightKey] = useState(null);
+  const [province, setProvince] = useState(DEFAULT_SIDO);
   const rowRefs = useRef({});
-  const ranked = useMemo(() => [...data].sort((a, b) => b.risk - a.risk), [data]);
+
+  // 시도 필터 pill: 데이터에 실제로 존재하는 시도만, 지역 수 많은 순으로 나열.
+  const sidoCounts = useMemo(() => {
+    const counts = new Map();
+    data.forEach((r) => counts.set(r.sido, (counts.get(r.sido) || 0) + 1));
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  }, [data]);
+
+  const filtered = province === "전체" ? data : data.filter((r) => r.sido === province);
+  const ranked = useMemo(() => [...filtered].sort((a, b) => b.risk - a.risk), [filtered]);
+  // 박스 크기·색상 모두 종합위험도로 통일(이중 인코딩) — 응급실 수는 툴팁으로만 노출.
   const cells = useMemo(() => {
-    const items = ranked.map((r) => ({ ...r, value: Math.max(r.hospitalCount, 1) }));
+    const items = ranked.map((r) => ({ ...r, value: Math.max(r.risk, 3) }));
     return squarify(items, 0, 0, W, H);
   }, [ranked]);
+
+  const selectProvince = (p) => { setProvince(p); setHighlightKey(null); };
 
   useEffect(() => {
     if (highlightKey && rowRefs.current[highlightKey]) {
@@ -90,8 +106,30 @@ export default function TreemapHeatmapPanel({ data }) {
   return (
     <div style={{ ...cardStyle, padding: 16 }}>
       <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 2 }}>지역별 위험도 — 트리맵 · 히트맵</div>
-      <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 10 }}>박스 크기=응급실 수 · 색상=종합위험도 · 어느 쪽에서 클릭해도 서로 강조돼요</div>
+      <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 10 }}>박스 크기·색상 모두 = 종합위험도 (위험할수록 크고 진하게) · 어느 쪽에서 클릭해도 서로 강조돼요</div>
 
+      <div className="flex flex-wrap" style={{ gap: 6, marginBottom: 14 }}>
+        <button onClick={() => selectProvince("전체")}
+          style={{ fontSize: 11, fontWeight: 600, padding: "5px 11px", borderRadius: 999, cursor: "pointer",
+            border: province === "전체" ? "1px solid #38bdf8" : "1px solid #e2e8f0",
+            background: province === "전체" ? "#38bdf81a" : "#ffffff",
+            color: province === "전체" ? "#0284c7" : "#64748b" }}>
+          전체 ({data.length})
+        </button>
+        {sidoCounts.map(([sido, count]) => (
+          <button key={sido} onClick={() => selectProvince(sido)}
+            style={{ fontSize: 11, fontWeight: 600, padding: "5px 11px", borderRadius: 999, cursor: "pointer",
+              border: province === sido ? "1px solid #38bdf8" : "1px solid #e2e8f0",
+              background: province === sido ? "#38bdf81a" : "#ffffff",
+              color: province === sido ? "#0284c7" : "#64748b" }}>
+            {SIDO_SHORT_LABELS[sido] ?? sido} ({count})
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 ? (
+        <div style={{ fontSize: 11.5, ...mutedText, padding: "24px 4px", textAlign: "center" }}>해당 시도에 산출된 지역이 없습니다</div>
+      ) : (
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 16 }}>
         <div>
           <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block", borderRadius: 8, overflow: "hidden" }}>
@@ -100,6 +138,7 @@ export default function TreemapHeatmapPanel({ data }) {
               const isHi = highlightKey === c.key;
               return (
                 <g key={c.key} onClick={() => setHighlightKey(c.key)} style={{ cursor: "pointer" }}>
+                  <title>{`${c.name} · 위험도 ${c.risk.toFixed(1)}점 · 응급실 ${c.hospitalCount}개 · 의료진 ${c.doctorCount}명`}</title>
                   <rect x={c.x} y={c.y} width={c.w} height={c.h} fill={riskColor(c.risk)}
                     stroke={isHi ? "#0f172a" : "#ffffff"} strokeWidth={isHi ? 2.5 : 1} />
                   {big && (
@@ -149,6 +188,7 @@ export default function TreemapHeatmapPanel({ data }) {
           </div>
         </div>
       </div>
+      )}
 
       <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid #e2e8f0" }}><RiskLegendStrip compact /></div>
     </div>
