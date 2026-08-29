@@ -101,6 +101,21 @@ python scripts\part4_analyze.py
 
 주의: PART 2는 전국 시군구별 API를 호출하고, HIRA 최초 수집은 약 1,000회의 API 요청이 발생할 수 있습니다. HIRA 재실행 시 기존 자동매칭 결과를 재사용하고 미매칭 병원만 다시 조회합니다.
 
+## 웹 대시보드 실행
+
+Node.js 20.9 이상에서 프론트엔드 의존성을 설치하고 Next.js 개발 서버를 실행합니다.
+
+```powershell
+npm ci
+npm run dev
+```
+
+브라우저에서 `http://localhost:3000`을 열면 `data/`의 분석 결과를 사용하는 통합 대시보드를 확인할 수 있습니다. 배포용 빌드는 다음 명령으로 검증합니다.
+
+```powershell
+npm run build
+```
+
 ## 분석 산식
 
 ### 병상 포화율
