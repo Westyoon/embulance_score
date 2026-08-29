@@ -1,5 +1,9 @@
 # Python pipeline
 .env
+.venv/
+.pipeline-staging-*/
+.pipeline-backup-*
+.pipeline.lock
 __pycache__/
 *.py[cod]
 /hospital_master.csv

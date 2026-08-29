@@ -1,5 +1,4 @@
 import { readCsv, readJson } from "./csvServer";
-import { SIDO_GEO_PREFIXES } from "./sido";
 import { CLUSTER_LABELS } from "./riskScale";
 import { corrLevel, CORR_INSIGHTS } from "./correlationScale";
 import koreaGeo from "@/data/koreaGeo.json";
@@ -34,36 +33,32 @@ function toRegion(row, clusterByKey, clusterMetaById, hospitalsByKey) {
   };
 }
 
-function buildPrefixToSido() {
-  const map = {};
-  for (const [sido, prefixes] of Object.entries(SIDO_GEO_PREFIXES)) {
-    for (const p of prefixes) map[p] = sido;
-  }
-  return map;
-}
-
-// KOSTAT 2013 단순화 경계(지도용)와 파이프라인의 "시도|시군구" 키를 잇는다.
-// 1) 시도 접두사 + 시군구명 직접 매칭
+// 행안부 2026-07-01 체계를 반영한 시군구 경계와 파이프라인의
+// "시도|시군구" 키를 잇는다.
+// 1) 최신 경계의 시도명 + 시군구명 직접 매칭
 // 2) 안 되면 "OO시 + 구" 형태를 부모 도시(OO시) 단위 파이프라인 로우로 대체
-//    (예: 수원시영통구 -> 경기도|수원시 값을 그대로 적용) — 최신 구 단위
-//    행정구역 개편이 2013 경계와 어긋나는 경우의 절충.
+//    (예: 수원시영통구 -> 경기도|수원시 값을 그대로 적용).
 // 3) 그래도 없으면 원천데이터 자체가 없는 지역으로 보고 회색 처리.
 function buildRegionIndexByGeoCode(regionsByKey) {
-  const prefixToSido = buildPrefixToSido();
   const index = {};
   for (const feature of koreaGeo.features) {
-    const { code, name } = feature.properties;
-    const sido = prefixToSido[code.slice(0, 2)];
+    const { code, name, sido } = feature.properties;
     let region = sido ? regionsByKey.get(`${sido}|${name}`) : null;
     if (!region && sido) {
       const m = name.match(/^(.+?시)(.+구)$/);
       if (m) region = regionsByKey.get(`${sido}|${m[1]}`);
     }
-    // 사이드 테이블에서 지역을 클릭했을 때 지도에서 하이라이트할 대표 GEO 코드.
-    // 시 단위로만 집계된 지역(예: 수원시)은 여러 구 폴리곤에 매칭되므로 처음
-    // 매칭된 코드 하나만 대표로 남긴다.
-    if (region && region.code == null) region.code = code;
-    index[code] = region ?? { key: null, name, sido: sido ?? null, missing: true, hospitals: [] };
+    if (region) {
+      // 부모 시 집계는 여러 일반구 폴리곤을 공유한다. 원본 region에는 사이드
+      // 테이블용 대표 코드를 두되, 지도 인덱스에는 클릭한 폴리곤 코드를 가진
+      // 별도 객체를 넣어 다른 구가 강조되는 일을 막는다.
+      if (!region.geoCodes) region.geoCodes = [];
+      region.geoCodes.push(code);
+      if (region.code == null) region.code = code;
+      index[code] = { ...region, code, geoName: name };
+    } else {
+      index[code] = { key: null, code, name, sido: sido ?? null, missing: true, hospitals: [] };
+    }
   }
   return index;
 }
@@ -76,6 +71,16 @@ function buildClusterMeta(clusterProfileRows) {
     metaById[row["클러스터"]] = { ...(i === 0 ? CLUSTER_LABELS.vulnerable : CLUSTER_LABELS.moderate), count: row["지역수"] };
   });
   return metaById;
+}
+
+function hospitalGeoCode(hospital) {
+  const address = String(hospital["주소"] ?? "").replace(/\s+/g, "");
+  const candidates = koreaGeo.features.filter((feature) => (
+    feature.properties.sido === hospital["시도"]
+      && address.includes(String(feature.properties.name).replace(/\s+/g, ""))
+  ));
+  candidates.sort((a, b) => String(b.properties.name).length - String(a.properties.name).length);
+  return candidates[0]?.properties.code ?? null;
 }
 
 function buildHospitals() {
@@ -95,6 +100,9 @@ function buildHospitals() {
       orgCode: h["기관코드"],
       address: h["주소"],
       phone: h["전화"],
+      latitude: h["위도"],
+      longitude: h["경도"],
+      geoCode: hospitalGeoCode(h),
       status: bed?.["상태"] ?? "결측",
       availableBeds: bed?.["가용병상"] ?? null,
       totalBeds: bed?.["전체병상"] ?? null,
@@ -136,7 +144,7 @@ function buildRegression() {
     { name: "포화율(원천)", value: coefByName.get("포화율_원천") },
     { name: "직선거리(km)", value: coefByName.get("직선거리_km") },
     { name: "인구대비병상비율", value: coefByName.get("인구대비병상비율"), note: "단위 스케일 상이" },
-    { name: "전문의부족비율", value: coefByName.get("병상대비전문의부족비율") },
+    { name: "의료진부족점수", value: coefByName.get("의료진부족점수") },
   ];
 
   return { coef, r2: metrics.r2, mae: metrics.mae, rows: metrics.rows };
@@ -169,7 +177,7 @@ export function loadDashboardData() {
   const complete = regions.filter((r) => !r.missing);
   const ranked = [...complete].sort((a, b) => b.risk - a.risk);
   const avg = complete.reduce((s, r) => s + r.risk, 0) / complete.length;
-  const high = complete.filter((r) => r.risk >= 50).length;
+  const high = complete.filter((r) => r.risk > 50).length;
 
   const clusterProfile = COMPONENT_KEYS.map(({ field, short }) => {
     const row = { subject: short, full: 100 };

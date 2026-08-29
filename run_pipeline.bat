@@ -1,11 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-python scripts\part1_collect_hospital_master.py || exit /b 1
-python scripts\part2_collect_bed_status.py || exit /b 1
-python scripts\part3_prepare_population.py || exit /b 1
-python scripts\part3_collect_hira_doctors.py || exit /b 1
-python scripts\part3_build_component_scores.py || exit /b 1
-python scripts\part3_calculate_region_risk.py || exit /b 1
-python scripts\part4_analyze.py || exit /b 1
-echo Pipeline completed.
+set "PIPELINE_PYTHON=python"
+if exist ".venv\Scripts\python.exe" set "PIPELINE_PYTHON=.venv\Scripts\python.exe"
+"%PIPELINE_PYTHON%" scripts\run_pipeline.py %*
+exit /b %errorlevel%

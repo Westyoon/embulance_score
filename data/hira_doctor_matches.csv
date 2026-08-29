@@ -1,535 +1,535 @@
-﻿기관코드,병원명,주소,시도,시군구,HIRA병원명,암호화요양기호,매칭점수,매칭상태,응급의학과전문의수
-A2200008,강릉아산병원,강원특별자치도 강릉시 사천면 방동길 38,강원특별자치도,강릉시,강릉아산병원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,9.0
-A2200011,강원특별자치도강릉의료원,"강원특별자치도 강릉시 경강로 2007-0 (남문동,강릉의료원)",강원특별자치도,강릉시,강원특별자치도강릉의료원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2200005,의료법인강릉동인병원,강원특별자치도 강릉시 강릉대로419번길 42 (포남동),강원특별자치도,강릉시,,,0.0,미매칭,
-A2200010,의산의료재단강릉고려병원,강원특별자치도 강릉시 옥가로 30 (옥천동),강원특별자치도,강릉시,,,0.0,미매칭,
-A2200038,근로복지공단동해병원,"강원특별자치도 동해시 하평로 11-  (평릉동, (평릉동))",강원특별자치도,동해시,,,0.0,미매칭,
-A2200003,의료법인동해동인병원,"강원특별자치도 동해시 하평로 26-  (평릉동, (평릉동))",강원특별자치도,동해시,,,0.0,미매칭,
-A2200007,강원특별자치도삼척의료원,강원특별자치도 삼척시 오십천로 473 (정상동),강원특별자치도,삼척시,강원특별자치도삼척의료원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,3.0
-A2200012,강원특별자치도속초의료원,강원특별자치도 속초시 영랑호반길 3 (영랑동),강원특별자치도,속초시,강원특별자치도속초의료원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,2.0
-A2200046,의료법인온세움의료재단온재병원,강원특별자치도 속초시 중앙로 11 (교동),강원특별자치도,속초시,,,0.0,미매칭,
-A2200037,의료법인성심의료재단양구성심병원,강원특별자치도 양구군 양구읍 중심로 160,강원특별자치도,양구군,,,0.0,미매칭,
-A2200002,강원특별자치도영월의료원,강원특별자치도 영월군 영월읍 중앙1로 59-  ( ),강원특별자치도,영월군,강원특별자치도영월의료원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,1.0
-A2200015,강원특별자치도원주의료원,"강원특별자치도 원주시 서원대로 387 (개운동, (개운동))",강원특별자치도,원주시,강원특별자치도원주의료원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,7.0
-A2200001,연세대학교원주세브란스기독병원,"강원특별자치도 원주시 일산로 20-0 (일산동, (일산동))",강원특별자치도,원주시,연세대학교 원주세브란스기독병원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,18
-A2200024,의료법인성지의료재단성지병원,강원특별자치도 원주시 원일로 22 (인동),강원특별자치도,원주시,,,0.0,미매칭,
-A2200048,근로복지공단정선병원,강원특별자치도 정선군 정선읍 봉양1길 145,강원특별자치도,정선군,,,0.0,미매칭,
-A2201730,철원병원,강원특별자치도 철원군 갈말읍 명성로 208-0,강원특별자치도,철원군,철원병원,JDQ4MTYyMiM1MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2200009,강원대학교병원,"강원특별자치도 춘천시 백령로 156-  (효자동,(효자동))",강원특별자치도,춘천시,강원대학교병원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,8.0
-A2200033,인성병원,강원특별자치도 춘천시 금강로 39 (낙원동),강원특별자치도,춘천시,인성병원,JDQ4MTYyMiM1MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2200013,한림대학교춘천성심병원,강원특별자치도 춘천시 삭주로 77 (교동),강원특별자치도,춘천시,한림대학교춘천성심병원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,13.0
-A2200004,근로복지공단태백병원,"강원특별자치도 태백시 보드미길 8 (장성동, (장성동))",강원특별자치도,태백시,,,0.0,미매칭,
-E2200026,평창군보건의료원,강원특별자치도 평창군 평창읍 노성로 11,강원특별자치도,평창군,평창군보건의료원,JDQ4MTYyMiM1MSMkMSMkNCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2200014,홍천아산병원,강원특별자치도 홍천군 홍천읍 산림공원1길 17,강원특별자치도,홍천군,홍천아산병원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-E2200025,화천군보건의료원,강원특별자치도 화천군 화천읍 강변로 111 (화천군보건의료원),강원특별자치도,화천군,화천군보건의료원,JDQ4MTYyMiM1MSMkMSMkNCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2200016,횡성대성병원,강원특별자치도 횡성군 횡성읍 횡성로 275,강원특별자치도,횡성군,횡성대성병원,JDQ4MTYyMiM1MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2100282,에이치제이매그놀리아국제병원,경기도 가평군 설악면 미사리로 267-177,경기도,가평군,에이치제이매그놀리아국제병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4OSQyNjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2100049,국립암센터,경기도 고양시 일산동구 일산로 323 (마두동),경기도,고양시,국립암센터,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A2100033,국민건강보험공단일산병원,"경기도 고양시 일산동구 일산로 100 (백석동,백석1동 1241외1필지 4층)",경기도,고양시,국민건강보험공단일산병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,12.0
-A2100047,동국대학교일산불교병원,"경기도 고양시 일산동구 동국로 27 (식사동, 동국대학교일산병원)",경기도,고양시,동국대학교일산불교병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,10.0
-A2100042,의료법인명지의료재단명지병원,경기도 고양시 덕양구 화수로14번길 55 (화정동),경기도,고양시,의료법인명지의료재단명지병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,14.0
-A2116972,의료법인성광의료재단일산차병원,"경기도 고양시 일산동구 중앙로 1205, 지하1층(일부),지하2층,지하4층(일부),1층(일부),2층(일부),3층(일부),4~5층,6층(일부), 7~10층 (장항동)",경기도,고양시,의료법인성광의료재단일산차병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2100283,의료법인일산복음병원,"경기도 고양시 일산동구 고양대로 760, 가동 (중산동, 일산복음병원)",경기도,고양시,의료법인일산복음병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQ3IyQ2MiQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2100290,의료법인자인의료재단(더자인병원),"경기도 고양시 덕양구 중앙로 555, /중앙로557번길 14, 지하1(일부),1-6층 (행신동)",경기도,고양시,의료법인자인의료재단(더자인병원),JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3MiQyNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2100038,인제대학교일산백병원,경기도 고양시 일산서구 주화로 170 (대화동),경기도,고양시,인제대학교일산백병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,12.0
-A2100007,광명성애병원,"경기도 광명시 디지털로 36, 광명성애병원 (철산동)",경기도,광명시,광명성애병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,10.0
-A2118788,중앙대학교광명병원,경기도 광명시 덕안로 110(일직동),경기도,광명시,중앙대학교광명병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,14.0
-A2100155,참조은병원,경기도 광주시 광주대로 45 (경안동),경기도,광주시,참조은병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,11.0
-A2100116,윤서병원,경기도 구리시 건원대로 47 (인창동),경기도,구리시,윤서병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ3OSQzNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2100039,한양대학교구리병원,경기도 구리시 경춘로 153 (교문동),경기도,구리시,한양대학교구리병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,8.0
-A2100048,원광대학교산본병원,경기도 군포시 산본로 321 (산본동),경기도,군포시,,,0.0,미매칭,
-A2100054,효산의료재단지샘병원,"경기도 군포시 군포로 591 (당동, (G샘병원)군포샘병원)",경기도,군포시,,,0.0,미매칭,
-A2100053,의료법인우리의료재단김포우리병원,"경기도 김포시 감암로 11, 김포우리병원 (걸포동)",경기도,김포시,의료법인우리의료재단김포우리병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQ0NjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,10.0
-A2100006,의료법인인봉의료재단뉴고려병원,"경기도 김포시 김포한강3로 283, 뉴고려병원 (장기동)",경기도,김포시,의료법인인봉의료재단뉴고려병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ4OSQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,10.0
-A2100041,남양주한양병원,경기도 남양주시 오남읍 양지로 47-55,경기도,남양주시,,,0.0,미매칭,
-A2118188,엘병원,"경기도 남양주시 퇴계원읍 퇴계원로 20, 지하2~지상7층 일부제외호",경기도,남양주시,엘병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQ3IyQ4MiQzNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,5.0
-A2100208,원병원,경기도 남양주시 화도읍 경춘로 1943-16,경기도,남양주시,원병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQzIyQwMyQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2100037,현대병원,경기도 남양주시 진접읍 봉현로 21,경기도,남양주시,현대병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,8.0
-A2120077,혜성병원,"경기도 남양주시 경춘로1308번길 4, 1층일부~10층 (평내동)",경기도,남양주시,혜성병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzIxIyQxIyQxIyQ2MiQ0NjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2100135,동두천중앙성모병원,경기도 동두천시 동광로 53 (생연동),경기도,동두천시,동두천중앙성모병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ5MiQyNjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2100052,가톨릭대학교부천성모병원,"경기도 부천시 원미구 소사로 327, 가톨릭대학교 부천성모병원 (소사동)",경기도,부천시,가톨릭대학교부천성모병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,12.0
-A2100055,부천세종병원,"경기도 부천시 소사구 호현로489번길 28 (소사본동, 세종병원)",경기도,부천시,부천세종병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,12.0
-A2100058,부천우리병원,경기도 부천시 오정구 소사로 726 (원종동),경기도,부천시,부천우리병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2100005,순천향대학교부속부천병원,"경기도 부천시 원미구 조마루로 170, 부흥로 173(1층일부) (중동)",경기도,부천시,순천향대학교부속부천병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQzNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,17.0
-A2100050,의료법인대인의료재단다니엘종합병원,"경기도 부천시 원미구 중동로 361, 다니엘종합병원 (약대동)",경기도,부천시,,,0.0,미매칭,
-A2100258,국군수도병원,경기도 성남시 분당구 새마을로177번길 81 (율동),경기도,성남시,국군수도병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQzNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,8.0
-A2100025,대진의료재단분당제생병원,경기도 성남시 분당구 서현로180번길 20 (서현동),경기도,성남시,,,0.0,미매칭,
-A2106200,바른마디병원,경기도 성남시 중원구 광명로 330 (금광동),경기도,성남시,바른마디병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzUxIyQyIyQ1IyQwMCQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,3.0
-A2100001,분당서울대학교병원,"경기도 성남시 분당구 구미로173번길 82 (구미동, 분당서울대학교병원)",경기도,성남시,분당서울대학교병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQyNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,16.0
-A2116806,성남시의료원,"경기도 성남시 수정구 수정로171번길 10, 성남시의료원 (태평동)",경기도,성남시,성남시의료원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,7.0
-A2100011,성남중앙병원,경기도 성남시 중원구 산성대로476번길 12 (금광동),경기도,성남시,성남중앙병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE4MzIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2115807,성모윌병원,"경기도 성남시 수정구 성남대로 1171, 삼성화재빌딩 1층일부, 2~9층 (수진동)",경기도,성남시,성모윌병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQzIyQ4MiQyNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2100016,순천의료재단성남정병원,"경기도 성남시 수정구 수정로 76, 지하3~9층 (수진동)",경기도,성남시,,,0.0,미매칭,
-A2100030,차의과학대학교분당차병원,경기도 성남시 분당구 야탑로 59 (야탑동),경기도,성남시,차의과학대학교분당차병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,22.0
-A2100012,가톨릭대학교성빈센트병원,경기도 수원시 팔달구 중부대로 93 (지동),경기도,수원시,,,0.0,미매칭,
-A2100032,경기도의료원수원병원,경기도 수원시 장안구 수성로245번길 69 (정자동),경기도,수원시,,,0.0,미매칭,
-A2119276,매듭병원,"경기도 수원시 영통구 태장로 68, 매듭병원 (망포동)",경기도,수원시,매듭병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzIxIyQxIyQxIyQ4OSQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2100206,수원중앙병원,경기도 수원시 권선구 권선로 654 (권선동),경기도,수원시,수원중앙병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQ0NjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2100002,아주대학교병원,경기도 수원시 영통구 월드컵로 164 (원천동),경기도,수원시,아주대학교병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,16.0
-A2100009,의료법인녹산의료재단동수원병원,경기도 수원시 팔달구 중부대로 165 (우만동),경기도,수원시,의료법인 녹산의료재단동수원병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,9
-A2121061,의료법인덕산의료재단수원덕산병원,경기도 수원시 권선구 서부로 1674 (고색동),경기도,수원시,,,0.0,미매칭,
-A2117135,의료법인명인의료재단화홍병원,경기도 수원시 권선구 호매실로90번길 98 (호매실동),경기도,수원시,,,0.0,미매칭,
-A2100175,의료법인토마스의료재단윌스기념병원,경기도 수원시 팔달구 경수대로 437 (인계동),경기도,수원시,,,0.0,미매칭,
-A2100013,의료법인 록향의료재단 신천연합병원,"경기도 시흥시 복지로 57, 복지로 61, 2층 (대야동)",경기도,시흥시,의료법인 록향의료재단 신천연합병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,3.0
-A2100008,의료법인남촌의료재단시화병원,"경기도 시흥시 군자천로 381, 시화병원 (정왕동)",경기도,시흥시,,,0.0,미매칭,
-A2100027,의료법인석경의료재단센트럴병원,"경기도 시흥시 공단1대로 237 (정왕동, 센트럴 병원)",경기도,시흥시,,,0.0,미매칭,
-A2100003,고려대학교의과대학부속안산병원,경기도 안산시 단원구 적금로 123 (고잔동),경기도,안산시,고려대학교의과대학부속안산병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,11.0
-A2100014,근로복지공단안산병원,"경기도 안산시 상록구 구룡로 87, 근로복지공단안산병원 (일동)",경기도,안산시,근로복지공단안산병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,3.0
-A2100017,대아의료재단한도병원,경기도 안산시 단원구 선부광장로 103 (선부동),경기도,안산시,대아의료재단한도병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,8.0
-A2100162,동안산병원,경기도 안산시 상록구 월피로 88 (월피동),경기도,안산시,동안산병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ2MiQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2100124,의료법인칠석의료재단사랑의병원,"경기도 안산시 상록구 예술광장로 69, 사랑의병원(593-4번지/593-5번지) (성포동)",경기도,안산시,의료법인칠석의료재단사랑의병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,8.0
-A2100021,의료법인플러스의료재단단원병원,경기도 안산시 단원구 원포공원1로 20 (초지동),경기도,안산시,,,0.0,미매칭,
-A2119939,클래스병원,"경기도 안산시 단원구 적금로1길 11, SR노빌리안 3~8층 1층(101~103)호 (고잔동)",경기도,안산시,클래스병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzIxIyQxIyQxIyQ2MiQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2100045,경기도의료원안성병원,"경기도 안성시 남파로 95, 경기도의료원 안성병원 (당왕동)",경기도,안성시,,,0.0,미매칭,
-A2100305,안성성모병원,경기도 안성시 시장길 58 (서인동),경기도,안성시,안성성모병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0
-A2100010,인산의료재단메트로병원,"경기도 안양시 만안구 명학로33번길 8 (안양동, 메트로병원)",경기도,안양시,,,0.7,낮은유사도,
-A2100004,한림대학교성심병원,경기도 안양시 동안구 관평로170번길 22 (평촌동),경기도,안양시,한림대학교성심병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,13.0
-A2100015,효산의료재단안양샘병원,"경기도 안양시 만안구 삼덕로 9 (안양동, 안양샘병원)",경기도,안양시,,,0.0,미매칭,
-A2100134,양주예쓰병원,경기도 양주시 회정로 103 (덕정동),경기도,양주시,양주예쓰병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4OSQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2100089,양평병원,경기도 양평군 양평읍 중앙로 129,경기도,양평군,양평병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQ0NjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,1.0
-A2100194,세종여주병원,"경기도 여주시 청심로 39, 세종여주병원 (하동)",경기도,여주시,세종여주병원,JDU4MTI3MSM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,4.0
-A2100173,연세새로운병원,경기도 여주시 영릉로 22 (창동),경기도,여주시,연세새로운병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-E2100187,연천군보건의료원,경기도 연천군 전곡읍 은대성로 95,경기도,연천군,연천군보건의료원,JDQ4MTYyMiM1MSMkMSMkMCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2100024,오산한국병원,경기도 오산시 밀머리로1번길 16 (원동),경기도,오산시,오산한국병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQzNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,4.0
-A2114449,조은오산병원,경기도 오산시 오산로 307 (오산동),경기도,오산시,조은오산병원,JDU4MTI3MSM1MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2100019,(의)영문의료재단다보스병원,"경기도 용인시 처인구 백옥대로1082번길 18, 다보스종합병원 (김량장동)",경기도,용인시,,,0.0,미매칭,
-A2100122,(의)효심의료재단용인서울병원,경기도 용인시 처인구 고림로 81 (고림동),경기도,용인시,,,0.0,미매칭,
-A2100029,강남병원,"경기도 용인시 기흥구 중부대로 411, 강남병원 (신갈동)",경기도,용인시,강남병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,7.0
-A2121142,메디필드한강병원,경기도 용인시 처인구 금령로39번길 8-6 (김량장동),경기도,용인시,메디필드한강병원,JDU4MTI3MSM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,6.0
-A2100020,연세대학교의과대학용인세브란스병원,경기도 용인시 기흥구 동백죽전대로 363 (중동),경기도,용인시,연세대학교 의과대학 용인세브란스병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,10
-A2100040,가톨릭대학교의정부성모병원,"경기도 의정부시 천보로 271, 의정부성모병원 (금오동)",경기도,의정부시,가톨릭대학교의정부성모병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQ0NjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,14.0
-A2100043,경기도의료원의정부병원,경기도 의정부시 흥선로 142 (의정부동),경기도,의정부시,경기도의료원의정부병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQ0NjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2100034,의료법인영동의료재단의정부백병원,경기도 의정부시 금신로 322 (신곡동),경기도,의정부시,,,0.0,미매칭,
-A2100150,추병원,경기도 의정부시 평화로 650 (의정부동),경기도,의정부시,추병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,6.0
-A2117994,학교법인을지학원의정부을지대학교병원,"경기도 의정부시 동일로 712, 을지대학교 의정부캠퍼스 및 부속병원 (금오동)",경기도,의정부시,학교법인 을지학원 의정부을지대학교병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,9
-A2100193,경기도의료원이천병원,경기도 이천시 경충대로 2742 (관고동),경기도,이천시,,,0.0,미매칭,
-A2100180,바른병원,"경기도 이천시 경충대로 2543, 바른병원 (진리동)",경기도,이천시,바른병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQwMyQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2100035,경기도의료원파주병원,"경기도 파주시 중앙로 207, 경기도립의료원파주병원 (금촌동)",경기도,파주시,경기도의료원파주병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,5.0
-A2100131,메디인병원,경기도 파주시 금릉역로 190(금촌동),경기도,파주시,메디인병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,6.0
-A2100083,무척조은병원,경기도 파주시 문산읍 방촌로 1675-20,경기도,파주시,무척조은병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQ3IyQxMyQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2100130,문산중앙병원,"경기도 파주시 문산읍 문향로39번길 53, 문산중앙병원",경기도,파주시,문산중앙병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzUxIyQxIyQxIyQ4MiQzNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2100255,성심중앙병원,"경기도 평택시 안중읍 안현로서6길 16, 성심중앙병원",경기도,평택시,성심중앙병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3OSQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2100309,의료법인갈렌의료재단박병원,경기도 평택시 송탄로 33 (장당동),경기도,평택시,,,0.0,미매칭,
-A2100022,의료법인박애의료재단박애병원,경기도 평택시 평택2로20번길 3 (평택동),경기도,평택시,,,0.0,미매칭,
-A2100028,의료법인백송의료재단굿모닝병원,경기도 평택시 중앙로 338 (합정동),경기도,평택시,,,0.6666666666666666,낮은유사도,
-A2113246,의료법인양진의료재단평택성모병원,경기도 평택시 평택로 284 (세교동),경기도,평택시,,,0.0,미매칭,
-A2100301,의료법인청파의료재단송탄중앙병원,경기도 평택시 오좌동길 17-16 (독곡동),경기도,평택시,,,0.0,미매칭,
-A2100031,경기도의료원포천병원,경기도 포천시 포천로 1648 (신읍동),경기도,포천시,경기도의료원포천병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,5.0
-A2100036,의료법인 일심의료재단 포천우리병원,경기도 포천시 소흘읍 호국로 661,경기도,포천시,의료법인 일심의료재단 포천우리병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,7.0
-A2115699,의료법인원광의료재단원광종합병원,경기도 화성시 병점구 화산북로 21 (송산동),경기도,화성시,,,0.0,미매칭,
-A2100018,의료법인은혜와감사의료재단화성중앙종합병원,경기도 화성시 만세구 향남읍 발안로 5,경기도,화성시,의료법인 은혜와감사의료재단 화성중앙종합병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjE4MzIjNzEjJDEjJDgjJDgz,1.0,자동매칭,1
-A2100046,한림대학교동탄성심병원,경기도 화성시 동탄구 큰재봉길 7 (석우동),경기도,화성시,한림대학교동탄성심병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQ0NjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,20.0
-A2116685,화성유일병원,경기도 화성시 만세구 남양읍 남양로920번길 6,경기도,화성시,화성유일병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3MiQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2800008,의료법인 거붕 백병원,경상남도 거제시 계룡로5길 14 (상동동),경상남도,거제시,의료법인 거붕 백병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2800005,의료법인 대우의료재단대우병원,경상남도 거제시 두모길 16 (두모동),경상남도,거제시,의료법인 대우의료재단대우병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2800022,의료법인 성념의료재단맑은샘병원,경상남도 거제시 연초면 거제대로 4477,경상남도,거제시,의료법인 성념의료재단맑은샘병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2800076,거창적십자병원,경상남도 거창군 거창읍 중앙로 91,경상남도,거창군,거창적십자병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2800032,강병원,경상남도 고성군 고성읍 중앙로 49,경상남도,고성군,강병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQxMyQzNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2803447,더조은병원,경상남도 고성군 고성읍 동외로 142,경상남도,고성군,,,0.0,미매칭,
-A2803677,강일병원,경상남도 김해시 가락로 359 (구산동),경상남도,김해시,강일병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,4.0
-A2800063,의료법인 지평의료재단 메가병원,경상남도 김해시 계동로 237 (대청동),경상남도,김해시,의료법인 지평의료재단 메가병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQ3IyQ5OSQyNjE4MzIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2800014,의료법인갑을의료재단 갑을장유병원,경상남도 김해시 장유로 167-13 (부곡동),경상남도,김해시,의료법인갑을의료재단 갑을장유병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,2.0
-A2800006,의료법인숭인의료재단 김해복음병원,경상남도 김해시 활천로 33 (삼정동),경상남도,김해시,의료법인숭인의료재단 김해복음병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,6.0
-A2800146,의료법인신의료재단김해삼승병원,경상남도 김해시 김해대로 2335 (부원동),경상남도,김해시,,,0.0,미매칭,
-A2800010,의료법인환명의료재단 조은금강병원,경상남도 김해시 김해대로 1814-37 (삼계동),경상남도,김해시,의료법인환명의료재단 조은금강병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,4.0
-A2800094,의료법인 이도의료재단 남해병원,경상남도 남해군 남해읍 화전로 169,경상남도,남해군,의료법인 이도의료재단 남해병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2800113,밀양병원,경상남도 밀양시 밀양대로 1823 (삼문동),경상남도,밀양시,밀양병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQ0NjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2800057,의료법인 생명사랑의료재단 밀양윤병원,경상남도 밀양시 삼문중앙로 32 (삼문동),경상남도,밀양시,의료법인 생명사랑의료재단 밀양윤병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4MiQ0NjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2800042,행복한병원,경상남도 밀양시 하남읍 수산중앙로 56-2,경상남도,밀양시,행복한병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ2MiQzNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2800101,삼천포제일병원,"경상남도 사천시 중앙로 136, 삼천포제일병원 (벌리동)",경상남도,사천시,삼천포제일병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ5OSQzNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2800068,의료법인승연의료재단 삼천포서울병원,경상남도 사천시 남일로 33 (동금동),경상남도,사천시,의료법인승연의료재단 삼천포서울병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ3OSQyNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,1.0
-A2804216,하나병원,"경상남도 사천시 사천읍 진삼로 1468-8, 하나병원",경상남도,사천시,하나병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQxMyQyNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-E2800380,산청군보건의료원,경상남도 산청군 산청읍 중앙로 97,경상남도,산청군,산청군보건의료원,JDQ4MTYyMiM4MSMkMSMkNCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2800019,베데스다복음병원,경상남도 양산시 신기로 28 (신기동),경상남도,양산시,베데스다복음병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2803867,본바른병원,"경상남도 양산시 물금읍 청운로 343, 양산바른빌딩 1층일부, 4층~10층",경상남도,양산시,본바른병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ3MiQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2800011,양산부산대학교병원,경상남도 양산시 물금읍 금오로 20,경상남도,양산시,양산부산대학교병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,9.0
-A2804593,양산성모병원,경상남도 양산시 서창로 59 (명동),경상남도,양산시,양산성모병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,1.0
-A2800090,의령병원,경상남도 의령군 의령읍 의병로14길 10,경상남도,의령군,의령병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ4MiQyNjEyMjIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2800001,경상국립대학교병원,경상남도 진주시 강남로 79 (칠암동),경상남도,진주시,경상국립대학교병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,8.0
-A2800084,반도병원,경상남도 진주시 남강로 701 (장대동),경상남도,진주시,반도병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2800015,의료법인 문병욱의료재단 진주고려병원,"경상남도 진주시 동진로 2 (칠암동, 진주고려병원)",경상남도,진주시,의료법인 문병욱의료재단 진주고려병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A2800045,의료법인 바른의료재단 바른병원,경상남도 진주시 동진로 7 (칠암동),경상남도,진주시,의료법인 바른의료재단 바른병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ3MiQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2800003,제일병원,경상남도 진주시 진주대로 885 (강남동),경상남도,진주시,제일병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,5.0
-A2800037,진주복음병원,경상남도 진주시 진양호로 370 (신안동),경상남도,진주시,진주복음병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ5MiQzNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A2800044,진주세란병원,경상남도 진주시 진주대로 829 (주약동),경상남도,진주시,진주세란병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ3MiQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2800043,한일병원,"경상남도 진주시 범골로 17, 한일병원 지하1 1~7층 (충무공동)",경상남도,진주시,한일병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,5.0
-A2800062,태황의료재단한성병원,경상남도 창녕군 창녕읍 교리1길 2,경상남도,창녕군,태황의료재단한성병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4OSQzNjE4MzIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2800025,경상남도마산의료원,경상남도 창원시 마산합포구 3·15대로 231 (중앙동3가),경상남도,창원시,경상남도마산의료원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,5.0
-A2800012,근로복지공단 창원병원,경상남도 창원시 성산구 창원대로 721 (중앙동),경상남도,창원시,근로복지공단 창원병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2800021,연세에스병원,경상남도 창원시 진해구 해원로32번길 13 (이동),경상남도,창원시,연세에스병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2800018,의료법인석영의료재단창원제일종합병원,경상남도 창원시 마산합포구 3·15대로 238 (중앙동3가),경상남도,창원시,의료법인석영의료재단창원제일종합병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2800009,의료법인청아의료재단청아병원,경상남도 창원시 마산회원구 내서읍 광려천서로 67 (청아병원),경상남도,창원시,의료법인청아의료재단청아병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2800017,의료법인합포의료재단에스엠지연세병원,"경상남도 창원시 마산합포구 3·15대로 76 (월남동2가, 합포의료재단)",경상남도,창원시,의료법인합포의료재단에스엠지연세병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,4.0
-A2803505,창원경상국립대학교병원,"경상남도 창원시 성산구 삼정자로 11 (성주동, 창원경상대학교병원)",경상남도,창원시,창원경상국립대학교병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,11.0
-A2800004,창원파티마병원,경상남도 창원시 의창구 창이대로 45 (명서동),경상남도,창원시,창원파티마병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,10.0
-A2800007,창원한마음병원,경상남도 창원시 의창구 용동로57번길 8 (사림동),경상남도,창원시,창원한마음병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,13.0
-A2800020,학교법인성균관대학삼성창원병원,"경상남도 창원시 마산회원구 팔용로 158 (합성동, 삼성창원병원)",경상남도,창원시,학교법인성균관대학삼성창원병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,9.0
-A2800092,새통영병원,경상남도 통영시 무전7길 192 (무전동),경상남도,통영시,새통영병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2800826,하동중앙의원,경상남도 하동군 하동읍 연화길 6,경상남도,하동군,하동중앙의원,JDQ4MTYyMiM4MSMkMiMkNCMkMDAkMzgxNzAyIzMxIyQxIyQzIyQ3MiQzNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2800138,시영의료재단 영동병원,경상남도 함안군 칠원읍 용산2길 45-13,경상남도,함안군,시영의료재단 영동병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4MiQzNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2800080,함양성심병원,경상남도 함양군 함양읍 고운로 70,경상남도,함양군,함양성심병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ2MiQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2800055,삼성합천병원,경상남도 합천군 합천읍 대야로 876,경상남도,합천군,삼성합천병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQ3IyQ3OSQzNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2700019,의)근원의료재단경산중앙병원,경상북도 경산시 경안로 11 (백천동),경상북도,경산시,,,0.0,미매칭,
-A2700036,의료법인서명의료재단세명종합병원,경상북도 경산시 경안로 208 (중방동),경상북도,경산시,,,0.0,미매칭,
-A2700097,계명대학교경주동산병원,경상북도 경주시 봉황로 65 (서부동),경상북도,경주시,,,0.0,미매칭,
-A2700003,동국대학교의과대학경주병원,경상북도 경주시 동대로 87 (석장동),경상북도,경주시,동국대학교의과대학경주병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,15.0
-A2700070,의료법인영암의료재단고령영생병원,경상북도 고령군 대가야읍 중앙로 33 (영생병원),경상북도,고령군,의료법인영암의료재단고령영생병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2700015,구미강동병원,경상북도 구미시 인동20길 46 (진평동),경상북도,구미시,구미강동병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,3.0
-A2700013,순천향대학교부속구미병원,"경상북도 구미시 1공단로 179 (공단동, (공단동))",경상북도,구미시,,,0.65,낮은유사도,
-A2700007,차의과학대학교부속구미차병원,경상북도 구미시 신시로10길 12 (형곡동),경상북도,구미시,차의과학대학교부속구미차병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,12.0
-A2700018,경상북도김천의료원,경상북도 김천시 모암길 24 (모암동),경상북도,김천시,경상북도김천의료원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,6.0
-A2700012,의료법인덕산의료재단김천제일병원,경상북도 김천시 신음1길 12 (신음동),경상북도,김천시,의료법인덕산의료재단김천제일병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,5.0
-A2700006,의료법인동춘의료재단문경제일병원,경상북도 문경시 당교3길 25 (모전동),경상북도,문경시,의료법인동춘의료재단문경제일병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,6.0
-A2700071,봉화해성병원,경상북도 봉화군 봉화읍 보밑길 3,경상북도,봉화군,봉화해성병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2700011,상주적십자병원,경상북도 상주시 상서문로 53 (남성동),경상북도,상주시,상주적십자병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2700009,의료법인삼백의료재단상주성모병원,경상북도 상주시 냉림서성길 7 (냉림동),경상북도,상주시,의료법인삼백의료재단상주성모병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2700030,의료법인석촌의료재단성주병원,경상북도 성주군 성주읍 성주읍3길 5-3,경상북도,성주군,의료법인석촌의료재단성주병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2700001,경상북도안동의료원,경상북도 안동시 태사2길 55 (북문동),경상북도,안동시,경상북도안동의료원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A2700004,안동성소병원,경상북도 안동시 서동문로 99 (금곡동),경상북도,안동시,안동성소병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,6.0
-A2700014,의료법인안동병원,경상북도 안동시 앙실로 11 (수상동),경상북도,안동시,의료법인안동병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,15.0
-A2700073,영덕아산병원,경상북도 영덕군 영해면 영덕로 1621,경상북도,영덕군,영덕아산병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQ0NjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2700026,의료법인명성의료재단영양병원,경상북도 영양군 영양읍 동서대로 75,경상북도,영양군,의료법인명성의료재단영양병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ5MiQ0NjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2700031,영주기독병원,경상북도 영주시 구성로 380 (영주동),경상북도,영주시,영주기독병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2700020,영주자인병원,경상북도 영주시 대동로31번길 9 (가흥동),경상북도,영주시,영주자인병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQwMyQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2702752,영주적십자병원,"경상북도 영주시 대학로 327-0 (가흥동,영주적십자병원)",경상북도,영주시,영주적십자병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,1.0
-A2700017,영남대학교의과대학부속영천병원,경상북도 영천시 오수1길 10 (오수동),경상북도,영천시,영남대학교의과대학부속영천병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2700023,의료법인서준의료재단예천권병원,경상북도 예천군 예천읍 시장로 136,경상북도,예천군,의료법인서준의료재단예천권병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-E2700553,울릉군보건의료원,경상북도 울릉군 울릉읍 울릉순환로 396-18,경상북도,울릉군,울릉군보건의료원,JDQ4MTYyMiM4MSMkMSMkMCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2700052,울진군의료원,경상북도 울진군 울진읍 현내항길 71,경상북도,울진군,울진군의료원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,1.0
-A2700063,의료법인영제의료재단영남제일병원,경상북도 의성군 안계면 용기4길 36,경상북도,의성군,의료법인영제의료재단영남제일병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ4MiQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2700038,의료법인대남의료재단청도대남병원,경상북도 청도군 화양읍 청화로 79-7,경상북도,청도군,의료법인대남의료재단청도대남병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-E2700554,청송군보건의료원,경상북도 청송군 청송읍 의료원길 19,경상북도,청송군,청송군보건의료원(안덕보건지소),JDQ4MTYyMiM4MSMkMSMkMCMkOTIkMzgxOTYxIzExIyQxIyQ3IyQwMyQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2700066,의료법인왜관병원,경상북도 칠곡군 왜관읍 군청2길 10,경상북도,칠곡군,,,0.0,미매칭,
-A2700005,경상북도포항의료원,"경상북도 포항시 북구 용흥로 36 (용흥동, (용흥동))",경상북도,포항시,경상북도포항의료원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,4.0
-A2700008,에스포항병원,"경상북도 포항시 남구 희망대로 352 (이동, 에스포항병원)",경상북도,포항시,에스포항병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2702563,의료법인은성의료재단좋은선린병원,경상북도 포항시 북구 대신로 43 (대신동),경상북도,포항시,의료법인은성의료재단좋은선린병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,1.0
-A2700016,포항성모병원,경상북도 포항시 남구 대잠동길 17 (대잠동),경상북도,포항시,포항성모병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,15.0
-A2700002,포항세명기독병원,경상북도 포항시 남구 포스코대로 351 (대도동),경상북도,포항시,의료법인한성재단포항세명기독병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEwMDIjNDEjJDEjJDgjJDgz,0.9,자동매칭,17.0
-A1300004,대구가톨릭대학교병원,대구광역시 남구 두류공원로17길 33 (대명동),대구광역시,남구,대구가톨릭대학교병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,6.0
-A1304119,대구예스병원,"대구광역시 남구 대명로 186, 지하1, 지상2~7층 (대명동)",대구광역시,남구,대구예스병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQzIyQ4OSQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1300034,드림종합병원,대구광역시 남구 대명로 153 (대명동),대구광역시,남구,드림종합병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,4.0
-A1300001,영남대학교병원,대구광역시 남구 현충로 170 (대명동),대구광역시,남구,영남대학교병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,7.0
-A1300003,계명대학교동산병원,대구광역시 달서구 달구벌대로 1035 (신당동),대구광역시,달서구,계명대학교동산병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,13.0
-A1300038,나사렛종합병원,"대구광역시 달서구 월배로 97, 나사렛병원 (진천동)",대구광역시,달서구,나사렛종합병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,4.0
-A1300110,더블유병원,"대구광역시 달서구 달구벌대로 1632, 더블유병원 (감삼동)",대구광역시,달서구,더블유병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,4.0
-A1300045,삼일병원,"대구광역시 달서구 월배로 436, 지하1,지상1~11층 (송현동)",대구광역시,달서구,삼일병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,5.0
-A1300006,의료법인구의료재단구병원,대구광역시 달서구 감삼북길 141 (감삼동),대구광역시,달서구,,,0.0,미매칭,
-A1300011,한국보훈복지의료공단대구보훈병원,대구광역시 달서구 월곡로 60 (도원동),대구광역시,달서구,,,0.0,미매칭,
-A1303449,행복한 병원,"대구광역시 달성군 유가읍 테크노순환로12길 4, 1층,4~6층(1층 사우나홀,113~117호,119~120호,405~407호,5층,601~607호",대구광역시,달성군,행복한 병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ5MiQ0NjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A1300018,강남종합병원,"대구광역시 동구 동촌로 207, 강남병원 (방촌동)",대구광역시,동구,강남종합병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,5.0
-A1300009,대구파티마병원,대구광역시 동구 아양로 99 (신암동),대구광역시,동구,대구파티마병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,13.0
-A1300033,의료법인백천의료재단바로본병원,대구광역시 동구 국채보상로 769 (신천동),대구광역시,동구,,,0.0,미매칭,
-A1300005,대구가톨릭대학교칠곡가톨릭병원,대구광역시 북구 칠곡중앙대로 440 (읍내동),대구광역시,북구,,,0.0,미매칭,
-A1300010,칠곡경북대학교병원,"대구광역시 북구 호국로 807, 칠곡경북대학교병원(임상실습동 1~11층 포함) (학정동)",대구광역시,북구,칠곡경북대학교병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,7.0
-A1300076,대구굿모닝병원,"대구광역시 서구 달서로 42, 대구 굿모닝병원 지하2층~11층 (내당동)",대구광역시,서구,대구굿모닝병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1300007,대구의료원,대구광역시 서구 평리로 157 (중리동),대구광역시,서구,대구의료원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1303923,더필병원,대구광역시 서구 서대구로 194 (평리동),대구광역시,서구,더필병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQzIyQ3OSQ0NjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,1.0
-A1300065,새동산병원,대구광역시 서구 국채보상로 379 (비산동),대구광역시,서구,새동산병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQxMyQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1300081,(재)미리내천주성삼성직수도회천주성삼병원,"대구광역시 수성구 달구벌대로 3190 (신매동, 천주성삼병원)",대구광역시,수성구,(재)미리내천주성삼성직수도회천주성삼병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A1300063,MS재건병원,"대구광역시 중구 동덕로 194 (동인동1가, 동화빌딩)",대구광역시,중구,MS재건병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3MiQ0NjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1300002,경북대학교병원,"대구광역시 중구 동덕로 130 (삼덕동2가, 경북대학교병원)",대구광역시,중구,경북대학교병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,8.0
-A1303386,계명대학교대구동산병원,"대구광역시 중구 달성로 56, 계명대학교대구동산병원 (동산동)",대구광역시,중구,계명대학교대구동산병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,6.0
-A1300008,곽병원,대구광역시 중구 국채보상로 531 (수동),대구광역시,중구,곽병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,2.0
-A1600009,근로복지공단대전병원,대전광역시 대덕구 계족로 637 (법동),대전광역시,대덕구,,,0.0,미매칭,
-A1600004,대전보훈병원,대전광역시 대덕구 대청로82번길 147 (신탄진동),대전광역시,대덕구,대전보훈병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE4MzIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1600003,대전한국병원,대전광역시 동구 동서대로 1672 (성남동),대전광역시,동구,대전한국병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1600014,대전화병원,대전광역시 동구 동대전로 39 (신안동),대전광역시,동구,대전화병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ2MiQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A1602246,대청병원,"대전광역시 서구 계백로 1322 (정림동, 대청병원)",대전광역시,서구,대청병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1600006,학교법인건양교육재단건양대학교병원,"대전광역시 서구 관저동로 158, 건양대학교병원 (관저동)",대전광역시,서구,,,0.0,미매칭,
-A1600002,학교법인을지학원대전을지대학교병원,대전광역시 서구 둔산서로 95 (둔산동),대전광역시,서구,학교법인 을지학원 대전을지대학교병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,6
-A1600007,의료법인영훈의료재단유성선병원,대전광역시 유성구 북유성대로 93 (지족동),대전광역시,유성구,,,0.0,미매칭,
-A1600008,의료법인영훈의료재단대전선병원,"대전광역시 중구 목중로 29 (목동,(목동))",대전광역시,중구,,,0.0,미매칭,
-A1600001,충남대학교병원,"대전광역시 중구 문화로 282, 충남대학교병원 (대사동)",대전광역시,중구,충남대학교병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,13.0
-A1600005,학교법인가톨릭학원가톨릭대학교대전성모병원,"대전광역시 중구 대흥로 64, 성모병원 (대흥동)",대전광역시,중구,,,0.0,미매칭,
-A1200081,의료법인 라움의료재단 세웅병원,부산광역시 금정구 서동로 162 (서동),부산광역시,금정구,의료법인 라움의료재단 세웅병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQxMyQ0NjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1200028,(의)서일의료재단기장병원,부산광역시 기장군 기장읍 대청로72번길 6,부산광역시,기장군,(의)서일의료재단기장병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ3MiQzNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1200015,동남권원자력의학원원자력병원,부산광역시 기장군 장안읍 좌동길 40,부산광역시,기장군,동남권원자력의학원원자력병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A1200013,부산성모병원(재단법인 천주교부산교구유지재단),부산광역시 남구 용호로232번길 25-14 (용호동),부산광역시,남구,부산성모병원(재단법인 천주교부산교구유지재단),JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,6.0
-A1200111,세일병원,"부산광역시 동구 중앙대로 317 (초량동, 세일병원)",부산광역시,동구,세일병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4OSQ0NjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1200017,의료법인정화의료재단 봉생기념병원,"부산광역시 동구 중앙대로 401 (좌천동, 봉생병원)",부산광역시,동구,의료법인정화의료재단 봉생기념병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,6.0
-A1200027,재단법인일신기독교선교회 일신기독병원,부산광역시 동구 정공단로 27 (좌천동),부산광역시,동구,재단법인일신기독교선교회 일신기독병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1200026,좋은문화병원,부산광역시 동구 범일로 119 (범일동),부산광역시,동구,좋은문화병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A1200018,대동병원,부산광역시 동래구 충렬대로 187 (명륜동),부산광역시,동래구,대동병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,7.0
-A1200011,동래봉생병원,부산광역시 동래구 안연로109번길 27 (안락동),부산광역시,동래구,동래봉생병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,6.0
-A1206845,빌리브세웅병원,부산광역시 동래구 충렬대로 455 (안락동),부산광역시,동래구,빌리브세웅병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A1200009,의료법인 광혜의료재단 광혜병원,"부산광역시 동래구 충렬대로 96 (온천동, 광혜병원)",부산광역시,동래구,의료법인 광혜의료재단 광혜병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A1200020,의료법인 온그룹의료재단 온병원,"부산광역시 부산진구 가야대로 719, ,767,721,본관 지하3~11층 전부,12층 일부,13~14층 전부,15층 일부,신관 1층, 9층 일부 (당감동)",부산광역시,부산진구,의료법인 온그룹의료재단 온병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A1200001,인제대학교부산백병원,"부산광역시 부산진구 복지로 75, 진사로83번길 81, 1층(일부), 3층 (개금동)",부산광역시,부산진구,인제대학교부산백병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,11.0
-A1200025,학교법인 춘해병원,"부산광역시 부산진구 중앙대로 605, 지상1층~지상9층 (범천동)",부산광역시,부산진구,학교법인 춘해병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1200019,학교법인)동의병원,"부산광역시 부산진구 양정로 62, 지상2ㆍ3ㆍ10층 각 일부/ 지하1ㆍ지상1ㆍ지상4~지상8층 전층 (양정동)",부산광역시,부산진구,학교법인)동의병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,6.0
-A1200045,구포성심병원,부산광역시 북구 낙동대로 1786 (구포동),부산광역시,북구,구포성심병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,3.0
-A1200006,의료법인 인당의료재단 부민병원,부산광역시 북구 만덕대로 59 (덕천동),부산광역시,북구,의료법인 인당의료재단 부민병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,4.0
-A1200110,재단법인 베스티안재단 베스티안부산병원,부산광역시 북구 화명대로 1 (화명동),부산광역시,북구,재단법인 베스티안재단 베스티안부산병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQwMyQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1200005,의료법인 은성의료재단 좋은삼선병원,"부산광역시 사상구 가야대로 326, 좋은삼선병원 (주례동)",부산광역시,사상구,의료법인 은성의료재단 좋은삼선병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0
-A1200101,의료법인센텀의료재단 서부산센텀병원,부산광역시 사상구 새벽로 226 (괘법동),부산광역시,사상구,의료법인센텀의료재단 서부산센텀병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ4MiQzNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1200016,한국보훈복지의료공단 부산보훈병원,부산광역시 사상구 백양대로 420 (주례동),부산광역시,사상구,한국보훈복지의료공단 부산보훈병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQ0NjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1200089,큐병원,부산광역시 사하구 낙동대로 408 (당리동),부산광역시,사하구,큐병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ3OSQ0NjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1200004,고신대학교복음병원,부산광역시 서구 감천로 262 (암남동),부산광역시,서구,고신대학교복음병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,3.0
-A1200003,동아대학교병원,부산광역시 서구 대신공원로 26 (동대신동3가),부산광역시,서구,동아대학교병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,12.0
-A1200002,부산대학교병원,부산광역시 서구 구덕로 179 (아미동1가),부산광역시,서구,부산대학교병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,8.0
-A1200021,삼육부산병원,부산광역시 서구 대티로 170 (서대신동2가),부산광역시,서구,삼육부산병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,8.0
-A1200007,비에이치에스한서병원,부산광역시 수영구 수영로 615 (광안동),부산광역시,수영구,비에이치에스한서병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,6.0
-A1200098,의료법인 센텀의료재단 센텀종합병원,부산광역시 수영구 수영로679번길 8 (광안동),부산광역시,수영구,의료법인 센텀의료재단 센텀종합병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,4.0
-A1200008,의료법인 은성의료재단 좋은강안병원,부산광역시 수영구 수영로 493 (남천동),부산광역시,수영구,의료법인 은성의료재단 좋은강안병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQ0NjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,6.0
-A1200024,부산광역시의료원,"부산광역시 연제구 월드컵대로 359 (거제동, 1동, 5동일부)",부산광역시,연제구,부산광역시의료원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,3.0
-A1200014,영도병원,부산광역시 영도구 태종로 85 (대교동2가),부산광역시,영도구,영도병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1200012,의료법인 행도의료재단 해동병원,부산광역시 영도구 태종로 133 (봉래동3가),부산광역시,영도구,의료법인 행도의료재단 해동병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1200023,재단법인천주교부산교구유지재단 메리놀병원,부산광역시 중구 중구로 121 (대청동4가),부산광역시,중구,재단법인천주교부산교구유지재단 메리놀병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1205143,의료법인 인당의료재단 해운대부민병원,"부산광역시 해운대구 해운대로 584, 해운대 부민병원 지하4~지상13층 (우동)",부산광역시,해운대구,의료법인 인당의료재단 해운대부민병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A1200022,인제대학교 해운대백병원,부산광역시 해운대구 해운대로 875 (좌동),부산광역시,해운대구,인제대학교 해운대백병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,12.0
-A1200048,효성시티병원,부산광역시 해운대구 해운대로 135 (재송동),부산광역시,해운대구,효성시티병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQ0NjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1100141,강남베드로병원,"서울특별시 강남구 남부순환로 2649, 베드로병원 (도곡동)",서울특별시,강남구,강남베드로병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,3.0
-A1123234,더드림병원,"서울특별시 강남구 선릉로 404, 더드림병원 (대치동)",서울특별시,강남구,더드림병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ5MiQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1100010,삼성서울병원,"서울특별시 강남구 일원로 81 (일원동, 삼성의료원)",서울특별시,강남구,삼성서울병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQzNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,18.0
-A1100015,연세대학교의과대학강남세브란스병원,"서울특별시 강남구 언주로 211, 강남세브란스병원 (도곡동)",서울특별시,강남구,연세대학교의과대학 강남세브란스병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,11
-A1100057,차의과학대학교강남차병원,"서울특별시 강남구 논현로 566, 강남차병원(역삼동650-9, 606-4, 605외2필지(지하7층~지하1층, 지상2층~7층)) (역삼동)",서울특별시,강남구,,,0.0,미매칭,
-A1100043,강동경희대학교병원,서울특별시 강동구 동남로 892 (상일동),서울특별시,강동구,강동경희대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,9.0
-A1100028,성심의료재단강동성심병원,서울특별시 강동구 성안로 150 (길동),서울특별시,강동구,성심의료재단강동성심병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,10.0
-A1100053,한국보훈복지의료공단중앙보훈병원,서울특별시 강동구 진황도로61길 53 (둔촌동),서울특별시,강동구,,,0.0,미매칭,
-A1121842,강북으뜸병원,"서울특별시 강북구 도봉로 187, 지하1층, 지상1층~지상5층 (미아동)",서울특별시,강북구,강북으뜸병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ3MiQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1100172,서울현대병원,"서울특별시 강북구 도봉로 374 (번동, 서울현대병원)",서울특별시,강북구,서울현대병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1100030,의료법인성화의료재단대한병원,"서울특별시 강북구 도봉로 301 (수유동, 대한병원)",서울특별시,강북구,,,0.0,미매칭,
-A1117285,강서케이병원,"서울특별시 강서구 가로공원로 187, 강서케이병원 (화곡동)",서울특별시,강서구,강서케이병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQxMyQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1100046,미즈메디병원,서울특별시 강서구 강서로 295 (내발산동),서울특별시,강서구,미즈메디병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ4OSQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1100036,부민병원,"서울특별시 강서구 공항대로 389, 부민병원 (등촌동)",서울특별시,강서구,부민병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQyNjE4MzIjNjEjJDEjJDAjJDgz,1.0,자동매칭,1.0
-A1100042,우리들병원,서울특별시 강서구 하늘길 70 (과해동),서울특별시,강서구,우리들병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1120796,이화여자대학교의과대학부속서울병원,"서울특별시 강서구 공항대로 260, 이화의대부속서울병원 (마곡동)",서울특별시,강서구,이화여자대학교의과대학부속서울병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,18.0
-A1100047,강남고려병원,서울특별시 관악구 관악로 242 (봉천동),서울특별시,관악구,강남고려병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ3MiQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A1100076,강남힐병원,"서울특별시 관악구 남부순환로 1449, 강남힐병원 (신림동)",서울특별시,관악구,강남힐병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ4MiQzNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,1.0
-A1100148,사랑의병원,"서울특별시 관악구 남부순환로 1860, -1,1,3,4,5층 (봉천동,  )",서울특별시,관악구,사랑의병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ5OSQzNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1100041,의료법인서울효천의료재단에이치플러스양지병원,"서울특별시 관악구 남부순환로 1636, 양지병원 (신림동)",서울특별시,관악구,의료법인서울효천의료재단 에이치플러스양지병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQ0NjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,11
-A1100002,건국대학교병원,서울특별시 광진구 능동로 120-1 (화양동),서울특별시,광진구,건국대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,7.0
-A1100051,혜민병원,서울특별시 광진구 자양로 85 (자양동),서울특별시,광진구,혜민병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,5.0
-A1100014,고려대학교의과대학부속구로병원,"서울특별시 구로구 구로동로 148, 고려대부속구로병원 (구로동)",서울특별시,구로구,고려대학교의과대학부속구로병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,10.0
-A1100026,구로성심병원,"서울특별시 구로구 경인로 427, 구로성심병원 (고척동)",서울특별시,구로구,구로성심병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQ0NjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,6.0
-A1100049,희명병원,서울특별시 금천구 시흥대로 244 (시흥동),서울특별시,금천구,희명병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQ0NjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0
-A1100048,노원을지대학교병원,"서울특별시 노원구 한글비석로 68, 을지병원 (하계동)",서울특별시,노원구,노원을지대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,7.0
-A1100016,인제대학교상계백병원,"서울특별시 노원구 동일로 1342, 상계백병원 (상계동)",서울특별시,노원구,,,0.0,미매칭,
-A1100027,한국원자력의학원원자력병원,"서울특별시 노원구 노원로 75, 한국원자력의학원 (공릉동)",서울특별시,노원구,한국원자력의학원원자력병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQ0NjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1100020,의료법인한전의료재단한일병원,"서울특별시 도봉구 우이천로 308, 한일병원 (쌍문동)",서울특별시,도봉구,,,0.0,미매칭,
-A1100001,경희대학교병원,서울특별시 동대문구 경희대로 23 (회기동),서울특별시,동대문구,경희대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,10.0
-A1100021,삼육서울병원,서울특별시 동대문구 망우로 82 (휘경동),서울특별시,동대문구,삼육서울병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,6.0
-A1100050,서울성심병원,"서울특별시 동대문구 왕산로 259, 서울성심병원 (청량리동)",서울특별시,동대문구,서울성심병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1100022,서울특별시동부병원,서울특별시 동대문구 무학로 124 (용두동),서울특별시,동대문구,,,0.0,미매칭,
-A1126226,낭만병원,서울특별시 동작구 동작대로 67 (사당동),서울특별시,동작구,낭만병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzUxIyQxIyQxIyQ4OSQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1100040,서울특별시보라매병원,서울특별시 동작구 보라매로5길 20 (신대방동),서울특별시,동작구,서울특별시보라매병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,10.0
-A1100003,중앙대학교병원,서울특별시 동작구 흑석로 102 (흑석동),서울특별시,동작구,중앙대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,17.0
-A1100063,신촌연세병원,"서울특별시 마포구 서강로 110, 지2층~6층 (신수동)",서울특별시,마포구,신촌연세병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQyIyQ1IyQwMCQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1100007,연세대학교의과대학세브란스병원,서울특별시 서대문구 연세로 50-1 (신촌동),서울특별시,서대문구,연세대학교의과대학세브란스병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,21.0
-A1100025,의료법인동신의료재단동신병원,"서울특별시 서대문구 연희로 272, 동신병원 본관동 (홍은동)",서울특별시,서대문구,,,0.0,미매칭,
-A1122033,기쁨병원,"서울특별시 서초구 서초중앙로 4, 기쁨병원 (서초동)",서울특별시,서초구,기쁨병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A1120432,올바로병원,"서울특별시 서초구 명달로 102, 서원빌딩 1-6층 (서초동)",서울특별시,서초구,올바로병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQyIyQ3IyQwMCQyNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A1100012,학교법인가톨릭학원가톨릭대학교서울성모병원,서울특별시 서초구 반포대로 222 (반포동),서울특별시,서초구,학교법인가톨릭학원가톨릭대학교서울성모병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,12.0
-A1122381,재단법인베스티안재단베스티안서울병원,서울특별시 성동구 왕십리로 382 (하왕십리동),서울특별시,성동구,재단법인베스티안재단베스티안서울병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,2.0
-A1100013,한양대학교병원,서울특별시 성동구 왕십리로 222-1 (사근동),서울특별시,성동구,한양대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,13.0
-A1100008,학교법인고려중앙학원고려대학교의과대학부속병원(안암병원),"서울특별시 성북구 고려대로 73, 고려대병원 (안암동5가)",서울특별시,성북구,학교법인 고려중앙학원 고려대학교의과대학부속병원(안암병원),JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,11
-A1125429,강철병원,"서울특별시 송파구 백제고분로 252, SH타워 2~8층 (삼전동)",서울특별시,송파구,강철병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQxMyQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1100039,경찰병원,"서울특별시 송파구 송이로 123, 국립경찰병원 (가락동)",서울특별시,송파구,경찰병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1100009,재단법인아산사회복지재단서울아산병원,"서울특별시 송파구 올림픽로43길 88, 서울아산병원 (풍납동)",서울특별시,송파구,,,0.0,미매칭,
-A1100223,서울특별시서남병원,서울특별시 양천구 신정이펜1로 20 (신정동),서울특별시,양천구,서울특별시서남병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjE4MzIjNzEjJDEjJDgjJDgz,1.0,자동매칭,8.0
-A1100005,이화여자대학교의과대학부속목동병원,서울특별시 양천구 안양천로 1071 (목동),서울특별시,양천구,이화여자대학교의과대학부속목동병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,17.0
-A1100019,홍익병원,"서울특별시 양천구 목동로 225, 홍익병원본관 (신정동)",서울특별시,양천구,홍익병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,7.0
-A1100011,가톨릭대학교여의도성모병원,"서울특별시 영등포구 63로 10, 여의도성모병원 (여의도동)",서울특별시,영등포구,,,0.0,미매칭,
-A1100037,대림성모병원,"서울특별시 영등포구 시흥대로 657 (대림동, 대림성모병원)",서울특별시,영등포구,대림성모병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,5.0
-A1100024,명지성모병원,"서울특별시 영등포구 도림로 156, 명지성모병원 (대림동)",서울특별시,영등포구,명지성모병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQ0NjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,5.0
-A1100054,성애의료재단성애병원,"서울특별시 영등포구 여의대방로53길 22 (신길동, 성애병원)",서울특별시,영등포구,,,0.0,미매칭,
-A1100045,씨엠병원,"서울특별시 영등포구 영등포로36길 13 (영등포동4가, 충무병원)",서울특별시,영등포구,씨엠병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1100255,의료법인인봉의료재단영등포병원,서울특별시 영등포구 당산로31길 10 (당산동3가),서울특별시,영등포구,,,0.0,미매칭,
-A1100163,한강수병원,"서울특별시 영등포구 영등포로 83, 한강수병원 (양평동1가)",서울특별시,영등포구,한강수병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ4OSQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A1100055,한림대학교강남성심병원,"서울특별시 영등포구 신길로 1 (대림동, 강남성심병원)",서울특별시,영등포구,,,0.0,미매칭,
-A1100038,한림대학교한강성심병원,"서울특별시 영등포구 버드나루로7길 12 (영등포동7가, 한강성심병원)",서울특별시,영등포구,,,0.0,미매칭,
-A1100004,순천향대학교부속서울병원,서울특별시 용산구 대사관로 59 (한남동),서울특별시,용산구,,,0.0,미매칭,
-A1121013,가톨릭대학교은평성모병원,서울특별시 은평구 통일로 1021 (진관동),서울특별시,은평구,,,0.0,미매칭,
-A1100152,은평연세병원,서울특별시 은평구 연서로 177 (갈현동),서울특별시,은평구,은평연세병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4MiQyNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1100023,의료법인청구성심병원,서울특별시 은평구 통일로 873 (갈현동),서울특별시,은평구,,,0.0,미매칭,
-A1117070,최원호병원,"서울특별시 은평구 서오릉로 45, 최원호병원 (녹번동)",서울특별시,은평구,최원호병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQ3IyQ4MiQyNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1100006,강북삼성병원,서울특별시 종로구 새문안로 29 (평동),서울특별시,종로구,강북삼성병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,8.0
-A1100017,서울대학교병원,서울특별시 종로구 대학로 101 (연건동),서울특별시,종로구,서울대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,22.0
-A1107402,서울대학교치과병원,서울특별시 종로구 대학로 101 (연건동),서울특별시,종로구,서울대학교치과병원,JDQ4MTg4MSM1MSMkMSMkMCMkNjIkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1100029,서울적십자병원,"서울특별시 종로구 새문안로 9, 적십자병원 (평동)",서울특별시,종로구,서울적십자병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,1.0
-A1100032,세란병원,서울특별시 종로구 통일로 256 (무악동),서울특별시,종로구,세란병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,4.0
-A1100052,국립중앙의료원,"서울특별시 중구 을지로 245, 국립중앙의료원 (을지로6가)",서울특별시,중구,국립중앙의료원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,17.0
-A1100044,녹색병원,서울특별시 중랑구 사가정로49길 53 (면목동),서울특별시,중랑구,녹색병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,6.0
-A1100035,서울특별시서울의료원,서울특별시 중랑구 신내로 156 (신내동),서울특별시,중랑구,서울특별시서울의료원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQyNjEyMjIjNjEjJDEjJDgjJDgz,1.0,자동매칭,15.0
-A1100075,의료법인풍산의료재단동부제일병원,"서울특별시 중랑구 망우로 511, 동부제일병원 지하1~6층 (망우동)",서울특별시,중랑구,의료법인풍산의료재단동부제일병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A1800441,세종충남대학교병원,"세종특별자치시 보듬7로 20, 세종충남대학교병원 (도담동)",세종특별자치시,세종시,세종충남대학교병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,12.0
-A1800417,의료법인 영제 의료재단 엔케이세종병원,"세종특별자치시 한누리대로 161, 세종시 NK리움힐 상가 1~8층 (나성동)",세종특별자치시,세종시,의료법인 영제 의료재단 엔케이세종병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,1.0
-A1700023,(의)내경의료재단울산제일병원,울산광역시 남구 남산로354번길 26 (신정동),울산광역시,남구,,,0.0,미매칭,
-A1700010,굿모닝병원,울산광역시 남구 삼산로 110 (달동),울산광역시,남구,굿모닝병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3OSQzNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1700003,울산병원,울산광역시 남구 월평로171번길 13 (신정동),울산광역시,남구,울산병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0
-A1700011,의료법인은성의료재단좋은삼정병원,울산광역시 남구 북부순환도로 51 (무거동),울산광역시,남구,,,0.0,미매칭,
-A1700028,의료법인정안의료재단중앙병원,"울산광역시 남구 문수로 472, 중앙병원 (신정동)",울산광역시,남구,,,0.6,낮은유사도,
-A1700004,학교법인울산공업학원울산대학교병원,"울산광역시 동구 대학병원로 25, 울산대학교병원 (전하동)",울산광역시,동구,,,0.0,미매칭,
-A1700007,울산엘리야병원,울산광역시 북구 호계로 285 (호계동),울산광역시,북구,울산엘리야병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1700025,의료법인송은의료재단울산시티병원,울산광역시 북구 산업로 1007 (연암동),울산광역시,북구,,,0.0,미매칭,
-A1700001,서울산보람병원,"울산광역시 울주군 삼남읍 중평로 53, 서울산보람병원",울산광역시,울주군,서울산보람병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,3.0
-A1700002,의료법인동강의료재단동강병원,울산광역시 중구 태화로 239 (태화동),울산광역시,중구,,,0.0,미매칭,
-A1701489,의료법인동강의료재단동천동강병원,"울산광역시 중구 외솔큰길 215 (남외동, 동천동강병원)",울산광역시,중구,,,0.0,미매칭,
-A1700036,의료법인에스엠씨의료재단울산세민병원,울산광역시 중구 학성로 184 (학성동),울산광역시,중구,의료법인에스엠씨의료재단울산세민병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ2MiQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1403617,비에스종합병원,인천광역시 강화군 강화읍 충렬사로 31,인천광역시,강화군,비에스종합병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQyNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,1.0
-A1400010,검단탑병원,인천광역시 검단구 청마로19번길 5 (당하동),인천광역시,검단구,검단탑병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQzNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,9.0
-A1400005,온누리병원,인천광역시 검단구 완정로 199 (왕길동),인천광역시,검단구,온누리병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1400014,의료법인인성의료재단한림병원,인천광역시 계양구 장제로 722 (작전동),인천광역시,계양구,,,0.0,미매칭,
-A1403121,인천더드림병원,인천광역시 계양구 계양대로 123(작전동),인천광역시,계양구,인천더드림병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQ3IyQ5MiQyNjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1403372,인천세종병원,"인천광역시 계양구 계양문화로 20, 인천세종병원 (작전동)",인천광역시,계양구,인천세종병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,15.0
-A1400045,국제바로병원,"인천광역시 남동구 석정로 518, 1층일부, 2층일부 ~ 9층 (간석동)",인천광역시,남동구,국제바로병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ3OSQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A1400001,의료법인 길의료재단 길병원,"인천광역시 남동구 남동대로774번길 21 (구월동, 가천대학교길병원)",인천광역시,남동구,의료법인 길의료재단 길병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,23.0
-A1403871,인천힘찬종합병원,"인천광역시 남동구 논현로 72, 인천힘찬종합병원 (논현동)",인천광역시,남동구,인천힘찬종합병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,6.0
-A1404358,더나눔병원,"인천광역시 미추홀구 독배로 408-1, 4~8층 (용현동)",인천광역시,미추홀구,더나눔병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzIxIyQxIyQxIyQ4MiQzNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1400016,인천사랑병원,인천광역시 미추홀구 미추홀대로 726 (주안동),인천광역시,미추홀구,의료법인 인천사랑병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,9.0
-A1400004,현대유비스병원,인천광역시 미추홀구 독배로 503 (숭의동),인천광역시,미추홀구,현대유비스병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ4OSQzNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,5.0
-A1400012,가톨릭대학교 인천성모병원,인천광역시 부평구 동수로 56 (부평동),인천광역시,부평구,,,0.0,미매칭,
-A1400032,근로복지공단인천병원,인천광역시 부평구 무네미로 446 (구산동),인천광역시,부평구,근로복지공단인천병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQyNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1400013,안은의료재단 부평세림병원,"인천광역시 부평구 부평대로 175 (청천동, 세림병원)",인천광역시,부평구,,,0.0,미매칭,
-A1400008,(의)성세의료재단 뉴성민병원,인천광역시 서해구 신석로 70 (석남동 523-1번지)  (석남동),인천광역시,서해구,(의)성세의료재단 뉴성민병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,1.0
-A1400015,가톨릭관동대학교국제성모병원,"인천광역시 서해구 심곡로100번길 25 (심곡동, 인천국제성모병원)",인천광역시,서해구,,,0.0,미매칭,
-A1400003,의료법인 루가의료재단 나은병원,"인천광역시 서해구 원적로 23 (가좌동, 원적로 27번길 11(가좌동))",인천광역시,서해구,의료법인루가의료재단 나은병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,7
-A1400011,의료법인 나사렛의료재단 나사렛국제병원,"인천광역시 연수구 먼우금로 98 (동춘동, 나사렛국제병원)",인천광역시,연수구,(의)나사렛의료재단 나사렛국제병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,7
-A1400018,인천적십자병원,"인천광역시 연수구 원인재로 263 (연수동, 인천적십자병원)",인천광역시,연수구,인천적십자병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQ0NjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,5.0
-A1403699,(의)성세의료재단 영종국제병원,"인천광역시 영종구 하늘별빛로65번길 7-9, 3,4층 (중산동)",인천광역시,영종구,의료법인 성세의료재단 영종국제병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQ3IyQ5OSQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0
-A1400037,인천광역시의료원백령병원,"인천광역시 옹진군 백령면 백령로 233, 인천광역시의료원 백령병원",인천광역시,옹진군,인천광역시의료원백령병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3OSQ0NjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1400007,의료법인 성수의료재단 인천백병원,인천광역시 제물포구 샛골로 214 (송림동),인천광역시,제물포구,의료법인 성수의료재단 인천백병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A1400017,인천광역시의료원,"인천광역시 제물포구 방축로 217 (송림동, 인천광역시 의료원)",인천광역시,제물포구,인천광역시의료원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,3.0
-A1400009,인천기독병원,인천광역시 제물포구 답동로30번길 10 (율목동),인천광역시,제물포구,인천기독병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,3.0
-A1400002,인하대학교의과대학부속병원,"인천광역시 제물포구 인항로 27-0 (신흥동3가,인하대학병원)",인천광역시,제물포구,인하대학교의과대학부속병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,19.0
-A2600050,전라남도강진의료원,전남광주통합특별시 강진군 강진읍 탐진로 5  ,전남광주통합특별시,강진군,,,0.0,미매칭,
-A2600018,의료법인영성의료재단고흥종합병원,전남광주통합특별시 고흥군 고흥읍 고흥로 1935,전남광주통합특별시,고흥군,,,0.0,미매칭,
-A2600068,의료법인장호의료재단녹동현대병원,전남광주통합특별시 고흥군 도양읍 차경구렁목길 215,전남광주통합특별시,고흥군,,,0.0,미매칭,
-A2600029,곡성사랑병원,전남광주통합특별시 곡성군 곡성읍 곡성로 761,전남광주통합특별시,곡성군,의료법인대송의료재단 곡성사랑병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ4MiQzNjEwMDIjNzEjJDEjJDgjJDgz,0.7214285714285714,자동매칭,0.0
-A1500019,KS병원,전남광주통합특별시 광산구 왕버들로 220 (수완동),전남광주통합특별시,광산구,KS병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,6.0
-A1500004,광주보훈병원,전남광주통합특별시 광산구 첨단월봉로 99 (산월동),전남광주통합특별시,광산구,광주보훈병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjE4MzIjNzEjJDEjJDgjJDgz,1.0,자동매칭,3.0
-A1502007,광주센트럴병원,"전남광주통합특별시 광산구 수완로 6, A동1,3,5,6층/B동동 (신가동)",전남광주통합특별시,광산구,광주센트럴병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A1500018,광주수완병원,전남광주통합특별시 광산구 임방울대로 370 (수완동),전남광주통합특별시,광산구,광주수완병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQ0NjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,3.0
-A1500043,광주열린병원,전남광주통합특별시 광산구 송도로 271 (송정동),전남광주통합특별시,광산구,광주열린병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4MiQzNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1500071,송정사랑병원,"전남광주통합특별시 광산구 송도로 232 (송정동, 송정사랑병원)",전남광주통합특별시,광산구,송정사랑병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ5OSQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A1500006,신가병원,전남광주통합특별시 광산구 목련로 316 (신가동),전남광주통합특별시,광산구,신가병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,4.0
-A1500011,첨단종합병원,전남광주통합특별시 광산구 첨단중앙로170번길 59 (쌍암동),전남광주통합특별시,광산구,첨단종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,7.0
-A1500017,하남성심병원,전남광주통합특별시 광산구 용아로 259 하남성심병원 (산정동),전남광주통합특별시,광산구,하남성심병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,4.0
-A2600006,광양사랑병원,"전남광주통합특별시 광양시 공영로 71 (중동, (중동))",전남광주통합특별시,광양시,광양사랑병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A2600024,의료법인현경의료재단광양서울병원,전남광주통합특별시 광양시 진등길 93 (마동),전남광주통합특별시,광양시,,,0.0,미매칭,
-A2600061,구례병원,전남광주통합특별시 구례군 구례읍 동편제길 4,전남광주통합특별시,구례군,구례병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2600016,나주종합병원,전남광주통합특별시 나주시 영산로 5419 (성북동),전남광주통합특별시,나주시,나주종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQzNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,1.0
-A2602211,빛가람종합병원,전남광주통합특별시 나주시 정보화길 49-0 (빛가람동),전남광주통합특별시,나주시,빛가람종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQ0NjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1500021,광주기독병원,전남광주통합특별시 남구 양림로 37 (양림동),전남광주통합특별시,남구,광주기독병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,7.0
-A1500009,광주씨티병원,전남광주통합특별시 남구 서문대로654번길 5 (진월동),전남광주통합특별시,남구,광주씨티병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,1.0
-A1500013,동아병원,전남광주통합특별시 남구 대남대로 238 (백운동),전남광주통합특별시,남구,동아병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ4OSQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,3.0
-A1500078,빛고을전남대학교병원,전남광주통합특별시 남구 덕남길 80 (덕남동),전남광주통합특별시,남구,빛고을전남대학교병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQzNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2600054,담양사랑병원,전남광주통합특별시 담양군 담양읍 천변7길 19,전남광주통합특별시,담양군,담양사랑병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4MiQyNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1500002,전남대학교병원,전남광주통합특별시 동구 제봉로 42 (학동),전남광주통합특별시,동구,전남대학교병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,16.0
-A1500001,조선대학교병원,전남광주통합특별시 동구 필문대로 365 (서석동),전남광주통합특별시,동구,조선대학교병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,9.0
-A2600020,목포기독병원,전남광주통합특별시 목포시 백년대로 303 (상동),전남광주통합특별시,목포시,목포기독병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,1.0
-A2600022,목포시의료원,"전남광주통합특별시 목포시 이로로 18 (용해동, (용해동))",전남광주통합특별시,목포시,목포시의료원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEyMjIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2600011,목포한국병원,전남광주통합특별시 목포시 영산로 483 (상동),전남광주통합특별시,목포시,목포한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,17.0
-A2600017,의료법인목포구암의료재단목포중앙병원,전남광주통합특별시 목포시 영산로 627 (석현동),전남광주통합특별시,목포시,,,0.0,미매칭,
-A2600007,의료법인해민의료재단 세안종합병원,전남광주통합특별시 목포시 고하대로 795-2 (연산동),전남광주통합특별시,목포시,의료법인해민의료재단 세안종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,1.0
-A2600003,대송의료재단무안병원,전남광주통합특별시 무안군 무안읍 몽탄로 65,전남광주통합특별시,무안군,,,0.0,미매칭,
-A2600052,보성아산병원,전남광주통합특별시 보성군 미력면 가평길 36-17,전남광주통합특별시,보성군,,,0.65,낮은유사도,
-A2600066,의료법인삼호의료재단벌교삼호병원,전남광주통합특별시 보성군 벌교읍 남하로 12,전남광주통합특별시,보성군,,,0.0,미매칭,
-A1500015,광주병원,전남광주통합특별시 북구 면앙로139번길 51 (두암동),전남광주통합특별시,북구,광주병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQ0NjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,4.0
-A1500005,광주일곡병원,전남광주통합특별시 북구 양일로 309 (일곡동),전남광주통합특별시,북구,광주일곡병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A1500003,광주현대병원,전남광주통합특별시 북구 설죽로 291 (용봉동),전남광주통합특별시,북구,광주현대병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQ0NjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,4.0
-A1500007,광주희망병원,전남광주통합특별시 북구 하서로 429 (용두동),전남광주통합특별시,북구,광주희망병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A1500010,운암한국병원,전남광주통합특별시 북구 북문대로 191 (운암동),전남광주통합특별시,북구,운암한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQ0NjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A1500057,해피뷰병원,전남광주통합특별시 북구 경열로 216 (유동),전남광주통합특별시,북구,해피뷰병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A1500016,광주한국병원,전남광주통합특별시 서구 월드컵4강로 223 (쌍촌동),전남광주통합특별시,서구,광주한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,4.0
-A1500014,미래로21병원,전남광주통합특별시 서구 화운로 1 (화정동),전남광주통합특별시,서구,미래로21병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQzNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A1500022,상무병원,전남광주통합특별시 서구 상무자유로 181-7 (치평동),전남광주통합특별시,서구,상무병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,2.0
-A1500020,서광병원,전남광주통합특별시 서구 금화로59번길 6 (금호동),전남광주통합특별시,서구,서광병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0
-A1502006,선한병원,전남광주통합특별시 서구 무진대로 975 (광천동),전남광주통합특별시,서구,선한병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2600012,근로복지공단순천병원,전남광주통합특별시 순천시 조례1길 24 (조례동),전남광주통합특별시,순천시,,,0.0,미매칭,
-A2600019,성가롤로병원,전남광주통합특별시 순천시 순광로 221 (조례동),전남광주통합특별시,순천시,성가롤로병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,15.0
-A2600008,순천제일병원,전남광주통합특별시 순천시 기적의도서관1길 3 (조례동),전남광주통합특별시,순천시,의료법인청언의료재단 순천제일병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEyMjIjNTEjJDEjJDIjJDgz,0.7214285714285714,자동매칭,1.0
-A2600004,순천중앙병원,전남광주통합특별시 순천시 장명로 5 (장천동),전남광주통합특별시,순천시,순천중앙병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A2600005,의료법인한국의료재단한국병원,전남광주통합특별시 순천시 우명길 42 (연향동),전남광주통합특별시,순천시,,,0.0,미매칭,
-A2600056,전라남도순천의료원,전남광주통합특별시 순천시 서문성터길 2 (매곡동),전남광주통합특별시,순천시,,,0.0,미매칭,
-A2600051,의료법인신안대우병원,전남광주통합특별시 신안군 비금면 송치길 155-11,전남광주통합특별시,신안군,,,0.65,낮은유사도,
-A2600010,여수전남병원,"전남광주통합특별시 여수시 좌수영로 49 (광무동, 전남병원)",전남광주통합특별시,여수시,여수전남병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0
-A2601742,여수한국병원,전남광주통합특별시 여수시 여천체육공원길 10 (신기동),전남광주통합특별시,여수시,여수한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQxMyQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2600014,여천전남병원,"전남광주통합특별시 여수시 무선로 95 (선원동, (선원동))",전남광주통합특별시,여수시,여천전남병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,4.0
-A2600027,의료법인한마음의료재단여수제일병원,"전남광주통합특별시 여수시 쌍봉로 70 (학동, (학동))",전남광주통합특별시,여수시,,,0.0,미매칭,
-A2600015,영광종합병원,"전남광주통합특별시 영광군 영광읍 와룡로 3,",전남광주통합특별시,영광군,영광종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A2600034,의료법인 거명의료재단 영광기독병원,전남광주통합특별시 영광군 영광읍 신남로 265,전남광주통합특별시,영광군,의료법인거명의료재단 영광기독병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0
-A2600070,영암한국병원,전남광주통합특별시 영암군 영암읍 오리정길 8,전남광주통합특별시,영암군,영암한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4OSQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2600667,금일마취통증의학과의원,"전남광주통합특별시 완도군 금일읍 감목길 5, 금일마취통증의학과의원",전남광주통합특별시,완도군,금일마취통증의학과의원,JDQ4MTYyMiM3MSMkMiMkMCMkMDAkMzgxMTkxIzIxIyQyIyQxIyQwMCQzNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-E2600362,완도군노화읍보건지소,"전남광주통합특별시 완도군 노화읍 노화로 813, 노화보건지소",전남광주통합특별시,완도군,완도군노화읍보건지소,JDQ4MTYyMiM3MSMkMSMkMCMkOTIkMzgxOTYxIzExIyQxIyQzIyQxMyQzNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2600032,완도대성병원,전남광주통합특별시 완도군 완도읍 청해진동로 63,전남광주통합특별시,완도군,완도대성병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4OSQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2600035,의료법인행복나눔의료재단장성병원,전남광주통합특별시 장성군 장성읍 역전로 171,전남광주통합특별시,장성군,,,0.0,미매칭,
-A2600021,의료법인우범의료재단장흥종합병원,전남광주통합특별시 장흥군 장흥읍 흥성로 74,전남광주통합특별시,장흥군,,,0.0,미매칭,
-A2600037,장흥우리병원,전남광주통합특별시 장흥군 장흥읍 흥성로 83,전남광주통합특별시,장흥군,장흥우리병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ4OSQ0NjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2602088,의료법인남우의료재단 진도전남병원,전남광주통합특별시 진도군 진도읍 남문길 12-11 (진도전남병원),전남광주통합특별시,진도군,의료법인남우의료재단 진도전남병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4MiQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2600040,진도한국병원,전남광주통합특별시 진도군 진도읍 남문길 48,전남광주통합특별시,진도군,진도한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2600090,의료법인인성의료재단함평성심병원,"전남광주통합특별시 함평군 함평읍 영수길 132, 함평성심병원",전남광주통합특별시,함평군,,,0.0,미매칭,
-A2600009,의료법인행촌의료재단해남종합병원,전남광주통합특별시 해남군 해남읍 해남로 45,전남광주통합특별시,해남군,,,0.0,미매칭,
-A2600077,해남우리종합병원,전남광주통합특별시 해남군 옥천면 해남로 597,전남광주통합특별시,해남군,해남우리종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQyNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,1.0
-A2600048,화순고려병원,전남광주통합특별시 화순군 화순읍 충의로 109,전남광주통합특별시,화순군,화순고려병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQyIyQzIyQwMCQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2600043,화순성심병원,전남광주통합특별시 화순군 화순읍 만연로 31,전남광주통합특별시,화순군,화순성심병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4MiQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2600001,화순전남대학교병원,전남광주통합특별시 화순군 화순읍 서양로 322,전남광주통합특별시,화순군,화순전남대학교병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,4.0
-A2500009,의료법인석천재단고창병원,전북특별자치도 고창군 고창읍 화신1길 9,전북특별자치도,고창군,의료법인석천재단고창병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2500012,의료법인오성의료재단동군산병원,전북특별자치도 군산시 조촌로 149 (조촌동),전북특별자치도,군산시,,,0.0,미매칭,
-A2500007,전북특별자치도군산의료원,"전북특별자치도 군산시 의료원로 27 (지곡동,(지곡동, 군산의료원))",전북특별자치도,군산시,,,0.0,미매칭,
-A2500038,김제우석병원,전북특별자치도 김제시 서암4길 45 (서암동),전북특별자치도,김제시,김제우석병원,JDQ4MTYyMiM2MSMkMSMkNiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3OSQzNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-A2500004,전북특별자치도남원의료원,전북특별자치도 남원시 충정로 365 (고죽동),전북특별자치도,남원시,,,0.0,미매칭,
-E2500019,무주군보건의료원,"전북특별자치도 무주군 무주읍 한풍루로 413, 무주군보건의료원",전북특별자치도,무주군,무주군보건의료원,JDQ4MTYyMiM2MSMkMSMkNiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQzNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2500010,부안성모병원,전북특별자치도 부안군 부안읍 오정2길 24,전북특별자치도,부안군,부안성모병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,1.0
-E2500021,순창군보건의료원,전북특별자치도 순창군 순창읍 교성로 135 (순창군보건의료원),전북특별자치도,순창군,순창군보건의료원,JDQ4MTYyMiM2MSMkMSMkNiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2500001,원광대학교병원,"전북특별자치도 익산시 무왕로 895 (신동,(신동))",전북특별자치도,익산시,원광대학교병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,12.0
-A2500011,의료법인대산의료재단익산병원,전북특별자치도 익산시 무왕로 969 (신동),전북특별자치도,익산시,,,0.0,미매칭,
-E2500022,임실군보건의료원,전북특별자치도 임실군 임실읍 호국로 1680,전북특별자치도,임실군,임실군보건의료원,JDQ4MTYyMiM2MSMkMSMkNiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-E2500020,장수군보건의료원,전북특별자치도 장수군 장수읍 장천로 247,전북특별자치도,장수군,장수군보건의료원,JDQ4MTYyMiM2MSMkMSMkNiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2500056,대자인병원,"전북특별자치도 전주시 덕진구 견훤로 390, 대자인병원 (우아동3가)",전북특별자치도,전주시,대자인병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,12.0
-A2502742,새강병원,전북특별자치도 전주시 완산구 백제대로 20-0 (평화동1가),전북특별자치도,전주시,새강병원,JDQ4MTYyMiM2MSMkMSMkNiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3MiQyNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,2.0
-A2500005,의료법인영경의료재단전주병원,"전북특별자치도 전주시 완산구 한두평3길 13 (중화산동2가, 전주병원)",전북특별자치도,전주시,의료법인영경의료재단전주병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,8.0
-A2501890,의료법인영경의료재단호성전주병원,전북특별자치도 전주시 덕진구 동부대로 895 (호성동1가),전북특별자치도,전주시,의료법인영경의료재단호성전주병원,JDQ4MTYyMiM2MSMkMSMkNiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQxMyQzNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,3.0
-A2500006,재단법인예수병원유지재단예수병원,"전북특별자치도 전주시 완산구 서원로 365 (중화산동1가, 예수병원)",전북특별자치도,전주시,재단법인예수병원유지재단예수병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,13.0
-A2500002,전북대학교병원,전북특별자치도 전주시 덕진구 건지로 20 (금암동),전북특별자치도,전주시,전북대학교병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,8.0
-A2500003,전주고려병원,전북특별자치도 전주시 덕진구 안덕원로 367 (산정동),전북특별자치도,전주시,전주고려병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0
-A2500008,재단법인 아산사회복지재단 정읍아산병원,전북특별자치도 정읍시 충정로 606-22 (용계동),전북특별자치도,정읍시,재단법인 아산사회복지재단 정읍아산병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2502031,진안군의료원,전북특별자치도 진안군 진안읍 진무로 1145-0,전북특별자치도,진안군,진안군의료원,JDQ4MTYyMiM2MSMkMSMkNiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3OSQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2900002,제주특별자치도서귀포의료원,제주특별자치도 서귀포시 장수로 47 (동홍동),제주특별자치도,서귀포시,제주특별자치도 서귀포의료원,JDQ4MTYyMiM4MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,8
-A2900003,의료법인 혜인의료재단 한국병원,제주특별자치도 제주시 서광로 193 (삼도일동),제주특별자치도,제주시,의료법인 혜인의료재단 한국병원,JDQ4MTYyMiM4MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,3.0
-A2900006,의료법인중앙의료재단중앙병원,"제주특별자치도 제주시 월랑로 91-0 (이호이동,중앙병원)",제주특별자치도,제주시,,,0.6,낮은유사도,
-A2900007,제주대학교병원,"제주특별자치도 제주시 아란13길 15-0 (아라일동, 0동 0층 0호 (아라일동,제주대학교병원))",제주특별자치도,제주시,제주대학교병원,JDQ4MTYyMiM4MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,11.0
-A2900001,제주한라병원,"제주특별자치도 제주시 도령로 65 (연동, (연동))",제주특별자치도,제주시,제주한라병원,JDQ4MTYyMiM4MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,12.0
-A2900005,한마음병원,제주특별자치도 제주시 연신로 52   (이도이동),제주특별자치도,제주시,한마음병원,JDQ4MTYyMiM4MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,6.0
-A2400010,충청남도공주의료원,충청남도 공주시 무령로 77 (웅진동),충청남도,공주시,,,0.0,미매칭,
-A2400019,새금산병원,충청남도 금산군 금산읍 비단로 183,충청남도,금산군,새금산병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5MiQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2400009,의료법인백제병원,충청남도 논산시 시민로294번길 14 (취암동),충청남도,논산시,,,0.0,미매칭,
-A2400008,당진종합병원,충청남도 당진시 반촌로 5-15 (시곡동),충청남도,당진시,당진종합병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,9.0
-A2400011,재단법인아산사회복지재단보령아산병원,충청남도 보령시 죽성로 136 (죽정동),충청남도,보령시,,,0.0,미매칭,
-A2400038,학교법인건양교육재단건양대학교부여병원,충청남도 부여군 부여읍 계백로 200,충청남도,부여군,학교법인 건양교육재단 건양대학교부여병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5MiQyNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0
-A2400003,서산중앙병원,충청남도 서산시 수석산업로 5 (수석동),충청남도,서산시,서산중앙병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0
-A2400006,충청남도서산의료원,충청남도 서산시 중앙로 149 (석림동),충청남도,서산시,,,0.0,미매칭,
-A2400044,의료법인 서해병원,충청남도 서천군 서천읍 서천로 184,충청남도,서천군,의료법인 서해병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQ0NjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2402257,아산충무병원,충청남도 아산시 문화로 381 (모종동),충청남도,아산시,아산충무병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,8.0
-A2400039,현대병원,충청남도 아산시 온천대로 1442 (온천동),충청남도,아산시,현대병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2400015,예산명지병원,충청남도 예산군 예산읍 신례원로 26,충청남도,예산군,예산명지병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2400004,의료법인예당의료재단예산종합병원,충청남도 예산군 예산읍 금오대로 94,충청남도,예산군,,,0.0,미매칭,
-A2402812,나은필병원,"충청남도 천안시 동남구 만남로 64, 1층일부,4~9층 (신부동)",충청남도,천안시,나은필병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2400002,단국대학교의과대학부속병원,"충청남도 천안시 동남구 망향로 201 (안서동, 단국대학교의과대학부속병원)",충청남도,천안시,단국대학교의과대학부속병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,9.0
-A2400012,의료법인영서의료재단천안충무병원,"충청남도 천안시 서북구 다가말3길 8, 충무병원 (쌍용동)",충청남도,천안시,,,0.0,미매칭,
-A2400005,충청남도천안의료원,충청남도 천안시 동남구 충절로 537 (삼룡동),충청남도,천안시,,,0.0,미매칭,
-A2400001,학교법인동은학원순천향대학교부속천안병원,충청남도 천안시 동남구 순천향6길 31 (봉명동),충청남도,천안시,,,0.0,미매칭,
-E2400032,청양군보건의료원,충청남도 청양군 청양읍 칠갑산로7길 54,충청남도,청양군,청양군보건의료원,JDQ4MTYyMiM2MSMkMSMkMiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-E2400033,태안군보건의료원,충청남도 태안군 태안읍 서해로 1952-16,충청남도,태안군,태안군보건의료원,JDQ4MTYyMiM2MSMkMSMkMiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,4.0
-A2400007,충청남도홍성의료원,충청남도 홍성군 홍성읍 조양로 224,충청남도,홍성군,,,0.0,미매칭,
-A2300034,의료법인대광의료재단괴산성모병원,충청북도 괴산군 괴산읍 임꺽정로 116-0 (괴산성모병원),충청북도,괴산군,,,0.0,미매칭,
-E2300011,단양군보건의료원,"충청북도 단양군 단양읍 삼봉로 53, 단양군보건의료원",충청북도,단양군,단양군보건의료원,JDQ4MTYyMiM1MSMkMSMkOCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0
-A2300017,의료법인정민의료재단보은한양병원,충청북도 보은군 보은읍 보은로 102,충청북도,보은군,,,0.0,미매칭,
-A2300030,의료법인조윤의료재단영동병원,충청북도 영동군 영동읍 대학로 106,충청북도,영동군,,,0.0,미매칭,
-A2300011,의료법인힐링의료재단옥천성모병원,충청북도 옥천군 옥천읍 성왕로 1195,충청북도,옥천군,,,0.0,미매칭,
-A2300015,의료법인태성의료재단제일조은병원,충청북도 음성군 금왕읍 음성로1230번길 10,충청북도,음성군,,,0.0,미매칭,
-A2300009,의료법인명지의료재단명지병원,"충청북도 제천시 내토로 991-0 (고암동,의료법인명지의료재단명지병원)",충청북도,제천시,의료법인명지의료재단명지병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,14.0
-A2300005,의료법인자산의료재단제천서울병원,충청북도 제천시 숭문로 57 (서부동),충청북도,제천시,,,0.0,미매칭,
-A2300013,의료법인 건명의료재단 중앙제일병원,충청북도 진천군 진천읍 중앙북로 36-0 (진천성모병원),충청북도,진천군,의료법인 건명의료재단 중앙제일병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0
-A2300021,오창중앙병원,충청북도 청주시 청원구 오창읍 중부로 683,충청북도,청주시,오창중앙병원,JDQ4MTYyMiM1MSMkMSMkOCMkOTkkMzgxMzUxIzExIyQxIyQzIyQwMyQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2300039,의료법인송암의료재단마이크로병원,충청북도 청주시 흥덕구 사직대로 26 (복대동),충청북도,청주시,의료법인송암의료재단마이크로재활병원,JDQ4MTYyMiM1MSMkMSMkOCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0
-A2300007,의료법인인화재단한국병원,충청북도 청주시 상당구 단재로 106 (영운동),충청북도,청주시,,,0.0,미매칭,
-A2300003,의료법인정산의료재단효성병원,충청북도 청주시 상당구 쇠내로 16 (금천동),충청북도,청주시,의료법인경동의료재단효성병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQyIyQ1IyQwMCQzNjEwMDIjNjEjJDEjJDQjJDgz,0.75,자동매칭,0
-A2300002,의료법인한마음의료재단하나병원,"충청북도 청주시 흥덕구 2순환로 1262, 하나병원 (가경동)",충청북도,청주시,의료법인한마음의료재단하나병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,5.0
-A2302011,재단법인베스티안재단베스티안병원,충청북도 청주시 흥덕구 오송읍 오송생명1로 191-0,충청북도,청주시,재단법인베스티안재단베스티안병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,1.0
-A2300008,청주성모병원,충청북도 청주시 청원구 주성로 173-19 (주중동),충청북도,청주시,청주성모병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0
-A2300001,충북대학교병원,"충청북도 청주시 서원구 1순환로 776-0 (개신동,충북대학교병원)",충청북도,청주시,충북대학교병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,5.0
-A2300006,충청북도청주의료원,"충청북도 청주시 서원구 흥덕로 48-0 (사직동,청주의료원)",충청북도,청주시,충청북도청주의료원부설한의원,JDQ4MTYyMiM1MSMkMSMkOCMkMTMkMzgxNzAyIzIxIyQxIyQxIyQ3MiQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0
-A2300010,건국대학교충주병원,충청북도 충주시 국원대로 82 (교현동),충청북도,충주시,,,0.0,미매칭,
-A2302306,충주미래병원,"충청북도 충주시 국원대로 99-0, 0동 (교현동,미래병원)",충청북도,충주시,충주미래병원,JDQ4MTYyMiM1MSMkMSMkOCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0
-A2300004,충청북도충주의료원,충청북도 충주시 안림로 239-50 (안림동),충청북도,충주시,,,0.0,미매칭,
+﻿기관코드,병원명,주소,시도,시군구,HIRA병원명,암호화요양기호,매칭점수,매칭상태,응급의학과전문의수,HIRA주소
+A2200008,강릉아산병원,강원특별자치도 강릉시 사천면 방동길 38,강원특별자치도,강릉시,강릉아산병원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,9.0,
+A2200011,강원특별자치도강릉의료원,"강원특별자치도 강릉시 경강로 2007-0 (남문동,강릉의료원)",강원특별자치도,강릉시,강원특별자치도강릉의료원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2200005,의료법인강릉동인병원,강원특별자치도 강릉시 강릉대로419번길 42 (포남동),강원특별자치도,강릉시,,,0.0,미매칭,,
+A2200010,의산의료재단강릉고려병원,강원특별자치도 강릉시 옥가로 30 (옥천동),강원특별자치도,강릉시,,,0.0,미매칭,,
+A2200038,근로복지공단동해병원,"강원특별자치도 동해시 하평로 11-  (평릉동, (평릉동))",강원특별자치도,동해시,,,0.0,미매칭,,
+A2200003,의료법인동해동인병원,"강원특별자치도 동해시 하평로 26-  (평릉동, (평릉동))",강원특별자치도,동해시,,,0.0,미매칭,,
+A2200007,강원특별자치도삼척의료원,강원특별자치도 삼척시 오십천로 473 (정상동),강원특별자치도,삼척시,강원특별자치도삼척의료원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,3.0,
+A2200012,강원특별자치도속초의료원,강원특별자치도 속초시 영랑호반길 3 (영랑동),강원특별자치도,속초시,강원특별자치도속초의료원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,2.0,
+A2200046,의료법인온세움의료재단온재병원,강원특별자치도 속초시 중앙로 11 (교동),강원특별자치도,속초시,,,0.0,미매칭,,
+A2200037,의료법인성심의료재단양구성심병원,강원특별자치도 양구군 양구읍 중심로 160,강원특별자치도,양구군,,,0.0,미매칭,,
+A2200002,강원특별자치도영월의료원,강원특별자치도 영월군 영월읍 중앙1로 59-  ( ),강원특별자치도,영월군,강원특별자치도영월의료원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,1.0,
+A2200015,강원특별자치도원주의료원,"강원특별자치도 원주시 서원대로 387 (개운동, (개운동))",강원특별자치도,원주시,강원특별자치도원주의료원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,7.0,
+A2200001,연세대학교원주세브란스기독병원,"강원특별자치도 원주시 일산로 20-0 (일산동, (일산동))",강원특별자치도,원주시,연세대학교 원주세브란스기독병원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,18.0,
+A2200024,의료법인성지의료재단성지병원,강원특별자치도 원주시 원일로 22 (인동),강원특별자치도,원주시,,,0.0,미매칭,,
+A2200048,근로복지공단정선병원,강원특별자치도 정선군 정선읍 봉양1길 145,강원특별자치도,정선군,,,0.0,미매칭,,
+A2201730,철원병원,강원특별자치도 철원군 갈말읍 명성로 208-0,강원특별자치도,철원군,철원병원,JDQ4MTYyMiM1MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2200009,강원대학교병원,"강원특별자치도 춘천시 백령로 156-  (효자동,(효자동))",강원특별자치도,춘천시,강원대학교병원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,8.0,
+A2200033,인성병원,강원특별자치도 춘천시 금강로 39 (낙원동),강원특별자치도,춘천시,인성병원,JDQ4MTYyMiM1MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2200013,한림대학교춘천성심병원,강원특별자치도 춘천시 삭주로 77 (교동),강원특별자치도,춘천시,한림대학교춘천성심병원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,13.0,
+A2200004,근로복지공단태백병원,"강원특별자치도 태백시 보드미길 8 (장성동, (장성동))",강원특별자치도,태백시,,,0.0,미매칭,,
+E2200026,평창군보건의료원,강원특별자치도 평창군 평창읍 노성로 11,강원특별자치도,평창군,평창군보건의료원,JDQ4MTYyMiM1MSMkMSMkNCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2200014,홍천아산병원,강원특별자치도 홍천군 홍천읍 산림공원1길 17,강원특별자치도,홍천군,홍천아산병원,JDQ4MTYyMiM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+E2200025,화천군보건의료원,강원특별자치도 화천군 화천읍 강변로 111 (화천군보건의료원),강원특별자치도,화천군,화천군보건의료원,JDQ4MTYyMiM1MSMkMSMkNCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2200016,횡성대성병원,강원특별자치도 횡성군 횡성읍 횡성로 275,강원특별자치도,횡성군,횡성대성병원,JDQ4MTYyMiM1MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2100282,에이치제이매그놀리아국제병원,경기도 가평군 설악면 미사리로 267-177,경기도,가평군,에이치제이매그놀리아국제병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4OSQyNjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2100049,국립암센터,경기도 고양시 일산동구 일산로 323 (마두동),경기도,고양시,국립암센터,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A2100033,국민건강보험공단일산병원,"경기도 고양시 일산동구 일산로 100 (백석동,백석1동 1241외1필지 4층)",경기도,고양시,국민건강보험공단일산병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,12.0,
+A2100047,동국대학교일산불교병원,"경기도 고양시 일산동구 동국로 27 (식사동, 동국대학교일산병원)",경기도,고양시,동국대학교일산불교병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,10.0,
+A2100042,의료법인명지의료재단명지병원,경기도 고양시 덕양구 화수로14번길 55 (화정동),경기도,고양시,의료법인명지의료재단명지병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE4MzIjNjEjJDEjJDgjJDgz,1.0,수동검증,12.0,경기도 고양시 덕양구 화수로14번길 55
+A2116972,의료법인성광의료재단일산차병원,"경기도 고양시 일산동구 중앙로 1205, 지하1층(일부),지하2층,지하4층(일부),1층(일부),2층(일부),3층(일부),4~5층,6층(일부), 7~10층 (장항동)",경기도,고양시,의료법인성광의료재단일산차병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2100283,의료법인일산복음병원,"경기도 고양시 일산동구 고양대로 760, 가동 (중산동, 일산복음병원)",경기도,고양시,의료법인일산복음병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQ3IyQ2MiQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2100290,의료법인자인의료재단(더자인병원),"경기도 고양시 덕양구 중앙로 555, /중앙로557번길 14, 지하1(일부),1-6층 (행신동)",경기도,고양시,의료법인자인의료재단(더자인병원),JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3MiQyNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2100038,인제대학교일산백병원,경기도 고양시 일산서구 주화로 170 (대화동),경기도,고양시,인제대학교일산백병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,12.0,
+A2100007,광명성애병원,"경기도 광명시 디지털로 36, 광명성애병원 (철산동)",경기도,광명시,광명성애병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,10.0,
+A2118788,중앙대학교광명병원,경기도 광명시 덕안로 110(일직동),경기도,광명시,중앙대학교광명병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,14.0,
+A2100155,참조은병원,경기도 광주시 광주대로 45 (경안동),경기도,광주시,참조은병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,11.0,
+A2100116,윤서병원,경기도 구리시 건원대로 47 (인창동),경기도,구리시,윤서병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ3OSQzNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2100039,한양대학교구리병원,경기도 구리시 경춘로 153 (교문동),경기도,구리시,한양대학교구리병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,8.0,
+A2100048,원광대학교산본병원,경기도 군포시 산본로 321 (산본동),경기도,군포시,,,0.0,미매칭,,
+A2100054,효산의료재단지샘병원,"경기도 군포시 군포로 591 (당동, (G샘병원)군포샘병원)",경기도,군포시,,,0.0,미매칭,,
+A2100053,의료법인우리의료재단김포우리병원,"경기도 김포시 감암로 11, 김포우리병원 (걸포동)",경기도,김포시,의료법인우리의료재단김포우리병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQ0NjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,10.0,
+A2100006,의료법인인봉의료재단뉴고려병원,"경기도 김포시 김포한강3로 283, 뉴고려병원 (장기동)",경기도,김포시,의료법인인봉의료재단뉴고려병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ4OSQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,10.0,
+A2100041,남양주한양병원,경기도 남양주시 오남읍 양지로 47-55,경기도,남양주시,,,0.0,미매칭,,
+A2118188,엘병원,"경기도 남양주시 퇴계원읍 퇴계원로 20, 지하2~지상7층 일부제외호",경기도,남양주시,엘병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQ3IyQ4MiQzNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,5.0,
+A2100208,원병원,경기도 남양주시 화도읍 경춘로 1943-16,경기도,남양주시,원병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQzIyQwMyQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2100037,현대병원,경기도 남양주시 진접읍 봉현로 21,경기도,남양주시,현대병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,8.0,
+A2120077,혜성병원,"경기도 남양주시 경춘로1308번길 4, 1층일부~10층 (평내동)",경기도,남양주시,혜성병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzIxIyQxIyQxIyQ2MiQ0NjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2100135,동두천중앙성모병원,경기도 동두천시 동광로 53 (생연동),경기도,동두천시,동두천중앙성모병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ5MiQyNjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2100052,가톨릭대학교부천성모병원,"경기도 부천시 원미구 소사로 327, 가톨릭대학교 부천성모병원 (소사동)",경기도,부천시,가톨릭대학교부천성모병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,12.0,
+A2100055,부천세종병원,"경기도 부천시 소사구 호현로489번길 28 (소사본동, 세종병원)",경기도,부천시,부천세종병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,12.0,
+A2100058,부천우리병원,경기도 부천시 오정구 소사로 726 (원종동),경기도,부천시,부천우리병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2100005,순천향대학교부속부천병원,"경기도 부천시 원미구 조마루로 170, 부흥로 173(1층일부) (중동)",경기도,부천시,순천향대학교부속부천병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQzNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,17.0,
+A2100050,의료법인대인의료재단다니엘종합병원,"경기도 부천시 원미구 중동로 361, 다니엘종합병원 (약대동)",경기도,부천시,,,0.0,미매칭,,
+A2100258,국군수도병원,경기도 성남시 분당구 새마을로177번길 81 (율동),경기도,성남시,국군수도병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQzNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,8.0,
+A2100025,대진의료재단분당제생병원,경기도 성남시 분당구 서현로180번길 20 (서현동),경기도,성남시,,,0.0,미매칭,,
+A2106200,바른마디병원,경기도 성남시 중원구 광명로 330 (금광동),경기도,성남시,바른마디병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzUxIyQyIyQ1IyQwMCQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,3.0,
+A2100001,분당서울대학교병원,"경기도 성남시 분당구 구미로173번길 82 (구미동, 분당서울대학교병원)",경기도,성남시,분당서울대학교병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQyNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,16.0,
+A2116806,성남시의료원,"경기도 성남시 수정구 수정로171번길 10, 성남시의료원 (태평동)",경기도,성남시,성남시의료원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,7.0,
+A2100011,성남중앙병원,경기도 성남시 중원구 산성대로476번길 12 (금광동),경기도,성남시,성남중앙병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE4MzIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2115807,성모윌병원,"경기도 성남시 수정구 성남대로 1171, 삼성화재빌딩 1층일부, 2~9층 (수진동)",경기도,성남시,성모윌병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQzIyQ4MiQyNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2100016,순천의료재단성남정병원,"경기도 성남시 수정구 수정로 76, 지하3~9층 (수진동)",경기도,성남시,,,0.0,미매칭,,
+A2100030,차의과학대학교분당차병원,경기도 성남시 분당구 야탑로 59 (야탑동),경기도,성남시,차의과학대학교분당차병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,22.0,
+A2100012,가톨릭대학교성빈센트병원,경기도 수원시 팔달구 중부대로 93 (지동),경기도,수원시,,,0.0,미매칭,,
+A2100032,경기도의료원수원병원,경기도 수원시 장안구 수성로245번길 69 (정자동),경기도,수원시,,,0.0,미매칭,,
+A2119276,매듭병원,"경기도 수원시 영통구 태장로 68, 매듭병원 (망포동)",경기도,수원시,매듭병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzIxIyQxIyQxIyQ4OSQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2100206,수원중앙병원,경기도 수원시 권선구 권선로 654 (권선동),경기도,수원시,수원중앙병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQ0NjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2100002,아주대학교병원,경기도 수원시 영통구 월드컵로 164 (원천동),경기도,수원시,아주대학교병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,16.0,
+A2100009,의료법인녹산의료재단동수원병원,경기도 수원시 팔달구 중부대로 165 (우만동),경기도,수원시,의료법인 녹산의료재단동수원병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,9.0,
+A2121061,의료법인덕산의료재단수원덕산병원,경기도 수원시 권선구 서부로 1674 (고색동),경기도,수원시,,,0.0,미매칭,,
+A2117135,의료법인명인의료재단화홍병원,경기도 수원시 권선구 호매실로90번길 98 (호매실동),경기도,수원시,,,0.0,미매칭,,
+A2100175,의료법인토마스의료재단윌스기념병원,경기도 수원시 팔달구 경수대로 437 (인계동),경기도,수원시,,,0.0,미매칭,,
+A2100013,의료법인 록향의료재단 신천연합병원,"경기도 시흥시 복지로 57, 복지로 61, 2층 (대야동)",경기도,시흥시,의료법인 록향의료재단 신천연합병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,3.0,
+A2100008,의료법인남촌의료재단시화병원,"경기도 시흥시 군자천로 381, 시화병원 (정왕동)",경기도,시흥시,,,0.0,미매칭,,
+A2100027,의료법인석경의료재단센트럴병원,"경기도 시흥시 공단1대로 237 (정왕동, 센트럴 병원)",경기도,시흥시,,,0.0,미매칭,,
+A2100003,고려대학교의과대학부속안산병원,경기도 안산시 단원구 적금로 123 (고잔동),경기도,안산시,고려대학교의과대학부속안산병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,11.0,
+A2100014,근로복지공단안산병원,"경기도 안산시 상록구 구룡로 87, 근로복지공단안산병원 (일동)",경기도,안산시,근로복지공단안산병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,3.0,
+A2100017,대아의료재단한도병원,경기도 안산시 단원구 선부광장로 103 (선부동),경기도,안산시,대아의료재단한도병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,8.0,
+A2100162,동안산병원,경기도 안산시 상록구 월피로 88 (월피동),경기도,안산시,동안산병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ2MiQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2100124,의료법인칠석의료재단사랑의병원,"경기도 안산시 상록구 예술광장로 69, 사랑의병원(593-4번지/593-5번지) (성포동)",경기도,안산시,의료법인칠석의료재단사랑의병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,8.0,
+A2100021,의료법인플러스의료재단단원병원,경기도 안산시 단원구 원포공원1로 20 (초지동),경기도,안산시,,,0.0,미매칭,,
+A2119939,클래스병원,"경기도 안산시 단원구 적금로1길 11, SR노빌리안 3~8층 1층(101~103)호 (고잔동)",경기도,안산시,클래스병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzIxIyQxIyQxIyQ2MiQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2100045,경기도의료원안성병원,"경기도 안성시 남파로 95, 경기도의료원 안성병원 (당왕동)",경기도,안성시,,,0.0,미매칭,,
+A2100305,안성성모병원,경기도 안성시 시장길 58 (서인동),경기도,안성시,안성성모병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0,
+A2100010,인산의료재단메트로병원,"경기도 안양시 만안구 명학로33번길 8 (안양동, 메트로병원)",경기도,안양시,,,0.7,낮은유사도,,
+A2100004,한림대학교성심병원,경기도 안양시 동안구 관평로170번길 22 (평촌동),경기도,안양시,한림대학교성심병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,13.0,
+A2100015,효산의료재단안양샘병원,"경기도 안양시 만안구 삼덕로 9 (안양동, 안양샘병원)",경기도,안양시,,,0.0,미매칭,,
+A2100134,양주예쓰병원,경기도 양주시 회정로 103 (덕정동),경기도,양주시,양주예쓰병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4OSQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2100089,양평병원,경기도 양평군 양평읍 중앙로 129,경기도,양평군,양평병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQ0NjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,1.0,
+A2100194,세종여주병원,"경기도 여주시 청심로 39, 세종여주병원 (하동)",경기도,여주시,세종여주병원,JDU4MTI3MSM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,4.0,
+A2100173,연세새로운병원,경기도 여주시 영릉로 22 (창동),경기도,여주시,연세새로운병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+E2100187,연천군보건의료원,경기도 연천군 전곡읍 은대성로 95,경기도,연천군,연천군보건의료원,JDQ4MTYyMiM1MSMkMSMkMCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2100024,오산한국병원,경기도 오산시 밀머리로1번길 16 (원동),경기도,오산시,오산한국병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQzNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,4.0,
+A2114449,조은오산병원,경기도 오산시 오산로 307 (오산동),경기도,오산시,조은오산병원,JDU4MTI3MSM1MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2100019,(의)영문의료재단다보스병원,"경기도 용인시 처인구 백옥대로1082번길 18, 다보스종합병원 (김량장동)",경기도,용인시,,,0.0,미매칭,,
+A2100122,(의)효심의료재단용인서울병원,경기도 용인시 처인구 고림로 81 (고림동),경기도,용인시,,,0.0,미매칭,,
+A2100029,강남병원,"경기도 용인시 기흥구 중부대로 411, 강남병원 (신갈동)",경기도,용인시,강남병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,7.0,
+A2121142,메디필드한강병원,경기도 용인시 처인구 금령로39번길 8-6 (김량장동),경기도,용인시,메디필드한강병원,JDU4MTI3MSM1MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,6.0,
+A2100020,연세대학교의과대학용인세브란스병원,경기도 용인시 기흥구 동백죽전대로 363 (중동),경기도,용인시,연세대학교 의과대학 용인세브란스병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,10.0,
+A2100040,가톨릭대학교의정부성모병원,"경기도 의정부시 천보로 271, 의정부성모병원 (금오동)",경기도,의정부시,가톨릭대학교의정부성모병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQ0NjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,14.0,
+A2100043,경기도의료원의정부병원,경기도 의정부시 흥선로 142 (의정부동),경기도,의정부시,경기도의료원의정부병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQ0NjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2100034,의료법인영동의료재단의정부백병원,경기도 의정부시 금신로 322 (신곡동),경기도,의정부시,,,0.0,미매칭,,
+A2100150,추병원,경기도 의정부시 평화로 650 (의정부동),경기도,의정부시,추병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,6.0,
+A2117994,학교법인을지학원의정부을지대학교병원,"경기도 의정부시 동일로 712, 을지대학교 의정부캠퍼스 및 부속병원 (금오동)",경기도,의정부시,학교법인 을지학원 의정부을지대학교병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,9.0,
+A2100193,경기도의료원이천병원,경기도 이천시 경충대로 2742 (관고동),경기도,이천시,,,0.0,미매칭,,
+A2100180,바른병원,"경기도 이천시 경충대로 2543, 바른병원 (진리동)",경기도,이천시,바른병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQwMyQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2100035,경기도의료원파주병원,"경기도 파주시 중앙로 207, 경기도립의료원파주병원 (금촌동)",경기도,파주시,경기도의료원파주병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,5.0,
+A2100131,메디인병원,경기도 파주시 금릉역로 190(금촌동),경기도,파주시,메디인병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,6.0,
+A2100083,무척조은병원,경기도 파주시 문산읍 방촌로 1675-20,경기도,파주시,무척조은병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQ3IyQxMyQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2100130,문산중앙병원,"경기도 파주시 문산읍 문향로39번길 53, 문산중앙병원",경기도,파주시,문산중앙병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzUxIyQxIyQxIyQ4MiQzNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2100255,성심중앙병원,"경기도 평택시 안중읍 안현로서6길 16, 성심중앙병원",경기도,평택시,성심중앙병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3OSQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2100309,의료법인갈렌의료재단박병원,경기도 평택시 송탄로 33 (장당동),경기도,평택시,,,0.0,미매칭,,
+A2100022,의료법인박애의료재단박애병원,경기도 평택시 평택2로20번길 3 (평택동),경기도,평택시,,,0.0,미매칭,,
+A2100028,의료법인백송의료재단굿모닝병원,경기도 평택시 중앙로 338 (합정동),경기도,평택시,,,0.6666666666666666,낮은유사도,,
+A2113246,의료법인양진의료재단평택성모병원,경기도 평택시 평택로 284 (세교동),경기도,평택시,,,0.0,미매칭,,
+A2100301,의료법인청파의료재단송탄중앙병원,경기도 평택시 오좌동길 17-16 (독곡동),경기도,평택시,,,0.0,미매칭,,
+A2100031,경기도의료원포천병원,경기도 포천시 포천로 1648 (신읍동),경기도,포천시,경기도의료원포천병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,5.0,
+A2100036,의료법인 일심의료재단 포천우리병원,경기도 포천시 소흘읍 호국로 661,경기도,포천시,의료법인 일심의료재단 포천우리병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,7.0,
+A2115699,의료법인원광의료재단원광종합병원,경기도 화성시 병점구 화산북로 21 (송산동),경기도,화성시,,,0.0,미매칭,,
+A2100018,의료법인은혜와감사의료재단화성중앙종합병원,경기도 화성시 만세구 향남읍 발안로 5,경기도,화성시,의료법인 은혜와감사의료재단 화성중앙종합병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjE4MzIjNzEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A2100046,한림대학교동탄성심병원,경기도 화성시 동탄구 큰재봉길 7 (석우동),경기도,화성시,한림대학교동탄성심병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQ0NjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,20.0,
+A2116685,화성유일병원,경기도 화성시 만세구 남양읍 남양로920번길 6,경기도,화성시,화성유일병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3MiQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2800008,의료법인 거붕 백병원,경상남도 거제시 계룡로5길 14 (상동동),경상남도,거제시,의료법인 거붕 백병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2800005,의료법인 대우의료재단대우병원,경상남도 거제시 두모길 16 (두모동),경상남도,거제시,의료법인 대우의료재단대우병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2800022,의료법인 성념의료재단맑은샘병원,경상남도 거제시 연초면 거제대로 4477,경상남도,거제시,의료법인 성념의료재단맑은샘병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2800076,거창적십자병원,경상남도 거창군 거창읍 중앙로 91,경상남도,거창군,거창적십자병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2800032,강병원,경상남도 고성군 고성읍 중앙로 49,경상남도,고성군,강병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQxMyQzNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2803447,더조은병원,경상남도 고성군 고성읍 동외로 142,경상남도,고성군,,,0.0,미매칭,,
+A2803677,강일병원,경상남도 김해시 가락로 359 (구산동),경상남도,김해시,강일병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,4.0,
+A2800063,의료법인 지평의료재단 메가병원,경상남도 김해시 계동로 237 (대청동),경상남도,김해시,의료법인 지평의료재단 메가병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQ3IyQ5OSQyNjE4MzIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2800014,의료법인갑을의료재단 갑을장유병원,경상남도 김해시 장유로 167-13 (부곡동),경상남도,김해시,의료법인갑을의료재단 갑을장유병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,2.0,
+A2800006,의료법인숭인의료재단 김해복음병원,경상남도 김해시 활천로 33 (삼정동),경상남도,김해시,의료법인숭인의료재단 김해복음병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,6.0,
+A2800146,의료법인신의료재단김해삼승병원,경상남도 김해시 김해대로 2335 (부원동),경상남도,김해시,,,0.0,미매칭,,
+A2800010,의료법인환명의료재단 조은금강병원,경상남도 김해시 김해대로 1814-37 (삼계동),경상남도,김해시,의료법인환명의료재단 조은금강병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,4.0,
+A2800094,의료법인 이도의료재단 남해병원,경상남도 남해군 남해읍 화전로 169,경상남도,남해군,의료법인 이도의료재단 남해병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2800113,밀양병원,경상남도 밀양시 밀양대로 1823 (삼문동),경상남도,밀양시,밀양병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQ0NjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2800057,의료법인 생명사랑의료재단 밀양윤병원,경상남도 밀양시 삼문중앙로 32 (삼문동),경상남도,밀양시,의료법인 생명사랑의료재단 밀양윤병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4MiQ0NjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2800042,행복한병원,경상남도 밀양시 하남읍 수산중앙로 56-2,경상남도,밀양시,행복한병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ2MiQzNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2800101,삼천포제일병원,"경상남도 사천시 중앙로 136, 삼천포제일병원 (벌리동)",경상남도,사천시,삼천포제일병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ5OSQzNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2800068,의료법인승연의료재단 삼천포서울병원,경상남도 사천시 남일로 33 (동금동),경상남도,사천시,의료법인승연의료재단 삼천포서울병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ3OSQyNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,1.0,
+A2804216,하나병원,"경상남도 사천시 사천읍 진삼로 1468-8, 하나병원",경상남도,사천시,하나병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQxMyQyNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+E2800380,산청군보건의료원,경상남도 산청군 산청읍 중앙로 97,경상남도,산청군,산청군보건의료원,JDQ4MTYyMiM4MSMkMSMkNCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2800019,베데스다복음병원,경상남도 양산시 신기로 28 (신기동),경상남도,양산시,베데스다복음병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2803867,본바른병원,"경상남도 양산시 물금읍 청운로 343, 양산바른빌딩 1층일부, 4층~10층",경상남도,양산시,본바른병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ3MiQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2800011,양산부산대학교병원,경상남도 양산시 물금읍 금오로 20,경상남도,양산시,양산부산대학교병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,9.0,
+A2804593,양산성모병원,경상남도 양산시 서창로 59 (명동),경상남도,양산시,양산성모병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,1.0,
+A2800090,의령병원,경상남도 의령군 의령읍 의병로14길 10,경상남도,의령군,의령병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ4MiQyNjEyMjIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2800001,경상국립대학교병원,경상남도 진주시 강남로 79 (칠암동),경상남도,진주시,경상국립대학교병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,8.0,
+A2800084,반도병원,경상남도 진주시 남강로 701 (장대동),경상남도,진주시,반도병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2800015,의료법인 문병욱의료재단 진주고려병원,"경상남도 진주시 동진로 2 (칠암동, 진주고려병원)",경상남도,진주시,의료법인 문병욱의료재단 진주고려병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A2800045,의료법인 바른의료재단 바른병원,경상남도 진주시 동진로 7 (칠암동),경상남도,진주시,의료법인 바른의료재단 바른병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ3MiQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2800003,제일병원,경상남도 진주시 진주대로 885 (강남동),경상남도,진주시,제일병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,5.0,
+A2800037,진주복음병원,경상남도 진주시 진양호로 370 (신안동),경상남도,진주시,진주복음병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ5MiQzNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A2800044,진주세란병원,경상남도 진주시 진주대로 829 (주약동),경상남도,진주시,진주세란병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ3MiQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2800043,한일병원,"경상남도 진주시 범골로 17, 한일병원 지하1 1~7층 (충무공동)",경상남도,진주시,한일병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,5.0,
+A2800062,태황의료재단한성병원,경상남도 창녕군 창녕읍 교리1길 2,경상남도,창녕군,태황의료재단한성병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4OSQzNjE4MzIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2800025,경상남도마산의료원,경상남도 창원시 마산합포구 3·15대로 231 (중앙동3가),경상남도,창원시,경상남도마산의료원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,5.0,
+A2800012,근로복지공단 창원병원,경상남도 창원시 성산구 창원대로 721 (중앙동),경상남도,창원시,근로복지공단 창원병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2800021,연세에스병원,경상남도 창원시 진해구 해원로32번길 13 (이동),경상남도,창원시,연세에스병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2800018,의료법인석영의료재단창원제일종합병원,경상남도 창원시 마산합포구 3·15대로 238 (중앙동3가),경상남도,창원시,의료법인석영의료재단창원제일종합병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2800009,의료법인청아의료재단청아병원,경상남도 창원시 마산회원구 내서읍 광려천서로 67 (청아병원),경상남도,창원시,의료법인청아의료재단청아병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2800017,의료법인합포의료재단에스엠지연세병원,"경상남도 창원시 마산합포구 3·15대로 76 (월남동2가, 합포의료재단)",경상남도,창원시,의료법인합포의료재단에스엠지연세병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,4.0,
+A2803505,창원경상국립대학교병원,"경상남도 창원시 성산구 삼정자로 11 (성주동, 창원경상대학교병원)",경상남도,창원시,창원경상국립대학교병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,11.0,
+A2800004,창원파티마병원,경상남도 창원시 의창구 창이대로 45 (명서동),경상남도,창원시,창원파티마병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,10.0,
+A2800007,창원한마음병원,경상남도 창원시 의창구 용동로57번길 8 (사림동),경상남도,창원시,창원한마음병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,13.0,
+A2800020,학교법인성균관대학삼성창원병원,"경상남도 창원시 마산회원구 팔용로 158 (합성동, 삼성창원병원)",경상남도,창원시,학교법인성균관대학삼성창원병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,9.0,
+A2800092,새통영병원,경상남도 통영시 무전7길 192 (무전동),경상남도,통영시,새통영병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2800826,하동중앙의원,경상남도 하동군 하동읍 연화길 6,경상남도,하동군,하동중앙의원,JDQ4MTYyMiM4MSMkMiMkNCMkMDAkMzgxNzAyIzMxIyQxIyQzIyQ3MiQzNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2800138,시영의료재단 영동병원,경상남도 함안군 칠원읍 용산2길 45-13,경상남도,함안군,시영의료재단 영동병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4MiQzNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2800080,함양성심병원,경상남도 함양군 함양읍 고운로 70,경상남도,함양군,함양성심병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ2MiQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2800055,삼성합천병원,경상남도 합천군 합천읍 대야로 876,경상남도,합천군,삼성합천병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQ3IyQ3OSQzNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2700019,의)근원의료재단경산중앙병원,경상북도 경산시 경안로 11 (백천동),경상북도,경산시,,,0.0,미매칭,,
+A2700036,의료법인서명의료재단세명종합병원,경상북도 경산시 경안로 208 (중방동),경상북도,경산시,,,0.0,미매칭,,
+A2700097,계명대학교경주동산병원,경상북도 경주시 봉황로 65 (서부동),경상북도,경주시,,,0.0,미매칭,,
+A2700003,동국대학교의과대학경주병원,경상북도 경주시 동대로 87 (석장동),경상북도,경주시,동국대학교의과대학경주병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,15.0,
+A2700070,의료법인영암의료재단고령영생병원,경상북도 고령군 대가야읍 중앙로 33 (영생병원),경상북도,고령군,의료법인영암의료재단고령영생병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2700015,구미강동병원,경상북도 구미시 인동20길 46 (진평동),경상북도,구미시,구미강동병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,3.0,
+A2700013,순천향대학교부속구미병원,"경상북도 구미시 1공단로 179 (공단동, (공단동))",경상북도,구미시,,,0.65,낮은유사도,,
+A2700007,차의과학대학교부속구미차병원,경상북도 구미시 신시로10길 12 (형곡동),경상북도,구미시,차의과학대학교부속구미차병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,12.0,
+A2700018,경상북도김천의료원,경상북도 김천시 모암길 24 (모암동),경상북도,김천시,경상북도김천의료원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,6.0,
+A2700012,의료법인덕산의료재단김천제일병원,경상북도 김천시 신음1길 12 (신음동),경상북도,김천시,의료법인덕산의료재단김천제일병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,5.0,
+A2700006,의료법인동춘의료재단문경제일병원,경상북도 문경시 당교3길 25 (모전동),경상북도,문경시,의료법인동춘의료재단문경제일병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,6.0,
+A2700071,봉화해성병원,경상북도 봉화군 봉화읍 보밑길 3,경상북도,봉화군,봉화해성병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2700011,상주적십자병원,경상북도 상주시 상서문로 53 (남성동),경상북도,상주시,상주적십자병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2700009,의료법인삼백의료재단상주성모병원,경상북도 상주시 냉림서성길 7 (냉림동),경상북도,상주시,의료법인삼백의료재단상주성모병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2700030,의료법인석촌의료재단성주병원,경상북도 성주군 성주읍 성주읍3길 5-3,경상북도,성주군,의료법인석촌의료재단성주병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2700001,경상북도안동의료원,경상북도 안동시 태사2길 55 (북문동),경상북도,안동시,경상북도안동의료원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A2700004,안동성소병원,경상북도 안동시 서동문로 99 (금곡동),경상북도,안동시,안동성소병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,6.0,
+A2700014,의료법인안동병원,경상북도 안동시 앙실로 11 (수상동),경상북도,안동시,의료법인안동병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,15.0,
+A2700073,영덕아산병원,경상북도 영덕군 영해면 영덕로 1621,경상북도,영덕군,영덕아산병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQ0NjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2700026,의료법인명성의료재단영양병원,경상북도 영양군 영양읍 동서대로 75,경상북도,영양군,의료법인명성의료재단영양병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ5MiQ0NjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2700031,영주기독병원,경상북도 영주시 구성로 380 (영주동),경상북도,영주시,영주기독병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2700020,영주자인병원,경상북도 영주시 대동로31번길 9 (가흥동),경상북도,영주시,영주자인병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQwMyQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2702752,영주적십자병원,"경상북도 영주시 대학로 327-0 (가흥동,영주적십자병원)",경상북도,영주시,영주적십자병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,1.0,
+A2700017,영남대학교의과대학부속영천병원,경상북도 영천시 오수1길 10 (오수동),경상북도,영천시,영남대학교의과대학부속영천병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2700023,의료법인서준의료재단예천권병원,경상북도 예천군 예천읍 시장로 136,경상북도,예천군,의료법인서준의료재단예천권병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+E2700553,울릉군보건의료원,경상북도 울릉군 울릉읍 울릉순환로 396-18,경상북도,울릉군,울릉군보건의료원,JDQ4MTYyMiM4MSMkMSMkMCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2700052,울진군의료원,경상북도 울진군 울진읍 현내항길 71,경상북도,울진군,울진군의료원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,1.0,
+A2700063,의료법인영제의료재단영남제일병원,경상북도 의성군 안계면 용기4길 36,경상북도,의성군,의료법인영제의료재단영남제일병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ4MiQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2700038,의료법인대남의료재단청도대남병원,경상북도 청도군 화양읍 청화로 79-7,경상북도,청도군,의료법인대남의료재단청도대남병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+E2700554,청송군보건의료원,경상북도 청송군 청송읍 의료원길 19,경상북도,청송군,청송군보건의료원(안덕보건지소),JDQ4MTYyMiM4MSMkMSMkMCMkOTIkMzgxOTYxIzExIyQxIyQ3IyQwMyQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2700066,의료법인왜관병원,경상북도 칠곡군 왜관읍 군청2길 10,경상북도,칠곡군,,,0.0,미매칭,,
+A2700005,경상북도포항의료원,"경상북도 포항시 북구 용흥로 36 (용흥동, (용흥동))",경상북도,포항시,경상북도포항의료원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,4.0,
+A2700008,에스포항병원,"경상북도 포항시 남구 희망대로 352 (이동, 에스포항병원)",경상북도,포항시,에스포항병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2702563,의료법인은성의료재단좋은선린병원,경상북도 포항시 북구 대신로 43 (대신동),경상북도,포항시,의료법인은성의료재단좋은선린병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,1.0,
+A2700016,포항성모병원,경상북도 포항시 남구 대잠동길 17 (대잠동),경상북도,포항시,포항성모병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,15.0,
+A2700002,포항세명기독병원,경상북도 포항시 남구 포스코대로 351 (대도동),경상북도,포항시,의료법인한성재단포항세명기독병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEwMDIjNDEjJDEjJDgjJDgz,0.9,자동매칭,17.0,
+A1300004,대구가톨릭대학교병원,대구광역시 남구 두류공원로17길 33 (대명동),대구광역시,남구,대구가톨릭대학교병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,6.0,
+A1304119,대구예스병원,"대구광역시 남구 대명로 186, 지하1, 지상2~7층 (대명동)",대구광역시,남구,대구예스병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQzIyQ4OSQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1300034,드림종합병원,대구광역시 남구 대명로 153 (대명동),대구광역시,남구,드림종합병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,4.0,
+A1300001,영남대학교병원,대구광역시 남구 현충로 170 (대명동),대구광역시,남구,영남대학교병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,7.0,
+A1300003,계명대학교동산병원,대구광역시 달서구 달구벌대로 1035 (신당동),대구광역시,달서구,계명대학교동산병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,13.0,
+A1300038,나사렛종합병원,"대구광역시 달서구 월배로 97, 나사렛병원 (진천동)",대구광역시,달서구,나사렛종합병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,4.0,
+A1300110,더블유병원,"대구광역시 달서구 달구벌대로 1632, 더블유병원 (감삼동)",대구광역시,달서구,더블유병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,4.0,
+A1300045,삼일병원,"대구광역시 달서구 월배로 436, 지하1,지상1~11층 (송현동)",대구광역시,달서구,삼일병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,5.0,
+A1300006,의료법인구의료재단구병원,대구광역시 달서구 감삼북길 141 (감삼동),대구광역시,달서구,,,0.0,미매칭,,
+A1300011,한국보훈복지의료공단대구보훈병원,대구광역시 달서구 월곡로 60 (도원동),대구광역시,달서구,,,0.0,미매칭,,
+A1303449,행복한 병원,"대구광역시 달성군 유가읍 테크노순환로12길 4, 1층,4~6층(1층 사우나홀,113~117호,119~120호,405~407호,5층,601~607호",대구광역시,달성군,행복한 병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ5MiQ0NjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A1300018,강남종합병원,"대구광역시 동구 동촌로 207, 강남병원 (방촌동)",대구광역시,동구,강남종합병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,5.0,
+A1300009,대구파티마병원,대구광역시 동구 아양로 99 (신암동),대구광역시,동구,대구파티마병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,13.0,
+A1300033,의료법인백천의료재단바로본병원,대구광역시 동구 국채보상로 769 (신천동),대구광역시,동구,,,0.0,미매칭,,
+A1300005,대구가톨릭대학교칠곡가톨릭병원,대구광역시 북구 칠곡중앙대로 440 (읍내동),대구광역시,북구,,,0.0,미매칭,,
+A1300010,칠곡경북대학교병원,"대구광역시 북구 호국로 807, 칠곡경북대학교병원(임상실습동 1~11층 포함) (학정동)",대구광역시,북구,칠곡경북대학교병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,7.0,
+A1300076,대구굿모닝병원,"대구광역시 서구 달서로 42, 대구 굿모닝병원 지하2층~11층 (내당동)",대구광역시,서구,대구굿모닝병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1300007,대구의료원,대구광역시 서구 평리로 157 (중리동),대구광역시,서구,대구의료원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1303923,더필병원,대구광역시 서구 서대구로 194 (평리동),대구광역시,서구,더필병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQzIyQ3OSQ0NjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,1.0,
+A1300065,새동산병원,대구광역시 서구 국채보상로 379 (비산동),대구광역시,서구,새동산병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQxMyQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1300081,(재)미리내천주성삼성직수도회천주성삼병원,"대구광역시 수성구 달구벌대로 3190 (신매동, 천주성삼병원)",대구광역시,수성구,(재)미리내천주성삼성직수도회천주성삼병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A1300063,MS재건병원,"대구광역시 중구 동덕로 194 (동인동1가, 동화빌딩)",대구광역시,중구,MS재건병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3MiQ0NjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1300002,경북대학교병원,"대구광역시 중구 동덕로 130 (삼덕동2가, 경북대학교병원)",대구광역시,중구,경북대학교병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,8.0,
+A1303386,계명대학교대구동산병원,"대구광역시 중구 달성로 56, 계명대학교대구동산병원 (동산동)",대구광역시,중구,계명대학교대구동산병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,6.0,
+A1300008,곽병원,대구광역시 중구 국채보상로 531 (수동),대구광역시,중구,곽병원,JDQ4MTYyMiM4MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,2.0,
+A1600009,근로복지공단대전병원,대전광역시 대덕구 계족로 637 (법동),대전광역시,대덕구,,,0.0,미매칭,,
+A1600004,대전보훈병원,대전광역시 대덕구 대청로82번길 147 (신탄진동),대전광역시,대덕구,대전보훈병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE4MzIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1600003,대전한국병원,대전광역시 동구 동서대로 1672 (성남동),대전광역시,동구,대전한국병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1600014,대전화병원,대전광역시 동구 동대전로 39 (신안동),대전광역시,동구,대전화병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ2MiQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A1602246,대청병원,"대전광역시 서구 계백로 1322 (정림동, 대청병원)",대전광역시,서구,대청병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1600006,학교법인건양교육재단건양대학교병원,"대전광역시 서구 관저동로 158, 건양대학교병원 (관저동)",대전광역시,서구,,,0.0,미매칭,,
+A1600002,학교법인을지학원대전을지대학교병원,대전광역시 서구 둔산서로 95 (둔산동),대전광역시,서구,학교법인 을지학원 대전을지대학교병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,6.0,
+A1600007,의료법인영훈의료재단유성선병원,대전광역시 유성구 북유성대로 93 (지족동),대전광역시,유성구,,,0.0,미매칭,,
+A1600008,의료법인영훈의료재단대전선병원,"대전광역시 중구 목중로 29 (목동,(목동))",대전광역시,중구,,,0.0,미매칭,,
+A1600001,충남대학교병원,"대전광역시 중구 문화로 282, 충남대학교병원 (대사동)",대전광역시,중구,충남대학교병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,13.0,
+A1600005,학교법인가톨릭학원가톨릭대학교대전성모병원,"대전광역시 중구 대흥로 64, 성모병원 (대흥동)",대전광역시,중구,,,0.0,미매칭,,
+A1200081,의료법인 라움의료재단 세웅병원,부산광역시 금정구 서동로 162 (서동),부산광역시,금정구,의료법인 라움의료재단 세웅병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQxMyQ0NjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1200028,(의)서일의료재단기장병원,부산광역시 기장군 기장읍 대청로72번길 6,부산광역시,기장군,(의)서일의료재단기장병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ3MiQzNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1200015,동남권원자력의학원원자력병원,부산광역시 기장군 장안읍 좌동길 40,부산광역시,기장군,동남권원자력의학원원자력병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A1200013,부산성모병원(재단법인 천주교부산교구유지재단),부산광역시 남구 용호로232번길 25-14 (용호동),부산광역시,남구,부산성모병원(재단법인 천주교부산교구유지재단),JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,6.0,
+A1200111,세일병원,"부산광역시 동구 중앙대로 317 (초량동, 세일병원)",부산광역시,동구,세일병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4OSQ0NjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1200017,의료법인정화의료재단 봉생기념병원,"부산광역시 동구 중앙대로 401 (좌천동, 봉생병원)",부산광역시,동구,의료법인정화의료재단 봉생기념병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,6.0,
+A1200027,재단법인일신기독교선교회 일신기독병원,부산광역시 동구 정공단로 27 (좌천동),부산광역시,동구,재단법인일신기독교선교회 일신기독병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1200026,좋은문화병원,부산광역시 동구 범일로 119 (범일동),부산광역시,동구,좋은문화병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A1200018,대동병원,부산광역시 동래구 충렬대로 187 (명륜동),부산광역시,동래구,대동병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,7.0,
+A1200011,동래봉생병원,부산광역시 동래구 안연로109번길 27 (안락동),부산광역시,동래구,동래봉생병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,6.0,
+A1206845,빌리브세웅병원,부산광역시 동래구 충렬대로 455 (안락동),부산광역시,동래구,빌리브세웅병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A1200009,의료법인 광혜의료재단 광혜병원,"부산광역시 동래구 충렬대로 96 (온천동, 광혜병원)",부산광역시,동래구,의료법인 광혜의료재단 광혜병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A1200020,의료법인 온그룹의료재단 온병원,"부산광역시 부산진구 가야대로 719, ,767,721,본관 지하3~11층 전부,12층 일부,13~14층 전부,15층 일부,신관 1층, 9층 일부 (당감동)",부산광역시,부산진구,의료법인 온그룹의료재단 온병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A1200001,인제대학교부산백병원,"부산광역시 부산진구 복지로 75, 진사로83번길 81, 1층(일부), 3층 (개금동)",부산광역시,부산진구,인제대학교부산백병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,11.0,
+A1200025,학교법인 춘해병원,"부산광역시 부산진구 중앙대로 605, 지상1층~지상9층 (범천동)",부산광역시,부산진구,학교법인 춘해병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1200019,학교법인)동의병원,"부산광역시 부산진구 양정로 62, 지상2ㆍ3ㆍ10층 각 일부/ 지하1ㆍ지상1ㆍ지상4~지상8층 전층 (양정동)",부산광역시,부산진구,학교법인)동의병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,6.0,
+A1200045,구포성심병원,부산광역시 북구 낙동대로 1786 (구포동),부산광역시,북구,구포성심병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,3.0,
+A1200006,의료법인 인당의료재단 부민병원,부산광역시 북구 만덕대로 59 (덕천동),부산광역시,북구,의료법인 인당의료재단 부민병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,4.0,
+A1200110,재단법인 베스티안재단 베스티안부산병원,부산광역시 북구 화명대로 1 (화명동),부산광역시,북구,재단법인 베스티안재단 베스티안부산병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQwMyQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1200005,의료법인 은성의료재단 좋은삼선병원,"부산광역시 사상구 가야대로 326, 좋은삼선병원 (주례동)",부산광역시,사상구,의료법인 은성의료재단 좋은삼선병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0,
+A1200101,의료법인센텀의료재단 서부산센텀병원,부산광역시 사상구 새벽로 226 (괘법동),부산광역시,사상구,의료법인센텀의료재단 서부산센텀병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ4MiQzNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1200016,한국보훈복지의료공단 부산보훈병원,부산광역시 사상구 백양대로 420 (주례동),부산광역시,사상구,한국보훈복지의료공단 부산보훈병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQ0NjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1200089,큐병원,부산광역시 사하구 낙동대로 408 (당리동),부산광역시,사하구,큐병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ3OSQ0NjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1200004,고신대학교복음병원,부산광역시 서구 감천로 262 (암남동),부산광역시,서구,고신대학교복음병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,3.0,
+A1200003,동아대학교병원,부산광역시 서구 대신공원로 26 (동대신동3가),부산광역시,서구,동아대학교병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,12.0,
+A1200002,부산대학교병원,부산광역시 서구 구덕로 179 (아미동1가),부산광역시,서구,부산대학교병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,8.0,
+A1200021,삼육부산병원,부산광역시 서구 대티로 170 (서대신동2가),부산광역시,서구,삼육부산병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,8.0,
+A1200007,비에이치에스한서병원,부산광역시 수영구 수영로 615 (광안동),부산광역시,수영구,비에이치에스한서병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,6.0,
+A1200098,의료법인 센텀의료재단 센텀종합병원,부산광역시 수영구 수영로679번길 8 (광안동),부산광역시,수영구,의료법인 센텀의료재단 센텀종합병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,4.0,
+A1200008,의료법인 은성의료재단 좋은강안병원,부산광역시 수영구 수영로 493 (남천동),부산광역시,수영구,의료법인 은성의료재단 좋은강안병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQ0NjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,6.0,
+A1200024,부산광역시의료원,"부산광역시 연제구 월드컵대로 359 (거제동, 1동, 5동일부)",부산광역시,연제구,부산광역시의료원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,3.0,
+A1200014,영도병원,부산광역시 영도구 태종로 85 (대교동2가),부산광역시,영도구,영도병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1200012,의료법인 행도의료재단 해동병원,부산광역시 영도구 태종로 133 (봉래동3가),부산광역시,영도구,의료법인 행도의료재단 해동병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1200023,재단법인천주교부산교구유지재단 메리놀병원,부산광역시 중구 중구로 121 (대청동4가),부산광역시,중구,재단법인천주교부산교구유지재단 메리놀병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1205143,의료법인 인당의료재단 해운대부민병원,"부산광역시 해운대구 해운대로 584, 해운대 부민병원 지하4~지상13층 (우동)",부산광역시,해운대구,의료법인 인당의료재단 해운대부민병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A1200022,인제대학교 해운대백병원,부산광역시 해운대구 해운대로 875 (좌동),부산광역시,해운대구,인제대학교 해운대백병원,JDQ4MTAxMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,12.0,
+A1200048,효성시티병원,부산광역시 해운대구 해운대로 135 (재송동),부산광역시,해운대구,효성시티병원,JDQ4MTAxMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQ0NjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1100141,강남베드로병원,"서울특별시 강남구 남부순환로 2649, 베드로병원 (도곡동)",서울특별시,강남구,강남베드로병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,3.0,
+A1123234,더드림병원,"서울특별시 강남구 선릉로 404, 더드림병원 (대치동)",서울특별시,강남구,더드림병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ5MiQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1100010,삼성서울병원,"서울특별시 강남구 일원로 81 (일원동, 삼성의료원)",서울특별시,강남구,삼성서울병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQzNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,18.0,
+A1100015,연세대학교의과대학강남세브란스병원,"서울특별시 강남구 언주로 211, 강남세브란스병원 (도곡동)",서울특별시,강남구,연세대학교의과대학 강남세브란스병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,11.0,
+A1100057,차의과학대학교강남차병원,"서울특별시 강남구 논현로 566, 강남차병원(역삼동650-9, 606-4, 605외2필지(지하7층~지하1층, 지상2층~7층)) (역삼동)",서울특별시,강남구,,,0.0,미매칭,,
+A1100043,강동경희대학교병원,서울특별시 강동구 동남로 892 (상일동),서울특별시,강동구,강동경희대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,9.0,
+A1100028,성심의료재단강동성심병원,서울특별시 강동구 성안로 150 (길동),서울특별시,강동구,성심의료재단강동성심병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,10.0,
+A1100053,한국보훈복지의료공단중앙보훈병원,서울특별시 강동구 진황도로61길 53 (둔촌동),서울특별시,강동구,,,0.0,미매칭,,
+A1121842,강북으뜸병원,"서울특별시 강북구 도봉로 187, 지하1층, 지상1층~지상5층 (미아동)",서울특별시,강북구,강북으뜸병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ3MiQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1100172,서울현대병원,"서울특별시 강북구 도봉로 374 (번동, 서울현대병원)",서울특별시,강북구,서울현대병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1100030,의료법인성화의료재단대한병원,"서울특별시 강북구 도봉로 301 (수유동, 대한병원)",서울특별시,강북구,,,0.0,미매칭,,
+A1117285,강서케이병원,"서울특별시 강서구 가로공원로 187, 강서케이병원 (화곡동)",서울특별시,강서구,강서케이병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQxMyQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1100046,미즈메디병원,서울특별시 강서구 강서로 295 (내발산동),서울특별시,강서구,미즈메디병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ4OSQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1100036,부민병원,"서울특별시 강서구 공항대로 389, 부민병원 (등촌동)",서울특별시,강서구,부민병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQyNjE4MzIjNjEjJDEjJDAjJDgz,1.0,자동매칭,1.0,
+A1100042,우리들병원,서울특별시 강서구 하늘길 70 (과해동),서울특별시,강서구,우리들병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1120796,이화여자대학교의과대학부속서울병원,"서울특별시 강서구 공항대로 260, 이화의대부속서울병원 (마곡동)",서울특별시,강서구,이화여자대학교의과대학부속서울병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,18.0,
+A1100047,강남고려병원,서울특별시 관악구 관악로 242 (봉천동),서울특별시,관악구,강남고려병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ3MiQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A1100076,강남힐병원,"서울특별시 관악구 남부순환로 1449, 강남힐병원 (신림동)",서울특별시,관악구,강남힐병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ4MiQzNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,1.0,
+A1100148,사랑의병원,"서울특별시 관악구 남부순환로 1860, -1,1,3,4,5층 (봉천동,  )",서울특별시,관악구,사랑의병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ5OSQzNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1100041,의료법인서울효천의료재단에이치플러스양지병원,"서울특별시 관악구 남부순환로 1636, 양지병원 (신림동)",서울특별시,관악구,의료법인서울효천의료재단 에이치플러스양지병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQ0NjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,11.0,
+A1100002,건국대학교병원,서울특별시 광진구 능동로 120-1 (화양동),서울특별시,광진구,건국대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE4MzIjNjEjJDEjJDQjJDgz,1.0,자동매칭,7.0,
+A1100051,혜민병원,서울특별시 광진구 자양로 85 (자양동),서울특별시,광진구,혜민병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,5.0,
+A1100014,고려대학교의과대학부속구로병원,"서울특별시 구로구 구로동로 148, 고려대부속구로병원 (구로동)",서울특별시,구로구,고려대학교의과대학부속구로병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,10.0,
+A1100026,구로성심병원,"서울특별시 구로구 경인로 427, 구로성심병원 (고척동)",서울특별시,구로구,구로성심병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQ0NjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,6.0,
+A1100049,희명병원,서울특별시 금천구 시흥대로 244 (시흥동),서울특별시,금천구,희명병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQ0NjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0,
+A1100048,노원을지대학교병원,"서울특별시 노원구 한글비석로 68, 을지병원 (하계동)",서울특별시,노원구,노원을지대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,7.0,
+A1100016,인제대학교상계백병원,"서울특별시 노원구 동일로 1342, 상계백병원 (상계동)",서울특별시,노원구,,,0.0,미매칭,,
+A1100027,한국원자력의학원원자력병원,"서울특별시 노원구 노원로 75, 한국원자력의학원 (공릉동)",서울특별시,노원구,한국원자력의학원원자력병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQ0NjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1100020,의료법인한전의료재단한일병원,"서울특별시 도봉구 우이천로 308, 한일병원 (쌍문동)",서울특별시,도봉구,,,0.0,미매칭,,
+A1100001,경희대학교병원,서울특별시 동대문구 경희대로 23 (회기동),서울특별시,동대문구,경희대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,10.0,
+A1100021,삼육서울병원,서울특별시 동대문구 망우로 82 (휘경동),서울특별시,동대문구,삼육서울병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,6.0,
+A1100050,서울성심병원,"서울특별시 동대문구 왕산로 259, 서울성심병원 (청량리동)",서울특별시,동대문구,서울성심병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1100022,서울특별시동부병원,서울특별시 동대문구 무학로 124 (용두동),서울특별시,동대문구,,,0.0,미매칭,,
+A1126226,낭만병원,서울특별시 동작구 동작대로 67 (사당동),서울특별시,동작구,낭만병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzUxIyQxIyQxIyQ4OSQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1100040,서울특별시보라매병원,서울특별시 동작구 보라매로5길 20 (신대방동),서울특별시,동작구,서울특별시보라매병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,10.0,
+A1100003,중앙대학교병원,서울특별시 동작구 흑석로 102 (흑석동),서울특별시,동작구,중앙대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,17.0,
+A1100063,신촌연세병원,"서울특별시 마포구 서강로 110, 지2층~6층 (신수동)",서울특별시,마포구,신촌연세병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQyIyQ1IyQwMCQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1100007,연세대학교의과대학세브란스병원,서울특별시 서대문구 연세로 50-1 (신촌동),서울특별시,서대문구,연세대학교의과대학세브란스병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,21.0,
+A1100025,의료법인동신의료재단동신병원,"서울특별시 서대문구 연희로 272, 동신병원 본관동 (홍은동)",서울특별시,서대문구,,,0.0,미매칭,,
+A1122033,기쁨병원,"서울특별시 서초구 서초중앙로 4, 기쁨병원 (서초동)",서울특별시,서초구,기쁨병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A1120432,올바로병원,"서울특별시 서초구 명달로 102, 서원빌딩 1-6층 (서초동)",서울특별시,서초구,올바로병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQyIyQ3IyQwMCQyNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A1100012,학교법인가톨릭학원가톨릭대학교서울성모병원,서울특별시 서초구 반포대로 222 (반포동),서울특별시,서초구,학교법인가톨릭학원가톨릭대학교서울성모병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,12.0,
+A1122381,재단법인베스티안재단베스티안서울병원,서울특별시 성동구 왕십리로 382 (하왕십리동),서울특별시,성동구,재단법인베스티안재단베스티안서울병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,2.0,
+A1100013,한양대학교병원,서울특별시 성동구 왕십리로 222-1 (사근동),서울특별시,성동구,한양대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,13.0,
+A1100008,학교법인고려중앙학원고려대학교의과대학부속병원(안암병원),"서울특별시 성북구 고려대로 73, 고려대병원 (안암동5가)",서울특별시,성북구,학교법인 고려중앙학원 고려대학교의과대학부속병원(안암병원),JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,11.0,
+A1125429,강철병원,"서울특별시 송파구 백제고분로 252, SH타워 2~8층 (삼전동)",서울특별시,송파구,강철병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQxMyQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1100039,경찰병원,"서울특별시 송파구 송이로 123, 국립경찰병원 (가락동)",서울특별시,송파구,경찰병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1100009,재단법인아산사회복지재단서울아산병원,"서울특별시 송파구 올림픽로43길 88, 서울아산병원 (풍납동)",서울특별시,송파구,,,0.0,미매칭,,
+A1100223,서울특별시서남병원,서울특별시 양천구 신정이펜1로 20 (신정동),서울특별시,양천구,서울특별시서남병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQzNjE4MzIjNzEjJDEjJDgjJDgz,1.0,자동매칭,8.0,
+A1100005,이화여자대학교의과대학부속목동병원,서울특별시 양천구 안양천로 1071 (목동),서울특별시,양천구,이화여자대학교의과대학부속목동병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,17.0,
+A1100019,홍익병원,"서울특별시 양천구 목동로 225, 홍익병원본관 (신정동)",서울특별시,양천구,홍익병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,7.0,
+A1100011,가톨릭대학교여의도성모병원,"서울특별시 영등포구 63로 10, 여의도성모병원 (여의도동)",서울특별시,영등포구,,,0.0,미매칭,,
+A1100037,대림성모병원,"서울특별시 영등포구 시흥대로 657 (대림동, 대림성모병원)",서울특별시,영등포구,대림성모병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,5.0,
+A1100024,명지성모병원,"서울특별시 영등포구 도림로 156, 명지성모병원 (대림동)",서울특별시,영등포구,명지성모병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQ0NjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,5.0,
+A1100054,성애의료재단성애병원,"서울특별시 영등포구 여의대방로53길 22 (신길동, 성애병원)",서울특별시,영등포구,,,0.0,미매칭,,
+A1100045,씨엠병원,"서울특별시 영등포구 영등포로36길 13 (영등포동4가, 충무병원)",서울특별시,영등포구,씨엠병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1100255,의료법인인봉의료재단영등포병원,서울특별시 영등포구 당산로31길 10 (당산동3가),서울특별시,영등포구,,,0.0,미매칭,,
+A1100163,한강수병원,"서울특별시 영등포구 영등포로 83, 한강수병원 (양평동1가)",서울특별시,영등포구,한강수병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ4OSQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A1100055,한림대학교강남성심병원,"서울특별시 영등포구 신길로 1 (대림동, 강남성심병원)",서울특별시,영등포구,,,0.0,미매칭,,
+A1100038,한림대학교한강성심병원,"서울특별시 영등포구 버드나루로7길 12 (영등포동7가, 한강성심병원)",서울특별시,영등포구,,,0.0,미매칭,,
+A1100004,순천향대학교부속서울병원,서울특별시 용산구 대사관로 59 (한남동),서울특별시,용산구,,,0.0,미매칭,,
+A1121013,가톨릭대학교은평성모병원,서울특별시 은평구 통일로 1021 (진관동),서울특별시,은평구,,,0.0,미매칭,,
+A1100152,은평연세병원,서울특별시 은평구 연서로 177 (갈현동),서울특별시,은평구,은평연세병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4MiQyNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1100023,의료법인청구성심병원,서울특별시 은평구 통일로 873 (갈현동),서울특별시,은평구,,,0.0,미매칭,,
+A1117070,최원호병원,"서울특별시 은평구 서오릉로 45, 최원호병원 (녹번동)",서울특별시,은평구,최원호병원,JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQ3IyQ4MiQyNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1100006,강북삼성병원,서울특별시 종로구 새문안로 29 (평동),서울특별시,종로구,강북삼성병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,8.0,
+A1100017,서울대학교병원,서울특별시 종로구 대학로 101 (연건동),서울특별시,종로구,서울대학교병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,22.0,
+A1107402,서울대학교치과병원,서울특별시 종로구 대학로 101 (연건동),서울특별시,종로구,서울대학교치과병원,JDQ4MTg4MSM1MSMkMSMkMCMkNjIkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1100029,서울적십자병원,"서울특별시 종로구 새문안로 9, 적십자병원 (평동)",서울특별시,종로구,서울적십자병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,1.0,
+A1100032,세란병원,서울특별시 종로구 통일로 256 (무악동),서울특별시,종로구,세란병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,4.0,
+A1100052,국립중앙의료원,"서울특별시 중구 을지로 245, 국립중앙의료원 (을지로6가)",서울특별시,중구,국립중앙의료원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,17.0,
+A1100044,녹색병원,서울특별시 중랑구 사가정로49길 53 (면목동),서울특별시,중랑구,녹색병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,6.0,
+A1100035,서울특별시서울의료원,서울특별시 중랑구 신내로 156 (신내동),서울특별시,중랑구,서울특별시서울의료원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQyNjEyMjIjNjEjJDEjJDgjJDgz,1.0,자동매칭,15.0,
+A1100075,의료법인풍산의료재단동부제일병원,"서울특별시 중랑구 망우로 511, 동부제일병원 지하1~6층 (망우동)",서울특별시,중랑구,의료법인풍산의료재단동부제일병원,JDQ4MTg4MSM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A1800441,세종충남대학교병원,"세종특별자치시 보듬7로 20, 세종충남대학교병원 (도담동)",세종특별자치시,세종시,세종충남대학교병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,12.0,
+A1800417,의료법인 영제 의료재단 엔케이세종병원,"세종특별자치시 한누리대로 161, 세종시 NK리움힐 상가 1~8층 (나성동)",세종특별자치시,세종시,의료법인 영제 의료재단 엔케이세종병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQ0NjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,1.0,
+A1700023,(의)내경의료재단울산제일병원,울산광역시 남구 남산로354번길 26 (신정동),울산광역시,남구,,,0.0,미매칭,,
+A1700010,굿모닝병원,울산광역시 남구 삼산로 110 (달동),울산광역시,남구,굿모닝병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3OSQzNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1700003,울산병원,울산광역시 남구 월평로171번길 13 (신정동),울산광역시,남구,울산병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0,
+A1700011,의료법인은성의료재단좋은삼정병원,울산광역시 남구 북부순환도로 51 (무거동),울산광역시,남구,,,0.0,미매칭,,
+A1700028,의료법인정안의료재단중앙병원,"울산광역시 남구 문수로 472, 중앙병원 (신정동)",울산광역시,남구,,,0.6,낮은유사도,,
+A1700004,학교법인울산공업학원울산대학교병원,"울산광역시 동구 대학병원로 25, 울산대학교병원 (전하동)",울산광역시,동구,,,0.0,미매칭,,
+A1700007,울산엘리야병원,울산광역시 북구 호계로 285 (호계동),울산광역시,북구,울산엘리야병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1700025,의료법인송은의료재단울산시티병원,울산광역시 북구 산업로 1007 (연암동),울산광역시,북구,,,0.0,미매칭,,
+A1700001,서울산보람병원,"울산광역시 울주군 삼남읍 중평로 53, 서울산보람병원",울산광역시,울주군,서울산보람병원,JDQ4MTYyMiM4MSMkMSMkNCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,3.0,
+A1700002,의료법인동강의료재단동강병원,울산광역시 중구 태화로 239 (태화동),울산광역시,중구,,,0.0,미매칭,,
+A1701489,의료법인동강의료재단동천동강병원,"울산광역시 중구 외솔큰길 215 (남외동, 동천동강병원)",울산광역시,중구,,,0.0,미매칭,,
+A1700036,의료법인에스엠씨의료재단울산세민병원,울산광역시 중구 학성로 184 (학성동),울산광역시,중구,의료법인에스엠씨의료재단울산세민병원,JDQ4MTYyMiM4MSMkMSMkNCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ2MiQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1403617,비에스종합병원,인천광역시 강화군 강화읍 충렬사로 31,인천광역시,강화군,비에스종합병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQ3IyQwMCQyNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,1.0,
+A1400010,검단탑병원,인천광역시 검단구 청마로19번길 5 (당하동),인천광역시,검단구,검단탑병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQzNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,9.0,
+A1400005,온누리병원,인천광역시 검단구 완정로 199 (왕길동),인천광역시,검단구,온누리병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1400014,의료법인인성의료재단한림병원,인천광역시 계양구 장제로 722 (작전동),인천광역시,계양구,,,0.0,미매칭,,
+A1403121,인천더드림병원,인천광역시 계양구 계양대로 123(작전동),인천광역시,계양구,인천더드림병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQ3IyQ5MiQyNjEwMDIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1403372,인천세종병원,"인천광역시 계양구 계양문화로 20, 인천세종병원 (작전동)",인천광역시,계양구,인천세종병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQzNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,15.0,
+A1400045,국제바로병원,"인천광역시 남동구 석정로 518, 1층일부, 2층일부 ~ 9층 (간석동)",인천광역시,남동구,국제바로병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ3OSQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A1400001,의료법인 길의료재단 길병원,"인천광역시 남동구 남동대로774번길 21 (구월동, 가천대학교길병원)",인천광역시,남동구,의료법인 길의료재단 길병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,23.0,
+A1403871,인천힘찬종합병원,"인천광역시 남동구 논현로 72, 인천힘찬종합병원 (논현동)",인천광역시,남동구,인천힘찬종합병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQyNjEyMjIjODEjJDEjJDYjJDgz,1.0,자동매칭,6.0,
+A1404358,더나눔병원,"인천광역시 미추홀구 독배로 408-1, 4~8층 (용현동)",인천광역시,미추홀구,더나눔병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzIxIyQxIyQxIyQ4MiQzNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1400016,인천사랑병원,인천광역시 미추홀구 미추홀대로 726 (주안동),인천광역시,미추홀구,의료법인 인천사랑병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQyNjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,9.0,
+A1400004,현대유비스병원,인천광역시 미추홀구 독배로 503 (숭의동),인천광역시,미추홀구,현대유비스병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ4OSQzNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,5.0,
+A1400012,가톨릭대학교 인천성모병원,인천광역시 부평구 동수로 56 (부평동),인천광역시,부평구,,,0.0,미매칭,,
+A1400032,근로복지공단인천병원,인천광역시 부평구 무네미로 446 (구산동),인천광역시,부평구,근로복지공단인천병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQyNjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1400013,안은의료재단 부평세림병원,"인천광역시 부평구 부평대로 175 (청천동, 세림병원)",인천광역시,부평구,,,0.0,미매칭,,
+A1400008,(의)성세의료재단 뉴성민병원,인천광역시 서해구 신석로 70 (석남동 523-1번지)  (석남동),인천광역시,서해구,(의)성세의료재단 뉴성민병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,1.0,
+A1400015,가톨릭관동대학교국제성모병원,"인천광역시 서해구 심곡로100번길 25 (심곡동, 인천국제성모병원)",인천광역시,서해구,,,0.0,미매칭,,
+A1400003,의료법인 루가의료재단 나은병원,"인천광역시 서해구 원적로 23 (가좌동, 원적로 27번길 11(가좌동))",인천광역시,서해구,의료법인루가의료재단 나은병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEyMjIjNjEjJDEjJDAjJDgz,1.0,자동매칭,7.0,
+A1400011,의료법인 나사렛의료재단 나사렛국제병원,"인천광역시 연수구 먼우금로 98 (동춘동, 나사렛국제병원)",인천광역시,연수구,(의)나사렛의료재단 나사렛국제병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,7.0,
+A1400018,인천적십자병원,"인천광역시 연수구 원인재로 263 (연수동, 인천적십자병원)",인천광역시,연수구,인천적십자병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQ0NjE0ODEjODEjJDEjJDIjJDgz,1.0,자동매칭,5.0,
+A1403699,(의)성세의료재단 영종국제병원,"인천광역시 영종구 하늘별빛로65번길 7-9, 3,4층 (중산동)",인천광역시,영종구,의료법인 성세의료재단 영종국제병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxOTYxIzExIyQxIyQ3IyQ5OSQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1400037,인천광역시의료원백령병원,"인천광역시 옹진군 백령면 백령로 233, 인천광역시의료원 백령병원",인천광역시,옹진군,인천광역시의료원백령병원,JDQ4MTYyMiM1MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3OSQ0NjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1400007,의료법인 성수의료재단 인천백병원,인천광역시 제물포구 샛골로 214 (송림동),인천광역시,제물포구,의료법인 성수의료재단 인천백병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQyNjEwMDIjNjEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A1400017,인천광역시의료원,"인천광역시 제물포구 방축로 217 (송림동, 인천광역시 의료원)",인천광역시,제물포구,인천광역시의료원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,3.0,
+A1400009,인천기독병원,인천광역시 제물포구 답동로30번길 10 (율목동),인천광역시,제물포구,인천기독병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,3.0,
+A1400002,인하대학교의과대학부속병원,"인천광역시 제물포구 인항로 27-0 (신흥동3가,인하대학병원)",인천광역시,제물포구,인하대학교의과대학부속병원,JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQzNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,19.0,
+A2600050,전라남도강진의료원,전남광주통합특별시 강진군 강진읍 탐진로 5  ,전남광주통합특별시,강진군,,,0.0,미매칭,,
+A2600018,의료법인영성의료재단고흥종합병원,전남광주통합특별시 고흥군 고흥읍 고흥로 1935,전남광주통합특별시,고흥군,,,0.0,미매칭,,
+A2600068,의료법인장호의료재단녹동현대병원,전남광주통합특별시 고흥군 도양읍 차경구렁목길 215,전남광주통합특별시,고흥군,,,0.0,미매칭,,
+A2600029,곡성사랑병원,전남광주통합특별시 곡성군 곡성읍 곡성로 761,전남광주통합특별시,곡성군,의료법인대송의료재단 곡성사랑병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ4MiQzNjEwMDIjNzEjJDEjJDgjJDgz,0.7214285714285714,자동매칭,0.0,
+A1500019,KS병원,전남광주통합특별시 광산구 왕버들로 220 (수완동),전남광주통합특별시,광산구,KS병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,6.0,
+A1500004,광주보훈병원,전남광주통합특별시 광산구 첨단월봉로 99 (산월동),전남광주통합특별시,광산구,광주보훈병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjE4MzIjNzEjJDEjJDgjJDgz,1.0,자동매칭,3.0,
+A1502007,광주센트럴병원,"전남광주통합특별시 광산구 수완로 6, A동1,3,5,6층/B동동 (신가동)",전남광주통합특별시,광산구,광주센트럴병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A1500018,광주수완병원,전남광주통합특별시 광산구 임방울대로 370 (수완동),전남광주통합특별시,광산구,광주수완병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQ0NjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,3.0,
+A1500043,광주열린병원,전남광주통합특별시 광산구 송도로 271 (송정동),전남광주통합특별시,광산구,광주열린병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4MiQzNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1500071,송정사랑병원,"전남광주통합특별시 광산구 송도로 232 (송정동, 송정사랑병원)",전남광주통합특별시,광산구,송정사랑병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ5OSQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A1500006,신가병원,전남광주통합특별시 광산구 목련로 316 (신가동),전남광주통합특별시,광산구,신가병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,4.0,
+A1500011,첨단종합병원,전남광주통합특별시 광산구 첨단중앙로170번길 59 (쌍암동),전남광주통합특별시,광산구,첨단종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,7.0,
+A1500017,하남성심병원,전남광주통합특별시 광산구 용아로 259 하남성심병원 (산정동),전남광주통합특별시,광산구,하남성심병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,4.0,
+A2600006,광양사랑병원,"전남광주통합특별시 광양시 공영로 71 (중동, (중동))",전남광주통합특별시,광양시,광양사랑병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A2600024,의료법인현경의료재단광양서울병원,전남광주통합특별시 광양시 진등길 93 (마동),전남광주통합특별시,광양시,,,0.0,미매칭,,
+A2600061,구례병원,전남광주통합특별시 구례군 구례읍 동편제길 4,전남광주통합특별시,구례군,구례병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2600016,나주종합병원,전남광주통합특별시 나주시 영산로 5419 (성북동),전남광주통합특별시,나주시,나주종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQzNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,1.0,
+A2602211,빛가람종합병원,전남광주통합특별시 나주시 정보화길 49-0 (빛가람동),전남광주통합특별시,나주시,빛가람종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQ0NjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1500021,광주기독병원,전남광주통합특별시 남구 양림로 37 (양림동),전남광주통합특별시,남구,광주기독병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,7.0,
+A1500009,광주씨티병원,전남광주통합특별시 남구 서문대로654번길 5 (진월동),전남광주통합특별시,남구,광주씨티병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,1.0,
+A1500013,동아병원,전남광주통합특별시 남구 대남대로 238 (백운동),전남광주통합특별시,남구,동아병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ4OSQyNjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,3.0,
+A1500078,빛고을전남대학교병원,전남광주통합특별시 남구 덕남길 80 (덕남동),전남광주통합특별시,남구,빛고을전남대학교병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQzNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2600054,담양사랑병원,전남광주통합특별시 담양군 담양읍 천변7길 19,전남광주통합특별시,담양군,담양사랑병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4MiQyNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1500002,전남대학교병원,전남광주통합특별시 동구 제봉로 42 (학동),전남광주통합특별시,동구,전남대학교병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNTEjJDEjJDYjJDgz,1.0,자동매칭,16.0,
+A1500001,조선대학교병원,전남광주통합특별시 동구 필문대로 365 (서석동),전남광주통합특별시,동구,조선대학교병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,9.0,
+A2600020,목포기독병원,전남광주통합특별시 목포시 백년대로 303 (상동),전남광주통합특별시,목포시,목포기독병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4MiQzNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,1.0,
+A2600022,목포시의료원,"전남광주통합특별시 목포시 이로로 18 (용해동, (용해동))",전남광주통합특별시,목포시,목포시의료원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEyMjIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2600011,목포한국병원,전남광주통합특별시 목포시 영산로 483 (상동),전남광주통합특별시,목포시,목포한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQyNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,17.0,
+A2600017,의료법인목포구암의료재단목포중앙병원,전남광주통합특별시 목포시 영산로 627 (석현동),전남광주통합특별시,목포시,,,0.0,미매칭,,
+A2600007,의료법인해민의료재단 세안종합병원,전남광주통합특별시 목포시 고하대로 795-2 (연산동),전남광주통합특별시,목포시,의료법인해민의료재단 세안종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQzNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,1.0,
+A2600003,대송의료재단무안병원,전남광주통합특별시 무안군 무안읍 몽탄로 65,전남광주통합특별시,무안군,,,0.0,미매칭,,
+A2600052,보성아산병원,전남광주통합특별시 보성군 미력면 가평길 36-17,전남광주통합특별시,보성군,,,0.65,낮은유사도,,
+A2600066,의료법인삼호의료재단벌교삼호병원,전남광주통합특별시 보성군 벌교읍 남하로 12,전남광주통합특별시,보성군,,,0.0,미매칭,,
+A1500015,광주병원,전남광주통합특별시 북구 면앙로139번길 51 (두암동),전남광주통합특별시,북구,광주병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQ0NjE0ODEjNzEjJDEjJDgjJDgz,1.0,자동매칭,4.0,
+A1500005,광주일곡병원,전남광주통합특별시 북구 양일로 309 (일곡동),전남광주통합특별시,북구,광주일곡병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A1500003,광주현대병원,전남광주통합특별시 북구 설죽로 291 (용봉동),전남광주통합특별시,북구,광주현대병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQ0NjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,4.0,
+A1500007,광주희망병원,전남광주통합특별시 북구 하서로 429 (용두동),전남광주통합특별시,북구,광주희망병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A1500010,운암한국병원,전남광주통합특별시 북구 북문대로 191 (운암동),전남광주통합특별시,북구,운암한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQ0NjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A1500057,해피뷰병원,전남광주통합특별시 북구 경열로 216 (유동),전남광주통합특별시,북구,해피뷰병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A1500016,광주한국병원,전남광주통합특별시 서구 월드컵4강로 223 (쌍촌동),전남광주통합특별시,서구,광주한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,4.0,
+A1500014,미래로21병원,전남광주통합특별시 서구 화운로 1 (화정동),전남광주통합특별시,서구,미래로21병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQzNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A1500022,상무병원,전남광주통합특별시 서구 상무자유로 181-7 (치평동),전남광주통합특별시,서구,상무병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQzNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,2.0,
+A1500020,서광병원,전남광주통합특별시 서구 금화로59번길 6 (금호동),전남광주통합특별시,서구,서광병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0,
+A1502006,선한병원,전남광주통합특별시 서구 무진대로 975 (광천동),전남광주통합특별시,서구,선한병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2600012,근로복지공단순천병원,전남광주통합특별시 순천시 조례1길 24 (조례동),전남광주통합특별시,순천시,,,0.0,미매칭,,
+A2600019,성가롤로병원,전남광주통합특별시 순천시 순광로 221 (조례동),전남광주통합특별시,순천시,성가롤로병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,15.0,
+A2600008,순천제일병원,전남광주통합특별시 순천시 기적의도서관1길 3 (조례동),전남광주통합특별시,순천시,의료법인청언의료재단 순천제일병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjEyMjIjNTEjJDEjJDIjJDgz,0.7214285714285714,자동매칭,1.0,
+A2600004,순천중앙병원,전남광주통합특별시 순천시 장명로 5 (장천동),전남광주통합특별시,순천시,순천중앙병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A2600005,의료법인한국의료재단한국병원,전남광주통합특별시 순천시 우명길 42 (연향동),전남광주통합특별시,순천시,,,0.0,미매칭,,
+A2600056,전라남도순천의료원,전남광주통합특별시 순천시 서문성터길 2 (매곡동),전남광주통합특별시,순천시,,,0.0,미매칭,,
+A2600051,의료법인신안대우병원,전남광주통합특별시 신안군 비금면 송치길 155-11,전남광주통합특별시,신안군,,,0.65,낮은유사도,,
+A2600010,여수전남병원,"전남광주통합특별시 여수시 좌수영로 49 (광무동, 전남병원)",전남광주통합특별시,여수시,여수전남병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0,
+A2601742,여수한국병원,전남광주통합특별시 여수시 여천체육공원길 10 (신기동),전남광주통합특별시,여수시,여수한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQxMyQyNjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2600014,여천전남병원,"전남광주통합특별시 여수시 무선로 95 (선원동, (선원동))",전남광주통합특별시,여수시,여천전남병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQ3IyQ3OSQyNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,4.0,
+A2600027,의료법인한마음의료재단여수제일병원,"전남광주통합특별시 여수시 쌍봉로 70 (학동, (학동))",전남광주통합특별시,여수시,,,0.0,미매칭,,
+A2600015,영광종합병원,"전남광주통합특별시 영광군 영광읍 와룡로 3,",전남광주통합특별시,영광군,영광종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A2600034,의료법인 거명의료재단 영광기독병원,전남광주통합특별시 영광군 영광읍 신남로 265,전남광주통합특별시,영광군,의료법인거명의료재단 영광기독병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2600070,영암한국병원,전남광주통합특별시 영암군 영암읍 오리정길 8,전남광주통합특별시,영암군,영암한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4OSQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2600667,금일마취통증의학과의원,"전남광주통합특별시 완도군 금일읍 감목길 5, 금일마취통증의학과의원",전남광주통합특별시,완도군,금일마취통증의학과의원,JDQ4MTYyMiM3MSMkMiMkMCMkMDAkMzgxMTkxIzIxIyQyIyQxIyQwMCQzNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+E2600362,완도군노화읍보건지소,"전남광주통합특별시 완도군 노화읍 노화로 813, 노화보건지소",전남광주통합특별시,완도군,완도군노화읍보건지소,JDQ4MTYyMiM3MSMkMSMkMCMkOTIkMzgxOTYxIzExIyQxIyQzIyQxMyQzNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2600032,완도대성병원,전남광주통합특별시 완도군 완도읍 청해진동로 63,전남광주통합특별시,완도군,완도대성병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4OSQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2600035,의료법인행복나눔의료재단장성병원,전남광주통합특별시 장성군 장성읍 역전로 171,전남광주통합특별시,장성군,,,0.0,미매칭,,
+A2600021,의료법인우범의료재단장흥종합병원,전남광주통합특별시 장흥군 장흥읍 흥성로 74,전남광주통합특별시,장흥군,,,0.0,미매칭,,
+A2600037,장흥우리병원,전남광주통합특별시 장흥군 장흥읍 흥성로 83,전남광주통합특별시,장흥군,장흥우리병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ4OSQ0NjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2602088,의료법인남우의료재단 진도전남병원,전남광주통합특별시 진도군 진도읍 남문길 12-11 (진도전남병원),전남광주통합특별시,진도군,의료법인남우의료재단 진도전남병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQxIyQ5IyQ4MiQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2600040,진도한국병원,전남광주통합특별시 진도군 진도읍 남문길 48,전남광주통합특별시,진도군,진도한국병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzExIyQxIyQzIyQ4MiQ0NjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2600090,의료법인인성의료재단함평성심병원,"전남광주통합특별시 함평군 함평읍 영수길 132, 함평성심병원",전남광주통합특별시,함평군,,,0.0,미매칭,,
+A2600009,의료법인행촌의료재단해남종합병원,전남광주통합특별시 해남군 해남읍 해남로 45,전남광주통합특별시,해남군,,,0.0,미매칭,,
+A2600077,해남우리종합병원,전남광주통합특별시 해남군 옥천면 해남로 597,전남광주통합특별시,해남군,해남우리종합병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQwMyQyNjE4MzIjODEjJDEjJDIjJDgz,1.0,자동매칭,1.0,
+A2600048,화순고려병원,전남광주통합특별시 화순군 화순읍 충의로 109,전남광주통합특별시,화순군,화순고려병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQyIyQzIyQwMCQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2600043,화순성심병원,전남광주통합특별시 화순군 화순읍 만연로 31,전남광주통합특별시,화순군,화순성심병원,JDQ4MTYyMiM3MSMkMSMkMCMkOTkkMzgxMzUxIzMxIyQxIyQzIyQ4MiQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2600001,화순전남대학교병원,전남광주통합특별시 화순군 화순읍 서양로 322,전남광주통합특별시,화순군,화순전남대학교병원,JDQ4MTYyMiM3MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,4.0,
+A2500009,의료법인석천재단고창병원,전북특별자치도 고창군 고창읍 화신1길 9,전북특별자치도,고창군,의료법인석천재단고창병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE0ODEjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2500012,의료법인오성의료재단동군산병원,전북특별자치도 군산시 조촌로 149 (조촌동),전북특별자치도,군산시,,,0.0,미매칭,,
+A2500007,전북특별자치도군산의료원,"전북특별자치도 군산시 의료원로 27 (지곡동,(지곡동, 군산의료원))",전북특별자치도,군산시,,,0.0,미매칭,,
+A2500038,김제우석병원,전북특별자치도 김제시 서암4길 45 (서암동),전북특별자치도,김제시,김제우석병원,JDQ4MTYyMiM2MSMkMSMkNiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3OSQzNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+A2500004,전북특별자치도남원의료원,전북특별자치도 남원시 충정로 365 (고죽동),전북특별자치도,남원시,,,0.0,미매칭,,
+E2500019,무주군보건의료원,"전북특별자치도 무주군 무주읍 한풍루로 413, 무주군보건의료원",전북특별자치도,무주군,무주군보건의료원,JDQ4MTYyMiM2MSMkMSMkNiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQzNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2500010,부안성모병원,전북특별자치도 부안군 부안읍 오정2길 24,전북특별자치도,부안군,부안성모병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,1.0,
+E2500021,순창군보건의료원,전북특별자치도 순창군 순창읍 교성로 135 (순창군보건의료원),전북특별자치도,순창군,순창군보건의료원,JDQ4MTYyMiM2MSMkMSMkNiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2500001,원광대학교병원,"전북특별자치도 익산시 무왕로 895 (신동,(신동))",전북특별자치도,익산시,원광대학교병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQzNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,12.0,
+A2500011,의료법인대산의료재단익산병원,전북특별자치도 익산시 무왕로 969 (신동),전북특별자치도,익산시,,,0.0,미매칭,,
+E2500022,임실군보건의료원,전북특별자치도 임실군 임실읍 호국로 1680,전북특별자치도,임실군,임실군보건의료원,JDQ4MTYyMiM2MSMkMSMkNiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEyMjIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+E2500020,장수군보건의료원,전북특별자치도 장수군 장수읍 장천로 247,전북특별자치도,장수군,장수군보건의료원,JDQ4MTYyMiM2MSMkMSMkNiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2500056,대자인병원,"전북특별자치도 전주시 덕진구 견훤로 390, 대자인병원 (우아동3가)",전북특별자치도,전주시,대자인병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,12.0,
+A2502742,새강병원,전북특별자치도 전주시 완산구 백제대로 20-0 (평화동1가),전북특별자치도,전주시,새강병원,JDQ4MTYyMiM2MSMkMSMkNiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3MiQyNjE4MzIjNDEjJDEjJDQjJDgz,1.0,자동매칭,2.0,
+A2500005,의료법인영경의료재단전주병원,"전북특별자치도 전주시 완산구 한두평3길 13 (중화산동2가, 전주병원)",전북특별자치도,전주시,의료법인영경의료재단전주병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEwMDIjNjEjJDEjJDAjJDgz,1.0,자동매칭,8.0,
+A2501890,의료법인영경의료재단호성전주병원,전북특별자치도 전주시 덕진구 동부대로 895 (호성동1가),전북특별자치도,전주시,의료법인영경의료재단호성전주병원,JDQ4MTYyMiM2MSMkMSMkNiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQxMyQzNjEyMjIjNzEjJDEjJDgjJDgz,1.0,자동매칭,3.0,
+A2500006,재단법인예수병원유지재단예수병원,"전북특별자치도 전주시 완산구 서원로 365 (중화산동1가, 예수병원)",전북특별자치도,전주시,재단법인예수병원유지재단예수병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,13.0,
+A2500002,전북대학교병원,전북특별자치도 전주시 덕진구 건지로 20 (금암동),전북특별자치도,전주시,전북대학교병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,8.0,
+A2500003,전주고려병원,전북특별자치도 전주시 덕진구 안덕원로 367 (산정동),전북특별자치도,전주시,전주고려병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjNjEjJDEjJDAjJDgz,1.0,자동매칭,0.0,
+A2500008,재단법인 아산사회복지재단 정읍아산병원,전북특별자치도 정읍시 충정로 606-22 (용계동),전북특별자치도,정읍시,재단법인 아산사회복지재단 정읍아산병원,JDQ4MTYyMiM2MSMkMSMkNiMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjE4MzIjNjEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2502031,진안군의료원,전북특별자치도 진안군 진안읍 진무로 1145-0,전북특별자치도,진안군,진안군의료원,JDQ4MTYyMiM2MSMkMSMkNiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3OSQyNjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2900002,제주특별자치도서귀포의료원,제주특별자치도 서귀포시 장수로 47 (동홍동),제주특별자치도,서귀포시,제주특별자치도 서귀포의료원,JDQ4MTYyMiM4MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,8.0,
+A2900003,의료법인 혜인의료재단 한국병원,제주특별자치도 제주시 서광로 193 (삼도일동),제주특별자치도,제주시,의료법인 혜인의료재단 한국병원,JDQ4MTYyMiM4MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,3.0,
+A2900006,의료법인중앙의료재단중앙병원,"제주특별자치도 제주시 월랑로 91-0 (이호이동,중앙병원)",제주특별자치도,제주시,,,0.6,낮은유사도,,
+A2900007,제주대학교병원,"제주특별자치도 제주시 아란13길 15-0 (아라일동, 0동 0층 0호 (아라일동,제주대학교병원))",제주특별자치도,제주시,제주대학교병원,JDQ4MTYyMiM4MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjE0ODEjNTEjJDEjJDYjJDgz,1.0,자동매칭,11.0,
+A2900001,제주한라병원,"제주특별자치도 제주시 도령로 65 (연동, (연동))",제주특별자치도,제주시,제주한라병원,JDQ4MTYyMiM4MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ3OSQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,12.0,
+A2900005,한마음병원,제주특별자치도 제주시 연신로 52   (이도이동),제주특별자치도,제주시,한마음병원,JDQ4MTYyMiM4MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjODEjJDEjJDYjJDgz,1.0,자동매칭,6.0,
+A2400010,충청남도공주의료원,충청남도 공주시 무령로 77 (웅진동),충청남도,공주시,,,0.0,미매칭,,
+A2400019,새금산병원,충청남도 금산군 금산읍 비단로 183,충청남도,금산군,새금산병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5MiQyNjEwMDIjODEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2400009,의료법인백제병원,충청남도 논산시 시민로294번길 14 (취암동),충청남도,논산시,,,0.0,미매칭,,
+A2400008,당진종합병원,충청남도 당진시 반촌로 5-15 (시곡동),충청남도,당진시,당진종합병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,9.0,
+A2400011,재단법인아산사회복지재단보령아산병원,충청남도 보령시 죽성로 136 (죽정동),충청남도,보령시,,,0.0,미매칭,,
+A2400038,학교법인건양교육재단건양대학교부여병원,충청남도 부여군 부여읍 계백로 200,충청남도,부여군,학교법인 건양교육재단 건양대학교부여병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5MiQyNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2400003,서산중앙병원,충청남도 서산시 수석산업로 5 (수석동),충청남도,서산시,서산중앙병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjE0ODEjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0,
+A2400006,충청남도서산의료원,충청남도 서산시 중앙로 149 (석림동),충청남도,서산시,,,0.0,미매칭,,
+A2400044,의료법인 서해병원,충청남도 서천군 서천읍 서천로 184,충청남도,서천군,의료법인 서해병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQ0NjEwMDIjNzEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2402257,아산충무병원,충청남도 아산시 문화로 381 (모종동),충청남도,아산시,아산충무병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQyIyQzIyQwMCQzNjE0ODEjNTEjJDEjJDIjJDgz,1.0,자동매칭,8.0,
+A2400039,현대병원,충청남도 아산시 온천대로 1442 (온천동),충청남도,아산시,현대병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQzIyQxMyQyNjE4MzIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2400015,예산명지병원,충청남도 예산군 예산읍 신례원로 26,충청남도,예산군,예산명지병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ4MiQzNjE0ODEjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2400004,의료법인예당의료재단예산종합병원,충청남도 예산군 예산읍 금오대로 94,충청남도,예산군,,,0.0,미매칭,,
+A2402812,나은필병원,"충청남도 천안시 동남구 만남로 64, 1층일부,4~9층 (신부동)",충청남도,천안시,나은필병원,JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQ0NjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2400002,단국대학교의과대학부속병원,"충청남도 천안시 동남구 망향로 201 (안서동, 단국대학교의과대학부속병원)",충청남도,천안시,단국대학교의과대학부속병원,JDQ4MTYyMiM2MSMkMSMkMiMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQ0NjEwMDIjODEjJDEjJDYjJDgz,1.0,자동매칭,9.0,
+A2400012,의료법인영서의료재단천안충무병원,"충청남도 천안시 서북구 다가말3길 8, 충무병원 (쌍용동)",충청남도,천안시,,,0.0,미매칭,,
+A2400005,충청남도천안의료원,충청남도 천안시 동남구 충절로 537 (삼룡동),충청남도,천안시,,,0.0,미매칭,,
+A2400001,학교법인동은학원순천향대학교부속천안병원,충청남도 천안시 동남구 순천향6길 31 (봉명동),충청남도,천안시,,,0.0,미매칭,,
+E2400032,청양군보건의료원,충청남도 청양군 청양읍 칠갑산로7길 54,충청남도,청양군,청양군보건의료원,JDQ4MTYyMiM2MSMkMSMkMiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEwMDIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+E2400033,태안군보건의료원,충청남도 태안군 태안읍 서해로 1952-16,충청남도,태안군,태안군보건의료원,JDQ4MTYyMiM2MSMkMSMkMiMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjEyMjIjNDEjJDEjJDQjJDgz,1.0,자동매칭,4.0,
+A2400007,충청남도홍성의료원,충청남도 홍성군 홍성읍 조양로 224,충청남도,홍성군,,,0.0,미매칭,,
+A2300034,의료법인대광의료재단괴산성모병원,충청북도 괴산군 괴산읍 임꺽정로 116-0 (괴산성모병원),충청북도,괴산군,,,0.0,미매칭,,
+E2300011,단양군보건의료원,"충청북도 단양군 단양읍 삼봉로 53, 단양군보건의료원",충청북도,단양군,단양군보건의료원,JDQ4MTYyMiM1MSMkMSMkOCMkOTIkNDgxNzAyIzExIyQxIyQzIyQ3OSQyNjE0ODEjNDEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2300017,의료법인정민의료재단보은한양병원,충청북도 보은군 보은읍 보은로 102,충청북도,보은군,,,0.0,미매칭,,
+A2300030,의료법인조윤의료재단영동병원,충청북도 영동군 영동읍 대학로 106,충청북도,영동군,,,0.0,미매칭,,
+A2300011,의료법인힐링의료재단옥천성모병원,충청북도 옥천군 옥천읍 성왕로 1195,충청북도,옥천군,,,0.0,미매칭,,
+A2300015,의료법인태성의료재단제일조은병원,충청북도 음성군 금왕읍 음성로1230번길 10,충청북도,음성군,,,0.0,미매칭,,
+A2300009,의료법인명지의료재단명지병원,"충청북도 제천시 내토로 991-0 (고암동,의료법인명지의료재단명지병원)",충청북도,제천시,의료법인 명지의료재단 명지병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjEyMjIjNjEjJDEjJDQjJDgz,1.0,수동검증,7.0,충청북도 제천시 내토로 991-0
+A2300005,의료법인자산의료재단제천서울병원,충청북도 제천시 숭문로 57 (서부동),충청북도,제천시,,,0.0,미매칭,,
+A2300013,의료법인 건명의료재단 중앙제일병원,충청북도 진천군 진천읍 중앙북로 36-0 (진천성모병원),충청북도,진천군,의료법인 건명의료재단 중앙제일병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQyNjE4MzIjNTEjJDEjJDYjJDgz,1.0,자동매칭,0.0,
+A2300021,오창중앙병원,충청북도 청주시 청원구 오창읍 중부로 683,충청북도,청주시,오창중앙병원,JDQ4MTYyMiM1MSMkMSMkOCMkOTkkMzgxMzUxIzExIyQxIyQzIyQwMyQyNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2300039,의료법인송암의료재단마이크로병원,충청북도 청주시 흥덕구 사직대로 26 (복대동),충청북도,청주시,의료법인송암의료재단마이크로재활병원,JDQ4MTYyMiM1MSMkMSMkOCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjEwMDIjNjEjJDEjJDQjJDgz,1.0,자동매칭,0.0,
+A2300007,의료법인인화재단한국병원,충청북도 청주시 상당구 단재로 106 (영운동),충청북도,청주시,,,0.0,미매칭,,
+A2300003,의료법인정산의료재단효성병원,충청북도 청주시 상당구 쇠내로 16 (금천동),충청북도,청주시,의료법인경동의료재단효성병원,JDQ4MTYyMiM4MSMkMSMkMCMkOTkkMzgxMzUxIzIxIyQyIyQ1IyQwMCQzNjEwMDIjNjEjJDEjJDQjJDgz,0.75,자동매칭,0.0,
+A2300002,의료법인한마음의료재단하나병원,"충청북도 청주시 흥덕구 2순환로 1262, 하나병원 (가경동)",충청북도,청주시,의료법인한마음의료재단하나병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjE4MzIjODEjJDEjJDYjJDgz,1.0,자동매칭,5.0,
+A2302011,재단법인베스티안재단베스티안병원,충청북도 청주시 흥덕구 오송읍 오송생명1로 191-0,충청북도,청주시,재단법인베스티안재단베스티안병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ5OSQzNjEwMDIjNDEjJDEjJDQjJDgz,1.0,자동매칭,1.0,
+A2300008,청주성모병원,충청북도 청주시 청원구 주성로 173-19 (주중동),충청북도,청주시,청주성모병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQzNjEyMjIjNDEjJDEjJDgjJDgz,1.0,자동매칭,5.0,
+A2300001,충북대학교병원,"충청북도 청주시 서원구 1순환로 776-0 (개신동,충북대학교병원)",충청북도,청주시,충북대학교병원,JDQ4MTYyMiM1MSMkMSMkOCMkODkkMzgxMzUxIzExIyQxIyQzIyQ4OSQyNjEyMjIjODEjJDEjJDIjJDgz,1.0,자동매칭,5.0,
+A2300006,충청북도청주의료원,"충청북도 청주시 서원구 흥덕로 48-0 (사직동,청주의료원)",충청북도,청주시,충청북도청주의료원부설한의원,JDQ4MTYyMiM1MSMkMSMkOCMkMTMkMzgxNzAyIzIxIyQxIyQxIyQ3MiQyNjEyMjIjNTEjJDEjJDIjJDgz,1.0,자동매칭,0.0,
+A2300010,건국대학교충주병원,충청북도 충주시 국원대로 82 (교현동),충청북도,충주시,,,0.0,미매칭,,
+A2302306,충주미래병원,"충청북도 충주시 국원대로 99-0, 0동 (교현동,미래병원)",충청북도,충주시,충주미래병원,JDQ4MTYyMiM1MSMkMSMkOCMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ2MiQzNjE4MzIjNDEjJDEjJDgjJDgz,1.0,자동매칭,0.0,
+A2300004,충청북도충주의료원,충청북도 충주시 안림로 239-50 (안림동),충청북도,충주시,,,0.0,미매칭,,

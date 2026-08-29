@@ -1,13 +1,15 @@
-import json
 import os
 
 os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+os.environ.setdefault("MKL_NUM_THREADS", "1")
+os.environ.setdefault("NUMEXPR_NUM_THREADS", "1")
 os.environ.setdefault("LOKY_MAX_CPU_COUNT", "1")
 
 import numpy as np
 import pandas as pd
 
-from common import DATA_DIR, read_csv, save_csv
+from common import DATA_DIR, read_csv, save_csv, save_json
 
 HISTORY = DATA_DIR / "bed_status_history.csv"
 FINAL = DATA_DIR / "region_risk_final.csv"
@@ -35,18 +37,15 @@ def build_regression() -> None:
     ).merge(
         read_csv(DATA_DIR / "population_bed_score.csv")[["시군구코드", "인구대비병상비율"]],
         on="시군구코드", how="left",
-    ).merge(
-        read_csv(DATA_DIR / "doctor_score.csv")[["시군구코드", "병상대비전문의부족비율"]],
-        on="시군구코드", how="left",
     )
     frame = frame.rename(columns={"병상포화도점수": "포화율_원천"})
-    features = ["포화율_원천", "직선거리_km", "인구대비병상비율", "병상대비전문의부족비율"]
+    features = ["포화율_원천", "직선거리_km", "인구대비병상비율", "의료진부족점수"]
     model_data = frame.dropna(subset=features + ["regionRisk"])
     output = DATA_DIR / "regression_result.csv"
     metrics_path = DATA_DIR / "regression_metrics.json"
     if len(model_data) < 10:
         save_csv(pd.DataFrame(columns=["변수명", "회귀계수"]), output)
-        metrics_path.write_text(json.dumps({"status": "insufficient_data", "rows": len(model_data)}, ensure_ascii=False, indent=2), encoding="utf-8")
+        save_json({"status": "insufficient_data", "rows": len(model_data)}, metrics_path)
         print(f"Regression skipped: only {len(model_data)} complete regions")
         return
 
@@ -66,7 +65,7 @@ def build_regression() -> None:
         "mae": float(mean_absolute_error(test["regionRisk"], predicted)),
         "intercept": float(model.intercept_),
     }
-    metrics_path.write_text(json.dumps(metrics, ensure_ascii=False, indent=2), encoding="utf-8")
+    save_json(metrics, metrics_path)
 
 
 def build_correlation_and_vif() -> None:
@@ -95,15 +94,34 @@ def build_clusters() -> None:
     frame = read_csv(FINAL)
     features = ["병상포화도점수", "접근성점수", "인구대비병상점수", "의료진부족점수"]
     data = frame.dropna(subset=features).copy()
+    evaluation_columns = ["k", "실루엣점수"]
+    result_columns = ["시군구코드", "시군구명", *features, "regionRisk", "클러스터"]
+    profile_columns = ["클러스터", *features, "regionRisk", "지역수"]
+    if len(data) < 3:
+        save_csv(pd.DataFrame(columns=evaluation_columns), DATA_DIR / "cluster_k_evaluation.csv")
+        save_csv(pd.DataFrame(columns=result_columns), DATA_DIR / "cluster_result.csv")
+        save_csv(pd.DataFrame(columns=profile_columns), DATA_DIR / "cluster_profile.csv")
+        print(f"Clustering skipped: only {len(data)} complete regions")
+        return
     scaled = StandardScaler().fit_transform(data[features])
+    unique_vectors = len(np.unique(scaled, axis=0))
+    max_k = min(8, len(data) - 1, unique_vectors)
+    if max_k < 2:
+        save_csv(pd.DataFrame(columns=evaluation_columns), DATA_DIR / "cluster_k_evaluation.csv")
+        save_csv(pd.DataFrame(columns=result_columns), DATA_DIR / "cluster_result.csv")
+        save_csv(pd.DataFrame(columns=profile_columns), DATA_DIR / "cluster_profile.csv")
+        print(f"Clustering skipped: only {unique_vectors} unique feature vector(s)")
+        return
     evaluations = []
-    for k in range(2, min(8, len(data) - 1) + 1):
+    for k in range(2, max_k + 1):
         labels = KMeans(n_clusters=k, random_state=42, n_init=20).fit_predict(scaled)
-        evaluations.append({"k": k, "실루엣점수": silhouette_score(scaled, labels)})
-    evaluation = pd.DataFrame(evaluations)
+        if len(np.unique(labels)) >= 2:
+            evaluations.append({"k": k, "실루엣점수": silhouette_score(scaled, labels)})
+    evaluation = pd.DataFrame(evaluations, columns=evaluation_columns)
     save_csv(evaluation, DATA_DIR / "cluster_k_evaluation.csv")
     if evaluation.empty:
-        save_csv(pd.DataFrame(), DATA_DIR / "cluster_result.csv")
+        save_csv(pd.DataFrame(columns=result_columns), DATA_DIR / "cluster_result.csv")
+        save_csv(pd.DataFrame(columns=profile_columns), DATA_DIR / "cluster_profile.csv")
         return
     best_k = int(evaluation.loc[evaluation["실루엣점수"].idxmax(), "k"])
     data["클러스터"] = KMeans(n_clusters=best_k, random_state=42, n_init=20).fit_predict(scaled)
@@ -114,9 +132,13 @@ def build_clusters() -> None:
 
 
 def main() -> None:
+    print("Building heatmap...", flush=True)
     build_heatmap()
+    print("Building correlation and VIF...", flush=True)
     build_correlation_and_vif()
+    print("Building regression...", flush=True)
     build_regression()
+    print("Building clusters...", flush=True)
     build_clusters()
     print("Saved PART 4 outputs")
 

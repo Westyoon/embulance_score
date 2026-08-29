@@ -44,17 +44,20 @@ export default function MapTab({ data }) {
   const { geo, regionIndex, regionsByKey, ranked, kpi, allHospitals } = data;
   const [selected, setSelected] = useState(null);
   const [selectedHospital, setSelectedHospital] = useState(null);
-  const [highlightCode, setHighlightCode] = useState(null);
+  const [highlightCodes, setHighlightCodes] = useState([]);
   const [sidePanel, setSidePanel] = useState("summary");
   const [regionQuery, setRegionQuery] = useState("");
   const [hospitalQuery, setHospitalQuery] = useState("");
 
-  const openRegion = (r) => { setHighlightCode(r.code ?? null); setSelected(r); setSelectedHospital(null); };
+  const codesForRegion = (region) => (
+    region?.geoCodes?.length ? region.geoCodes : (region?.code ? [region.code] : [])
+  );
+  const openRegion = (r) => { setHighlightCodes(codesForRegion(r)); setSelected(r); setSelectedHospital(null); };
   const openHospital = (h) => {
     const region = findRegionForHospital(regionsByKey, h);
     setSelectedHospital(enrichHospital(h));
     setSelected(null);
-    if (region) setHighlightCode(region.code ?? null);
+    setHighlightCodes(h.geoCode ? [h.geoCode] : codesForRegion(region));
   };
   const backToRegion = () => {
     const region = findRegionForHospital(regionsByKey, selectedHospital);
@@ -80,8 +83,8 @@ export default function MapTab({ data }) {
           </div>
           <span style={{ fontSize: 10.5, ...mutedText }}>휠로 확대/축소 · 드래그로 이동 · 지역 클릭 시 상세</span>
         </div>
-        <KoreaMap geo={geo} regionIndex={regionIndex} onSelect={openRegion} highlightCode={highlightCode}
-          selectedHospital={selectedHospital} hospitalRegionCode={hospitalRegion?.code ?? null} />
+        <KoreaMap geo={geo} regionIndex={regionIndex} onSelect={openRegion} highlightCodes={highlightCodes}
+          selectedHospital={selectedHospital} hospitalRegionCode={selectedHospital?.geoCode ?? hospitalRegion?.code ?? null} />
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -98,7 +101,7 @@ export default function MapTab({ data }) {
           <>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               <KpiCard label="평균 위험도" value={kpi.avg.toFixed(1)} accent="#38bdf8" icon={Activity} />
-              <KpiCard label="고위험 지역" value={kpi.high} sub="50점 이상" accent="#ef4444" icon={AlertTriangle} />
+              <KpiCard label="고위험 지역" value={kpi.high} sub="50점 초과" accent="#ef4444" icon={AlertTriangle} />
             </div>
             <div style={{ ...cardStyle, padding: "10px 12px", flex: 1, overflowY: "auto", maxHeight: 380 }}>
               <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
@@ -111,7 +114,7 @@ export default function MapTab({ data }) {
               </div>
               {filteredRanked.length === 0 && <div style={{ fontSize: 11.5, ...mutedText, padding: "14px 4px", textAlign: "center" }}>검색 결과가 없습니다</div>}
               {filteredRanked.map((r) => {
-                const active = r.code != null && highlightCode === r.code;
+                const active = codesForRegion(r).some((code) => highlightCodes.includes(code));
                 return (
                   <div key={r.key} onClick={() => openRegion(r)}
                     style={{ display: "grid", gridTemplateColumns: "1fr 62px 42px", gap: 4, alignItems: "center",

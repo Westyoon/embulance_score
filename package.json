@@ -2,11 +2,14 @@
   "name": "ecc-dashboard-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "update:boundaries": "node scripts/update_boundaries.mjs",
+    "validate:frontend-data": "node scripts/validate_frontend_data.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.33.0",
@@ -18,6 +21,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "admdongkor": "^0.5.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4"

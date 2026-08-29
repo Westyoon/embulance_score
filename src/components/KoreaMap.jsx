@@ -8,21 +8,24 @@ import { mutedText } from "./shared";
 
 const W = 520, H = 620;
 
-export default function KoreaMap({ geo, regionIndex, onSelect, highlightCode, selectedHospital, hospitalRegionCode }) {
+export default function KoreaMap({ geo, regionIndex, onSelect, highlightCodes, selectedHospital, hospitalRegionCode }) {
   const containerRef = useRef(null);
   const [view, setView] = useState({ scale: 1, x: 0, y: 0 });
   const dragRef = useRef(null);
   const [hoverInfo, setHoverInfo] = useState(null);
 
-  const paths = useMemo(() => {
+  const mapGeometry = useMemo(() => {
     const bounds = computeBounds(geo);
     const project = makeProjector(bounds, W, H, 14);
-    return geo.features.map((f) => {
+    const paths = geo.features.map((f) => {
       const [cx, cy] = centroidOf(f.geometry, project);
       return { code: f.properties.code, name: f.properties.name, d: geometryPath(f.geometry, project), cx, cy };
     });
+    return { paths, project };
   }, [geo]);
-  const highlighted = highlightCode ? paths.find((p) => p.code === highlightCode) : null;
+  const { paths, project } = mapGeometry;
+  const highlightedCodeSet = useMemo(() => new Set(highlightCodes ?? []), [highlightCodes]);
+  const highlighted = paths.filter((path) => highlightedCodeSet.has(path.code));
 
   // 병원 상세 패널이 열려있는 동안만 지도에 마커 1개를 띄운다 — 별도 state 없이
   // selectedHospital 하나에서 파생시켜, 패널을 닫으면 마커도 자동으로 사라진다.
@@ -30,11 +33,17 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCode, se
     if (!selectedHospital || !hospitalRegionCode) return null;
     const region = paths.find((p) => p.code === hospitalRegionCode);
     if (!region) return null;
+    const latitude = Number(selectedHospital.latitude);
+    const longitude = Number(selectedHospital.longitude);
+    if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+      const [x, y] = project(longitude, latitude);
+      return { ...selectedHospital, x, y };
+    }
     const seed = hashCode((selectedHospital.orgCode || selectedHospital.name) + hospitalRegionCode);
     const angle = seededRandom(seed) * Math.PI * 2;
     const dist = 3 + seededRandom(seed + 1) * 4;
     return { ...selectedHospital, x: region.cx + Math.cos(angle) * dist, y: region.cy + Math.sin(angle) * dist };
-  }, [paths, selectedHospital, hospitalRegionCode]);
+  }, [paths, project, selectedHospital, hospitalRegionCode]);
 
   const clampView = (v) => {
     const scale = Math.min(8, Math.max(1, v.scale));
@@ -60,7 +69,7 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCode, se
           {paths.map((p) => {
             const r = regionIndex[p.code];
             const fill = r && !r.missing ? riskColor(r.risk) : MISSING_COLOR;
-            const isHi = p.code === highlightCode;
+            const isHi = highlightedCodeSet.has(p.code);
             return (
               <path key={p.code} d={p.d} fill={fill} fillOpacity={isHi ? 1 : 0.92}
                 stroke={isHi ? "#0f172a" : "#cbd5e1"} strokeWidth={(isHi ? 2.2 : 0.5) / view.scale}
@@ -71,15 +80,15 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCode, se
                 style={{ cursor: "pointer" }} />
             );
           })}
-          {highlighted && (
-            <g style={{ pointerEvents: "none" }}>
-              <circle cx={highlighted.cx} cy={highlighted.cy} r={6 / view.scale} fill="none" stroke="#0f172a" strokeWidth={1.4 / view.scale}>
+          {highlighted.map((path) => (
+            <g key={`highlight-${path.code}`} style={{ pointerEvents: "none" }}>
+              <circle cx={path.cx} cy={path.cy} r={6 / view.scale} fill="none" stroke="#0f172a" strokeWidth={1.4 / view.scale}>
                 <animate attributeName="r" values={`${5 / view.scale};${13 / view.scale};${5 / view.scale}`} dur="1.5s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.9;0;0.9" dur="1.5s" repeatCount="indefinite" />
               </circle>
-              <circle cx={highlighted.cx} cy={highlighted.cy} r={3.5 / view.scale} fill="#0f172a" stroke="#ffffff" strokeWidth={1.2 / view.scale} />
+              <circle cx={path.cx} cy={path.cy} r={3.5 / view.scale} fill="#0f172a" stroke="#ffffff" strokeWidth={1.2 / view.scale} />
             </g>
-          )}
+          ))}
           {hospitalMarker && (() => {
             const r = 4.2 / view.scale;
             const m = hospitalMarker;

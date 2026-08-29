@@ -49,7 +49,7 @@ export default function AnalyticsTab({ data }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
         <KpiCard label="평균 위험도" value={kpi.avg.toFixed(1)} sub={`전국 ${kpi.complete}개 산출 지역`} accent="#38bdf8" icon={Activity} />
-        <KpiCard label="고위험 지역" value={kpi.high} sub="50점 이상" accent="#ef4444" icon={AlertTriangle} />
+        <KpiCard label="고위험 지역" value={kpi.high} sub="50점 초과" accent="#ef4444" icon={AlertTriangle} />
         <KpiCard label="위험도 산출 완료" value={`${kpi.complete} / ${kpi.total}`} sub={`${kpi.missing}개 지역 원천데이터부족`} accent="#22c55e" icon={Users} />
         <KpiCard label="기준 시각" value={formatAsOf(kpi.asOf)} sub="KST · 병상 API 최신 수집" accent="#a78bfa" icon={LayoutDashboard} />
       </div>

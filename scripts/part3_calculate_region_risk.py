@@ -3,6 +3,14 @@ import pandas as pd
 
 from common import DATA_DIR, read_csv, save_csv
 
+RISK_BINS = [-np.inf, 20, 35, 50, 65, np.inf]
+RISK_GRADES = [1, 2, 3, 4, 5]
+RISK_GRADE_NAMES = ["매우낮음", "낮음", "보통", "높음", "매우높음"]
+
+
+def classify_risk(values: pd.Series, labels: list) -> pd.Series:
+    return pd.cut(values, RISK_BINS, labels=labels, right=True, include_lowest=True)
+
 
 def main() -> None:
     bed = read_csv(DATA_DIR / "bed_status.csv")
@@ -42,7 +50,9 @@ def main() -> None:
         + 0.20 * final.loc[complete, "인구대비병상점수"]
         + 0.15 * final.loc[complete, "의료진부족점수"]
     )
-    final["위험등급"] = pd.cut(final["regionRisk"], [-0.001, 20, 40, 60, 80, 100], labels=[1, 2, 3, 4, 5])
+    # 프론트와 동일: <=20, <=35, <=50, <=65, >65.
+    final["위험등급"] = classify_risk(final["regionRisk"], RISK_GRADES)
+    final["위험등급명"] = classify_risk(final["regionRisk"], RISK_GRADE_NAMES)
     final["산출상태"] = np.where(complete, "완료", "원천데이터부족")
     save_csv(final.sort_values("시군구코드"), DATA_DIR / "region_risk_final.csv")
     print(f"Saved {len(final):,} regions; complete={int(complete.sum()):,}")

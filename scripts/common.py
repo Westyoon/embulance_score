@@ -1,14 +1,16 @@
 import os
 import xml.etree.ElementTree as ET
+import json
 from pathlib import Path
 from urllib.parse import unquote
+from uuid import uuid4
 
 import pandas as pd
 import requests
 from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = ROOT / "data"
+DATA_DIR = Path(os.getenv("PIPELINE_DATA_DIR", ROOT / "data")).resolve()
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 load_dotenv(ROOT / ".env")
 
@@ -18,7 +20,7 @@ API_BASE = "https://apis.data.go.kr/B552657/ErmctInfoInqireService"
 def api_key() -> str:
     value = os.getenv("DATA_GO_KR_API_KEY", "").strip()
     if not value:
-        raise RuntimeError(".env에 DATA_GO_KR_API_KEY를 설정하세요.")
+        raise RuntimeError("환경변수 또는 .env에 DATA_GO_KR_API_KEY를 설정하세요.")
     return unquote(value)
 
 
@@ -49,5 +51,20 @@ def read_csv(path: Path) -> pd.DataFrame:
 
 def save_csv(frame: pd.DataFrame, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    frame.to_csv(path, index=False, encoding="utf-8-sig")
+    temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    try:
+        frame.to_csv(temporary, index=False, encoding="utf-8-sig")
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def save_json(value: dict, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    try:
+        temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
