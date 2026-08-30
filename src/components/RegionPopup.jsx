@@ -10,6 +10,10 @@ const COMPONENTS = [
   { key: "doc", name: "의료진부족", weight: "15%" },
 ];
 
+function isFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
 export default function RegionPopup({ region, onClose, onSelectHospital }) {
   if (!region) return null;
 
@@ -26,7 +30,7 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
         <div style={{ fontSize: 12, ...mutedText, marginTop: 14, lineHeight: 1.6, background: "#f8fafc", border: "1px solid #e2e8f0", padding: "12px 14px", borderRadius: 10 }}>
           {region.key
             ? <>구성점수 중 일부(주로 의료진부족점수)가 HIRA 매칭 기준을 충족하지 못해 최종 위험도가 <b style={{ color: "#0f172a" }}>산출되지 않은 지역</b>입니다. &quot;의료진 부족 0점&quot;이 아니라 <b style={{ color: "#0f172a" }}>&quot;데이터 부족으로 미산출&quot;</b>로 표시해야 합니다.</>
-            : <>이 경계 데이터셋(2013 KOSTAT 단순화)에 대응하는 <b style={{ color: "#0f172a" }}>원천 데이터가 없는 지역</b>입니다. 최근 행정구역 개편이나 데이터 매칭 누락으로 아직 위험도가 연결되지 않았습니다.</>}
+            : <>행정안전부 2026-07-01 행정구역 체계를 반영한 최신 경계 데이터셋에 대응하는 <b style={{ color: "#0f172a" }}>원천 데이터가 없는 지역</b>입니다. 행정구역 개편이나 데이터 매칭 누락으로 아직 위험도가 연결되지 않았습니다.</>}
         </div>
       </div>
     );
@@ -37,6 +41,15 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
   const [top1, top2] = sorted;
   const lvl = riskLabel(region.risk);
   const hospitals = region.hospitals?.length ? region.hospitals : null;
+  const accessibilityRoute = region.accessibilityRoute;
+  const hasRoadRoute = isFiniteNumber(accessibilityRoute?.roadDistanceKm)
+    && isFiniteNumber(accessibilityRoute?.etaMin);
+  const fallbackDistanceKm = isFiniteNumber(accessibilityRoute?.straightDistanceKm)
+    ? accessibilityRoute.straightDistanceKm
+    : (!hasRoadRoute && isFiniteNumber(accessibilityRoute?.distanceKm)
+      ? accessibilityRoute.distanceKm
+      : null);
+  const shownDistanceKm = hasRoadRoute ? accessibilityRoute.roadDistanceKm : fallbackDistanceKm;
 
   return (
     <div style={{ ...cardStyle, padding: 20, maxHeight: 560, overflowY: "auto" }}>
@@ -81,6 +94,39 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
           {region.name}의 종합 위험도는 <b style={{ color: "#0f172a" }}>{region.risk.toFixed(1)}점 ({lvl})</b>입니다.
           네 요인 중 <b style={{ color: "#0f172a" }}>{top1.name}</b>({top1.value.toFixed(0)}점)과{" "}
           <b style={{ color: "#0f172a" }}>{top2.name}</b>({top2.value.toFixed(0)}점)이 가장 큰 영향을 주고 있어{region.clusterLabel ? <>, <b style={{ color: region.clusterColor }}>{region.clusterLabel}</b> 지역으로 분석됩니다.</> : "입니다."}
+        </div>
+
+        <div style={{ marginTop: 12, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 12px" }}>
+          <div style={{ fontSize: 10, ...mutedText }}>접근성 선정 센터</div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>
+            {accessibilityRoute?.destinationName ?? "미산출"}
+          </div>
+          {accessibilityRoute?.destinationOrgCode && (
+            <div style={{ fontSize: 9.5, ...mutedText, marginTop: 1 }}>기관코드 {accessibilityRoute.destinationOrgCode}</div>
+          )}
+          <div className="flex" style={{ gap: 8, marginTop: 8 }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 15, fontWeight: 800, color: "#0f172a" }}>
+                {shownDistanceKm == null ? "미산출" : `${shownDistanceKm.toFixed(1)}km`}
+              </div>
+              <div style={{ fontSize: 9.5, ...mutedText }}>
+                {hasRoadRoute ? "카카오 도로거리" : (fallbackDistanceKm == null ? "거리" : "직선거리 (대체)")}
+              </div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 15, fontWeight: 800, color: "#0f172a" }}>
+                {hasRoadRoute ? `${Math.round(accessibilityRoute.etaMin)}분` : "미산출"}
+              </div>
+              <div style={{ fontSize: 9.5, ...mutedText }}>예상 소요시간</div>
+            </div>
+          </div>
+          <div style={{ fontSize: 9.5, color: "#94a3b8", marginTop: 6 }} title={accessibilityRoute?.routeStatus ?? undefined}>
+            {hasRoadRoute
+              ? "* 지역 대표점 기준 · 카카오모빌리티 도로 경로"
+              : fallbackDistanceKm != null
+                ? "* 지역 대표점 기준 · 카카오 경로 미산출로 직선거리 대체 · 예상시간 미산출"
+                : "* 지역 대표점 기준 · 경로 데이터 미산출"}
+          </div>
         </div>
 
         <div style={{ marginTop: 16 }}>

@@ -32,14 +32,14 @@ def build_heatmap() -> None:
 def build_regression() -> None:
     frame = read_csv(FINAL)
     frame = frame.merge(
-        read_csv(DATA_DIR / "accessibility_score.csv")[["시군구코드", "직선거리_km"]],
+        read_csv(DATA_DIR / "accessibility_score.csv")[["시군구코드", "도로거리_km"]],
         on="시군구코드", how="left",
     ).merge(
         read_csv(DATA_DIR / "population_bed_score.csv")[["시군구코드", "인구대비병상비율"]],
         on="시군구코드", how="left",
     )
     frame = frame.rename(columns={"병상포화도점수": "포화율_원천"})
-    features = ["포화율_원천", "직선거리_km", "인구대비병상비율", "의료진부족점수"]
+    features = ["포화율_원천", "도로거리_km", "인구대비병상비율", "의료진부족점수"]
     model_data = frame.dropna(subset=features + ["regionRisk"])
     output = DATA_DIR / "regression_result.csv"
     metrics_path = DATA_DIR / "regression_metrics.json"

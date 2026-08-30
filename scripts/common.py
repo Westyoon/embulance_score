@@ -25,17 +25,38 @@ def api_key() -> str:
 
 
 def request_xml(endpoint: str, params: dict, timeout: int = 45) -> ET.Element:
-    response = requests.get(
-        f"{API_BASE}/{endpoint}",
-        params={"serviceKey": api_key(), **params},
-        timeout=timeout,
-    )
-    response.raise_for_status()
-    root = ET.fromstring(response.content)
+    try:
+        response = requests.get(
+            f"{API_BASE}/{endpoint}",
+            params={"serviceKey": api_key(), **params},
+            timeout=timeout,
+        )
+    except requests.Timeout:
+        # requests 예외 문자열에는 serviceKey가 포함된 최종 URL이 들어갈 수 있다.
+        # 원본 예외 체인도 숨겨 표준 traceback에 인증정보가 노출되지 않게 한다.
+        raise RuntimeError("공공데이터 API 요청 시간 초과") from None
+    except requests.ConnectionError:
+        raise RuntimeError("공공데이터 API 연결 실패") from None
+    except requests.RequestException:
+        raise RuntimeError("공공데이터 API 요청 실패") from None
+
+    if not 200 <= response.status_code < 300:
+        # raise_for_status()의 HTTPError에는 query string과 응답 본문이 포함될 수
+        # 있으므로 상태코드만 새 예외에 전달한다.
+        status_code = response.status_code
+        response.close()
+        raise RuntimeError(f"공공데이터 API HTTP 오류: {status_code}")
+
+    content = response.content
+    response.close()
+    try:
+        root = ET.fromstring(content)
+    except ET.ParseError:
+        raise RuntimeError("공공데이터 API 응답 형식을 해석할 수 없습니다.") from None
     code = root.findtext(".//resultCode")
-    message = root.findtext(".//resultMsg")
     if code != "00":
-        raise RuntimeError(f"공공데이터 API 오류: {code} {message}")
+        safe_code = "".join(character for character in str(code or "unknown") if character.isalnum() or character in "_-")[:20]
+        raise RuntimeError(f"공공데이터 API 응답 오류(resultCode={safe_code})")
     return root
 
 

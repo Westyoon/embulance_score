@@ -78,6 +78,13 @@ def main() -> None:
         environment.setdefault("PYTHONIOENCODING", "utf-8")
 
         python = sys.executable
+        npm = shutil.which("npm.cmd") if os.name == "nt" else shutil.which("npm")
+        if not npm:
+            raise RuntimeError("npm 실행 파일을 찾지 못했습니다.")
+        node = shutil.which("node.exe") if os.name == "nt" else shutil.which("node")
+        if not node:
+            raise RuntimeError("node 실행 파일을 찾지 못했습니다.")
+
         run([python, "scripts/part1_collect_hospital_master.py"], environment)
         run([python, "scripts/part2_collect_bed_status.py"], environment)
         population_command = [python, "scripts/part3_collect_population.py"]
@@ -88,17 +95,13 @@ def main() -> None:
         run(population_command, environment)
         run(prepare_command, environment)
         run([python, "scripts/part3_collect_hira_doctors.py"], environment)
+        # 카카오 경로의 지역 대표점과 지도 경계가 같은 버전을 보도록 경계를 먼저 갱신한다.
+        run([npm, "run", "update:boundaries"], environment)
+        run([python, "scripts/part3_collect_kakao_routes.py"], environment)
         run([python, "scripts/part3_build_component_scores.py"], environment)
         run([python, "scripts/part3_calculate_region_risk.py"], environment)
         run([python, "scripts/part4_analyze.py"], environment)
-        npm = shutil.which("npm.cmd") if os.name == "nt" else shutil.which("npm")
-        if not npm:
-            raise RuntimeError("npm 실행 파일을 찾지 못했습니다.")
-        run([npm, "run", "update:boundaries"], environment)
         run([python, "scripts/validate_data_contract.py"], environment)
-        node = shutil.which("node.exe") if os.name == "nt" else shutil.which("node")
-        if not node:
-            raise RuntimeError("node 실행 파일을 찾지 못했습니다.")
         run([node, "scripts/validate_frontend_data.mjs"], environment)
         promote(staged_data, staged_boundary, backup_data, backup_boundary)
         print(f"Pipeline completed after staged validation: run_id={run_id}")

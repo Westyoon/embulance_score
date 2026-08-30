@@ -1,9 +1,13 @@
 import argparse
 import os
 import re
+import threading
+import time
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
 from difflib import SequenceMatcher
+from email.utils import parsedate_to_datetime
 from urllib.parse import unquote
 
 import pandas as pd
@@ -15,10 +19,91 @@ MASTER = DATA_DIR / "hospital_master.csv"
 DETAIL_OUTPUT = DATA_DIR / "hira_doctor_matches.csv"
 OUTPUT = DATA_DIR / "doctor_source.csv"
 OVERRIDES = DATA_DIR / "hira_match_overrides.csv"
+NO_SEARCH_OUTPUT = DATA_DIR / "hira_no_search_results.csv"
+REVIEW_OUTPUT = DATA_DIR / "hira_low_similarity.csv"
 HOSPITAL_URL = "https://apis.data.go.kr/B551182/hospInfoServicev2/getHospBasisList"
 SPECIALIST_URL = "https://apis.data.go.kr/B551182/MadmDtlInfoService2.8/getSpcSbjtSdrInfo2.8"
 MATCHED_STATES = {"자동매칭", "수동검증"}
 MIN_HIRA_MATCHES = 400
+DEFAULT_WORKERS = 8
+MAX_WORKERS = 16
+REQUEST_ATTEMPTS = 4
+REQUEST_TIMEOUT = (10, 60)
+RETRYABLE_HTTP_STATUSES = {429, *range(500, 600)}
+MAX_RETRY_DELAY_SECONDS = 60.0
+_thread_local = threading.local()
+
+
+class HiraRequestError(RuntimeError):
+    """A deliberately redacted HIRA transport error."""
+
+
+def _http_session() -> requests.Session:
+    session = getattr(_thread_local, "session", None)
+    if session is None:
+        session = requests.Session()
+        _thread_local.session = session
+    return session
+
+
+def _retry_delay(response: requests.Response | None, attempt: int) -> float:
+    retry_after = response.headers.get("Retry-After", "") if response is not None else ""
+    if retry_after:
+        try:
+            return min(max(float(retry_after), 0.0), MAX_RETRY_DELAY_SECONDS)
+        except ValueError:
+            try:
+                retry_at = parsedate_to_datetime(retry_after)
+                if retry_at.tzinfo is None:
+                    retry_at = retry_at.replace(tzinfo=timezone.utc)
+                seconds = (retry_at - datetime.now(timezone.utc)).total_seconds()
+                return min(max(seconds, 0.0), MAX_RETRY_DELAY_SECONDS)
+            except (TypeError, ValueError, OverflowError):
+                pass
+    return min(0.75 * (2**attempt), MAX_RETRY_DELAY_SECONDS)
+
+
+def hira_get(url: str, *, params: dict, attempts: int = REQUEST_ATTEMPTS) -> requests.Response:
+    """GET a HIRA endpoint with bounded retries and redacted failures."""
+    if attempts < 1:
+        raise ValueError("attempts must be at least 1")
+
+    last_failure = "Unknown"
+    for attempt in range(attempts):
+        response = None
+        try:
+            response = _http_session().get(url, params=params, timeout=REQUEST_TIMEOUT)
+        except (requests.ReadTimeout, requests.ConnectionError) as exc:
+            last_failure = type(exc).__name__
+            if attempt + 1 >= attempts:
+                break
+            time.sleep(_retry_delay(None, attempt))
+            continue
+        except requests.RequestException as exc:
+            raise HiraRequestError(f"HIRA API 요청 실패({type(exc).__name__})") from None
+
+        if 200 <= response.status_code < 300:
+            return response
+
+        last_failure = f"HTTP {response.status_code}"
+        if response.status_code not in RETRYABLE_HTTP_STATUSES or attempt + 1 >= attempts:
+            response.close()
+            break
+        delay = _retry_delay(response, attempt)
+        response.close()
+        time.sleep(delay)
+
+    raise HiraRequestError(f"HIRA API 요청 실패({last_failure}, attempts={attempts})") from None
+
+
+def worker_count(value: str) -> int:
+    try:
+        workers = int(value)
+    except (TypeError, ValueError) as exc:
+        raise argparse.ArgumentTypeError("workers must be an integer from 1 to 16") from exc
+    if not 1 <= workers <= MAX_WORKERS:
+        raise argparse.ArgumentTypeError("workers must be from 1 to 16")
+    return workers
 
 
 def hira_key() -> str:
@@ -29,9 +114,14 @@ def hira_key() -> str:
 
 
 def items(content: bytes) -> list[dict]:
-    root = ET.fromstring(content)
-    if root.findtext(".//resultCode") != "00":
-        raise RuntimeError(f"HIRA API 오류: {root.findtext('.//resultCode')} {root.findtext('.//resultMsg')}")
+    try:
+        root = ET.fromstring(content)
+    except ET.ParseError:
+        raise RuntimeError("HIRA API 응답 형식을 해석할 수 없습니다.") from None
+    result_code = root.findtext(".//resultCode")
+    if result_code != "00":
+        safe_code = re.sub(r"[^0-9A-Za-z_-]", "", str(result_code or "unknown"))[:20]
+        raise RuntimeError(f"HIRA API 응답 오류(resultCode={safe_code})")
     return [{child.tag: child.text for child in item} for item in root.findall(".//item")]
 
 
@@ -71,15 +161,16 @@ def choose_match(name: str, district: str, candidates: list[dict]) -> tuple[dict
 
 
 def fetch_specialist_count(ykiho: str, key: str) -> int:
-    response = requests.get(
+    response = hira_get(
         SPECIALIST_URL,
         params={"serviceKey": key, "ykiho": ykiho, "pageNo": 1, "numOfRows": 100},
-        timeout=20,
     )
-    response.raise_for_status()
     specialists = items(response.content)
     emergency = [item for item in specialists if item.get("dgsbjtCd") == "24"]
-    return sum(int(item.get("dtlSdrCnt") or 0) for item in emergency)
+    try:
+        return sum(int(item.get("dtlSdrCnt") or 0) for item in emergency)
+    except (TypeError, ValueError):
+        raise RuntimeError("HIRA API 전문의 수 응답값이 올바르지 않습니다.") from None
 
 
 def refresh_match(row: dict, key: str) -> dict:
@@ -96,12 +187,10 @@ def fetch_one(row: dict, key: str) -> dict:
         search_terms.append(compact[-6:])
     candidates = []
     for term in dict.fromkeys(search_terms):
-        response = requests.get(
+        response = hira_get(
             HOSPITAL_URL,
             params={"serviceKey": key, "yadmNm": term, "pageNo": 1, "numOfRows": 20},
-            timeout=20,
         )
-        response.raise_for_status()
         candidates.extend(items(response.content))
         if candidates:
             break
@@ -178,12 +267,35 @@ def build_regional_source(detail: pd.DataFrame) -> pd.DataFrame:
     return grouped
 
 
+def save_review_outputs(detail: pd.DataFrame) -> tuple[int, int]:
+    columns = [
+        "기관코드", "병원명", "주소", "시도", "시군구", "HIRA병원명", "HIRA주소",
+        "암호화요양기호", "매칭점수", "매칭상태", "응급의학과전문의수",
+    ]
+    for column in columns:
+        if column not in detail:
+            detail[column] = pd.NA
+    no_search = detail[detail["매칭상태"].eq("미매칭")][columns].copy()
+    review = detail[
+        ~detail["매칭상태"].isin([*MATCHED_STATES, "미매칭"])
+    ][columns].copy()
+    save_csv(no_search.sort_values(["시도", "시군구", "병원명"]), NO_SEARCH_OUTPUT)
+    save_csv(review.sort_values(["매칭상태", "시도", "시군구", "병원명"]), REVIEW_OUTPUT)
+    return len(no_search), len(review)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="NEMC 기관에 HIRA 응급의학과 전문의 수를 연결")
     parser.add_argument(
         "--rebuild-only",
         action="store_true",
         help="API 호출 없이 기존 기관 매칭과 수동 검증 파일로 지역 집계만 재생성",
+    )
+    parser.add_argument(
+        "--workers",
+        type=worker_count,
+        default=worker_count(os.getenv("HIRA_WORKERS", str(DEFAULT_WORKERS))),
+        help="HIRA 동시 요청 수(1~16, 기본값: 8, 환경변수: HIRA_WORKERS)",
     )
     args = parser.parse_args()
     master = read_csv(MASTER)[["기관코드", "병원명", "주소", "시도", "시군구"]].fillna("")
@@ -223,10 +335,11 @@ def main() -> None:
         master = master[~master["기관코드"].isin(cached["기관코드"])]
         print(
             f"Refreshing {len(cached):,} cached specialist counts; "
-            f"retrying {len(master):,} unmatched institutions"
+            f"retrying {len(master):,} unmatched institutions; workers={args.workers}",
+            flush=True,
         )
         failures = []
-        with ThreadPoolExecutor(max_workers=24) as executor:
+        with ThreadPoolExecutor(max_workers=args.workers) as executor:
             futures = {
                 executor.submit(fetch_one, row, key): row
                 for row in master.to_dict("records")
@@ -235,12 +348,19 @@ def main() -> None:
                 executor.submit(refresh_match, row, key): row
                 for row in cached.to_dict("records")
             })
+            completed = 0
             for future in as_completed(futures):
                 row = futures[future]
                 try:
                     results.append(future.result())
                 except Exception as exc:
                     failures.append(f"{row['기관코드']} {row['병원명']}: {exc}")
+                completed += 1
+                if completed % 50 == 0 or completed == len(futures):
+                    print(
+                        f"HIRA requests: {completed:,}/{len(futures):,}; failures={len(failures):,}",
+                        flush=True,
+                    )
 
         if failures:
             preview = "\n".join(f"  {message}" for message in failures[:10])
@@ -273,8 +393,10 @@ def main() -> None:
     save_csv(detail.sort_values(["시도", "시군구", "병원명"]), DETAIL_OUTPUT)
     grouped = build_regional_source(detail)
     save_csv(grouped, OUTPUT)
+    no_search_count, review_count = save_review_outputs(detail)
     print(f"Saved {len(detail):,} hospital matches; matched={matched_count:,}")
     print(f"Saved {len(grouped):,} regional doctor rows; usable={int(grouped['데이터품질'].eq('사용가능').sum()):,}")
+    print(f"Saved HIRA review queues: no_search={no_search_count:,}, other_review={review_count:,}")
 
 
 if __name__ == "__main__":

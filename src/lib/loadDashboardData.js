@@ -9,8 +9,74 @@ const COMPONENT_KEYS = [
   { field: "인구대비병상점수", short: "인구대비병상" },
   { field: "의료진부족점수", short: "의료진부족" },
 ];
+const SUCCESS_ROUTE_STATUSES = new Set(["성공", "성공:출도착5m이내"]);
 
-function toRegion(row, clusterByKey, clusterMetaById, hospitalsByKey) {
+function finiteNumber(value) {
+  if (value == null || value === "") return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function readOptionalCsv(filename) {
+  try {
+    return readCsv(filename);
+  } catch (error) {
+    if (error?.code === "ENOENT") return [];
+    throw error;
+  }
+}
+
+function normalizeHospitalRoute(row) {
+  if (!row) return null;
+  const straightDistanceKm = finiteNumber(row["직선거리_km"]);
+  const roadDistanceKm = finiteNumber(row["도로거리_km"]);
+  const routeEtaMin = finiteNumber(row["예상시간_분"]);
+  const routeStatus = row["경로상태"] || null;
+  const hasRoadRoute = SUCCESS_ROUTE_STATUSES.has(routeStatus)
+    && roadDistanceKm != null
+    && routeEtaMin != null;
+
+  return {
+    straightDistanceKm,
+    roadDistanceKm: hasRoadRoute ? roadDistanceKm : null,
+    distanceKm: hasRoadRoute ? roadDistanceKm : straightDistanceKm,
+    etaMin: hasRoadRoute ? routeEtaMin : null,
+    distanceBasis: hasRoadRoute
+      ? "카카오 도로거리"
+      : (straightDistanceKm != null ? "직선거리 대체" : "미산출"),
+    routeOriginMethod: row["중심점방법"] || null,
+    routeStatus,
+    routeUpdatedAt: row["수집시각"] || null,
+  };
+}
+
+function normalizeAccessibilityRoute(row) {
+  if (!row) return null;
+  const straightDistanceKm = finiteNumber(row["직선거리_km"]);
+  const roadDistanceKm = finiteNumber(row["도로거리_km"]);
+  const routeEtaMin = finiteNumber(row["예상시간_분"]);
+  const routeStatus = row["경로상태"] || null;
+  const hasRoadRoute = SUCCESS_ROUTE_STATUSES.has(routeStatus)
+    && roadDistanceKm != null
+    && routeEtaMin != null;
+
+  return {
+    destinationOrgCode: row["최근접기관코드"] || null,
+    destinationName: row["최근접병원"] || null,
+    straightDistanceKm,
+    roadDistanceKm: hasRoadRoute ? roadDistanceKm : null,
+    distanceKm: hasRoadRoute ? roadDistanceKm : straightDistanceKm,
+    etaMin: hasRoadRoute ? routeEtaMin : null,
+    distanceBasis: hasRoadRoute
+      ? "카카오 도로거리"
+      : (straightDistanceKm != null ? "직선거리 대체" : (row["거리기준"] || "미산출")),
+    originMethod: row["중심점방법"] || null,
+    routeStatus,
+    routeUpdatedAt: row["경로수집시각"] || null,
+  };
+}
+
+function toRegion(row, clusterByKey, clusterMetaById, hospitalsByKey, accessibilityByKey) {
   const key = row["시군구코드"];
   const complete = row["산출상태"] === "완료";
   const clusterRow = clusterByKey.get(key);
@@ -30,6 +96,7 @@ function toRegion(row, clusterByKey, clusterMetaById, hospitalsByKey) {
     clusterLabel: meta?.label ?? null,
     clusterColor: meta?.color ?? null,
     hospitals: hospitalsByKey.get(key) ?? [],
+    accessibilityRoute: accessibilityByKey.get(key) ?? null,
   };
 }
 
@@ -83,7 +150,7 @@ function hospitalGeoCode(hospital) {
   return candidates[0]?.properties.code ?? null;
 }
 
-function buildHospitals() {
+function buildHospitals(routeByCode) {
   const hospitals = readCsv("hospital_master.csv");
   const bedStatus = readCsv("bed_status.csv");
   const bedByCode = new Map(bedStatus.map((r) => [r["기관코드"], r]));
@@ -92,6 +159,7 @@ function buildHospitals() {
   for (const h of hospitals) {
     const key = `${h["시도"]}|${h["시군구"]}`;
     const bed = bedByCode.get(h["기관코드"]);
+    const route = routeByCode.get(h["기관코드"]);
     const entry = {
       name: h["병원명"],
       grade: h["등급"],
@@ -108,6 +176,14 @@ function buildHospitals() {
       totalBeds: bed?.["전체병상"] ?? null,
       saturation: bed?.["포화율"] ?? null,
       updatedAt: bed?.["수집시각"] ?? null,
+      straightDistanceKm: route?.straightDistanceKm ?? null,
+      roadDistanceKm: route?.roadDistanceKm ?? null,
+      distanceKm: route?.distanceKm ?? null,
+      etaMin: route?.etaMin ?? null,
+      distanceBasis: route?.distanceBasis ?? "미산출",
+      routeOriginMethod: route?.routeOriginMethod ?? null,
+      routeStatus: route?.routeStatus ?? null,
+      routeUpdatedAt: route?.routeUpdatedAt ?? null,
     };
     all.push(entry);
     if (!byKey.has(key)) byKey.set(key, []);
@@ -142,10 +218,10 @@ function buildRegression() {
   const coefByName = new Map(coefRows.map((r) => [r["변수명"], r["회귀계수"]]));
   const coef = [
     { name: "포화율(원천)", value: coefByName.get("포화율_원천") },
-    { name: "직선거리(km)", value: coefByName.get("직선거리_km") },
+    { name: "도로거리(km)", value: coefByName.get("도로거리_km") },
     { name: "인구대비병상비율", value: coefByName.get("인구대비병상비율"), note: "단위 스케일 상이" },
     { name: "의료진부족점수", value: coefByName.get("의료진부족점수") },
-  ];
+  ].filter(({ value }) => Number.isFinite(value));
 
   return { coef, r2: metrics.r2, mae: metrics.mae, rows: metrics.rows };
 }
@@ -165,12 +241,24 @@ export function loadDashboardData() {
   const clusterRows = readCsv("cluster_result.csv");
   const clusterProfileRows = readCsv("cluster_profile.csv");
   const bedStatus = readCsv("bed_status.csv");
+  const accessibilityRows = readCsv("accessibility_score.csv");
+  const hospitalRouteRows = readOptionalCsv("kakao_hospital_routes.csv");
 
   const clusterByKey = new Map(clusterRows.map((r) => [r["시군구코드"], r]));
   const clusterMetaById = buildClusterMeta(clusterProfileRows);
-  const { byKey: hospitalsByKey, all: allHospitals } = buildHospitals();
+  const accessibilityByKey = new Map(accessibilityRows.map((row) => [
+    row["시군구코드"],
+    normalizeAccessibilityRoute(row),
+  ]));
+  const routeByCode = new Map(hospitalRouteRows.map((row) => [
+    row["기관코드"],
+    normalizeHospitalRoute(row),
+  ]));
+  const { byKey: hospitalsByKey, all: allHospitals } = buildHospitals(routeByCode);
 
-  const regions = riskRows.map((row) => toRegion(row, clusterByKey, clusterMetaById, hospitalsByKey));
+  const regions = riskRows.map((row) => (
+    toRegion(row, clusterByKey, clusterMetaById, hospitalsByKey, accessibilityByKey)
+  ));
   const regionsByKey = new Map(regions.map((r) => [r.key, r]));
   const regionIndex = buildRegionIndexByGeoCode(regionsByKey);
 

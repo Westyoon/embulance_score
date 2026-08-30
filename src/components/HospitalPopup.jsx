@@ -14,14 +14,25 @@ const COMPONENTS = [
 function formatUpdatedAt(iso) {
   if (!iso) return null;
   const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
   const pad = (n) => String(n).padStart(2, "0");
   return `${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
+function isFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
 export default function HospitalPopup({ hospital, region, onClose, onBack }) {
   if (!hospital) return null;
-  const bedEntries = Object.values(hospital.beds);
+  const bedEntries = Object.values(hospital.beds ?? {});
   const updatedLabel = formatUpdatedAt(hospital.updatedAt);
+  const routeUpdatedLabel = formatUpdatedAt(hospital.routeUpdatedAt);
+  const hasRoadRoute = isFiniteNumber(hospital.roadDistanceKm) && isFiniteNumber(hospital.etaMin);
+  const fallbackDistanceKm = isFiniteNumber(hospital.straightDistanceKm)
+    ? hospital.straightDistanceKm
+    : (!hasRoadRoute && isFiniteNumber(hospital.distanceKm) ? hospital.distanceKm : null);
+  const shownDistanceKm = hasRoadRoute ? hospital.roadDistanceKm : fallbackDistanceKm;
 
   return (
     <div style={{ ...cardStyle, padding: 20, maxHeight: 560, overflowY: "auto" }}>
@@ -56,15 +67,27 @@ export default function HospitalPopup({ hospital, region, onClose, onBack }) {
         {/* HD-04 접근성 */}
         <div className="flex" style={{ marginTop: 12, gap: 8 }}>
           <div style={{ flex: 1, background: "#f8fafc", borderRadius: 10, padding: "10px 12px", textAlign: "center" }}>
-            <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a" }}>{hospital.distanceKm.toFixed(1)}km</div>
-            <div style={{ fontSize: 10, color: "#64748b" }}>직선거리</div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a" }}>
+              {shownDistanceKm == null ? "미산출" : `${shownDistanceKm.toFixed(1)}km`}
+            </div>
+            <div style={{ fontSize: 10, color: "#64748b" }}>
+              {hasRoadRoute ? "카카오 도로거리" : (fallbackDistanceKm == null ? "거리" : "직선거리 (대체)")}
+            </div>
           </div>
           <div style={{ flex: 1, background: "#f8fafc", borderRadius: 10, padding: "10px 12px", textAlign: "center" }}>
-            <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a" }}>{hospital.etaMin}분</div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a" }}>
+              {hasRoadRoute ? `${Math.round(hospital.etaMin)}분` : "미산출"}
+            </div>
             <div style={{ fontSize: 10, color: "#64748b" }}>예상 소요시간</div>
           </div>
         </div>
-        <div style={{ fontSize: 9.5, color: "#94a3b8", marginTop: 4 }}>* 구급차 평균 50km/h 기준 참고값 · 실제 경로 API 적용 전 MVP 방식</div>
+        <div style={{ fontSize: 9.5, color: "#94a3b8", marginTop: 4 }} title={hospital.routeStatus ?? undefined}>
+          {hasRoadRoute
+            ? `* 지역 대표점 기준 · 카카오모빌리티 도로 경로${routeUpdatedLabel ? ` · ${routeUpdatedLabel} 수집` : ""}`
+            : fallbackDistanceKm != null
+              ? "* 지역 대표점 기준 · 카카오 경로 미산출로 직선거리 대체 · 예상시간 미산출"
+              : "* 지역 대표점 기준 · 카카오 경로와 거리 모두 미산출"}
+        </div>
 
         {/* 실시간 응급실 병상 (bed_status.csv 실데이터) */}
         {hospital.status !== "결측" && (

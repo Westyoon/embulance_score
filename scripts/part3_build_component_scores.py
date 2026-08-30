@@ -1,5 +1,3 @@
-from math import atan2, cos, radians, sin, sqrt
-
 import numpy as np
 import pandas as pd
 
@@ -7,9 +5,9 @@ from common import DATA_DIR, read_csv, save_csv
 
 MASTER = DATA_DIR / "hospital_master.csv"
 BED_STATUS = DATA_DIR / "bed_status.csv"
-CENTROIDS = DATA_DIR / "region_centroids.csv"
 POPULATION_SOURCE = DATA_DIR / "population_source.csv"
 DOCTOR_SOURCE = DATA_DIR / "doctor_source.csv"
+KAKAO_ROUTES = DATA_DIR / "kakao_route_accessibility.csv"
 
 
 def region_code(frame: pd.DataFrame) -> pd.Series:
@@ -29,46 +27,59 @@ def percentile_score(values: pd.Series, higher_is_risk: bool = True) -> pd.Serie
     return score if higher_is_risk else 100 - score
 
 
-def haversine_vector(lat, lon, hospital_lat, hospital_lon):
-    radius = 6371.0
-    lat1, lon1 = radians(lat), radians(lon)
-    lat2 = np.radians(hospital_lat.to_numpy(dtype=float))
-    lon2 = np.radians(hospital_lon.to_numpy(dtype=float))
-    dlat, dlon = lat2 - lat1, lon2 - lon1
-    a = np.sin(dlat / 2) ** 2 + cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
-    return radius * 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
-
-
 def build_accessibility(master: pd.DataFrame) -> pd.DataFrame:
-    hospitals = master.dropna(subset=["위도", "경도"]).copy()
-    eligible = hospitals[hospitals["등급"].astype(str).str.contains("권역|지역응급의료센터", regex=True)]
-    if eligible.empty:
-        raise RuntimeError("권역/지역응급의료센터 좌표가 없습니다.")
+    if not KAKAO_ROUTES.exists():
+        raise FileNotFoundError(
+            f"{KAKAO_ROUTES}가 없습니다. scripts/part3_collect_kakao_routes.py를 먼저 실행하세요."
+        )
+    routes = read_csv(KAKAO_ROUTES)
+    required = {
+        "시군구코드",
+        "기관코드",
+        "병원명",
+        "직선거리_km",
+        "도로거리_km",
+        "예상시간_분",
+        "중심점방법",
+        "경계버전",
+        "경로상태",
+        "수집시각",
+    }
+    if not required.issubset(routes.columns):
+        raise ValueError(f"{KAKAO_ROUTES} 필수 컬럼: {sorted(required)}")
+    expected_keys = set(region_code(master))
+    if routes["시군구코드"].duplicated().any() or set(routes["시군구코드"]) != expected_keys:
+        raise ValueError("카카오 접근성 경로가 NEMC 지역 모집단을 중복 없이 정확히 포함하지 않습니다.")
+    if not routes["경로상태"].isin(["성공", "성공:출도착5m이내"]).all():
+        raise ValueError("카카오 접근성 최종 경로에 성공하지 않은 행이 있습니다.")
+    for column in ["직선거리_km", "도로거리_km", "예상시간_분"]:
+        routes[column] = pd.to_numeric(routes[column], errors="coerce")
+        if routes[column].isna().any() or not routes[column].ge(0).all():
+            raise ValueError(f"카카오 접근성 {column}에 결측 또는 음수가 있습니다.")
 
-    if CENTROIDS.exists():
-        centroids = read_csv(CENTROIDS)
-        required = {"시도", "시군구", "위도", "경도"}
-        if not required.issubset(centroids.columns):
-            raise ValueError(f"{CENTROIDS} 필수 컬럼: {sorted(required)}")
-        method = "공식중심점입력"
-    else:
-        # 공식 중심점이 없을 때만 해당 지역 내 응급기관 좌표 평균을 명시적 대체값으로 사용한다.
-        centroids = hospitals.groupby(["시도", "시군구"], as_index=False)[["위도", "경도"]].mean()
-        method = "병원좌표평균대체"
-
-    rows = []
-    for item in centroids.itertuples(index=False):
-        distances = haversine_vector(float(item.위도), float(item.경도), eligible["위도"], eligible["경도"])
-        nearest_idx = int(np.argmin(distances))
-        nearest = eligible.iloc[nearest_idx]
-        rows.append({
-            "시군구코드": f"{item.시도}|{item.시군구}",
-            "최근접병원": nearest["병원명"],
-            "직선거리_km": float(distances[nearest_idx]),
-            "중심점방법": method,
-        })
-    result = pd.DataFrame(rows)
-    result["접근성점수"] = percentile_score(result["직선거리_km"], higher_is_risk=True)
+    result = routes[
+        [
+            "시군구코드",
+            "기관코드",
+            "병원명",
+            "직선거리_km",
+            "도로거리_km",
+            "예상시간_분",
+            "중심점방법",
+            "경계버전",
+            "경로상태",
+            "수집시각",
+        ]
+    ].rename(
+        columns={
+            "기관코드": "최근접기관코드",
+            "병원명": "최근접병원",
+            "수집시각": "경로수집시각",
+        }
+    )
+    result["접근거리_km"] = result["도로거리_km"]
+    result["거리기준"] = "카카오자동차최단거리경로"
+    result["접근성점수"] = percentile_score(result["도로거리_km"], higher_is_risk=True)
     save_csv(result, DATA_DIR / "accessibility_score.csv")
     return result
 
