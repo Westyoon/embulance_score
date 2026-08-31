@@ -29,6 +29,8 @@ Railway Volume: /app/runtime
 
 Railway는 볼륨을 빌드나 pre-deploy 단계가 아니라 서비스 시작 시 마운트합니다. 따라서 `/app/runtime` 초기화는 start command에서 수행하며, 볼륨이 비어 있으면 저장소에 포함된 검증 완료 데이터와 경계를 최초 데이터로 복사합니다. 자세한 플랫폼 동작은 [Railway Volumes](https://docs.railway.com/volumes), [Volumes 제한](https://docs.railway.com/volumes/reference), [Serverless](https://docs.railway.com/deployments/serverless) 문서를 참고합니다.
 
+HIRA 수동 매칭·원천 제외와 병원 좌표·지역 보정 CSV는 저장소가 운영 기준본입니다. 새 이미지가 시작될 때 이 네 관리 파일을 기존 Volume의 `data/`에 다시 복사하므로, 검토 근거 변경이 영속 Volume에도 반영됩니다. 수집 결과와 이력 CSV는 덮어쓰지 않으며 다음 staging 갱신이 관리 파일을 사용해 새 결과를 만듭니다.
+
 ## 1. Railway 서비스 만들기
 
 1. `backend` push 시 GitHub Actions가 애플리케이션·파이프라인·컨테이너를 검증합니다.
@@ -119,7 +121,7 @@ curl.exe -fsS "$env:APP_URL/api/health"
   "dataVersion": "...",
   "dataAsOf": "...",
   "regions": 219,
-  "completeRegions": 197,
+  "completeRegions": 202,
   "pipeline": {
     "state": "idle"
   }

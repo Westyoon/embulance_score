@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="refresh"
+      content="0; url=https://emergency-dashboard-production-e303.up.railway.app/"
+    />
+    <link
+      rel="canonical"
+      href="https://emergency-dashboard-production-e303.up.railway.app/"
+    />
+    <title>응급의료 취약도 동적 대시보드로 이동</title>
+    <script>
+      const target = new URL("https://emergency-dashboard-production-e303.up.railway.app/");
+      target.search = window.location.search;
+      target.hash = window.location.hash;
+      window.location.replace(target);
+    </script>
+  </head>
+  <body>
+    <p>
+      최신 동적 대시보드로 이동합니다.
+      <a href="https://emergency-dashboard-production-e303.up.railway.app/">바로 이동</a>
+    </p>
+  </body>
+</html>

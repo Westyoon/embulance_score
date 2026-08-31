@@ -1,10 +1,11 @@
 {
-  "collected_at_utc": "2026-08-30T16:02:28+00:00",
+  "collected_at_utc": "2026-08-31T11:18:19+00:00",
   "source_endpoint": "https://apis.data.go.kr/B551182/hospInfoServicev2/getHospBasisList",
-  "catalog_rows": 79812,
+  "catalog_rows": 79864,
   "page_size": 1000,
-  "manual_matches": 8,
+  "manual_matches": 9,
   "manual_match_codes": [
+    "A1100076",
     "A1700028",
     "A2100010",
     "A2100028",
@@ -15,45 +16,17 @@
     "A2900006"
   ],
   "automatic_matches": 523,
-  "deferred_matches": 3,
-  "matching_logic_version": "hira-catalog-v3",
-  "matched_hospitals": 531,
-  "usable_regions": 218,
-  "target_usable_regions": 219,
-  "regional_quality_gaps": [
-    {
-      "province": "서울특별시",
-      "district": "관악구",
-      "total_hospitals": 4,
-      "matched_hospitals": 3,
-      "additional_matches_needed": 1,
-      "source_exclusion_codes": [
-        "A1100076"
-      ]
-    }
-  ],
-  "regional_rows": 219,
-  "emergency_specialist_total": 2167.0,
-  "exclusion_ledger_migration": {
-    "from_logic_version": "hira-catalog-v2",
-    "migrated_at_utc": "2026-08-31T00:49:11+00:00",
-    "catalog_snapshot_age_seconds": 31603
-  },
+  "deferred_matches": 2,
   "algorithmic_deferred_matches": 2,
-  "source_exclusion_count": 1,
-  "source_exclusion_codes": [
-    "A1100076"
-  ],
-  "source_exclusions": [
-    {
-      "institution_code": "A1100076",
-      "hospital_name": "강남힐병원",
-      "reason_code": "HIRA_SOURCE_NOT_FOUND",
-      "reason": "HIRA전체목록·전문의API·상세페이지미제공",
-      "confirmed_identifier": "JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ4MiQzNjEyMjIjNTEjJDEjJDYjJDgz",
-      "evidence_url": "https://www.hira.or.kr/ra/hosp/hospInfoAjax.do?ykiho=JDQ4MTg4MSM1MSMkMSMkMCMkOTkkMzgxMzUxIzQxIyQxIyQ3IyQ4MiQzNjEyMjIjNTEjJDEjJDYjJDgz",
-      "confirmed_at": "2026-08-31"
-    }
-  ],
+  "matching_logic_version": "hira-catalog-v3",
+  "matched_hospitals": 532,
+  "usable_regions": 219,
+  "target_usable_regions": 219,
+  "regional_quality_gaps": [],
+  "regional_rows": 219,
+  "emergency_specialist_total": 2156.0,
+  "source_exclusion_count": 0,
+  "source_exclusion_codes": [],
+  "source_exclusions": [],
   "source_exclusion_transitions": []
 }

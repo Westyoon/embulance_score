@@ -14,6 +14,12 @@ const boundaryFile = path.join(runtimeRoot, "koreaGeo.json");
 const statusFile = path.join(stateDir, "pipeline_status.json");
 const requestFile = path.join(stateDir, "refresh_request.json");
 const lockFile = path.join(stateDir, ".pipeline.lock");
+const managedDataFiles = [
+  "hira_match_exclusions.csv",
+  "hira_match_overrides.csv",
+  "hospital_coordinate_overrides.csv",
+  "hospital_region_overrides.csv",
+];
 const python = process.env.PIPELINE_PYTHON || (
   process.platform === "win32"
     ? path.join(root, ".venv", "Scripts", "python.exe")
@@ -128,6 +134,9 @@ function seedRuntime() {
   if (!fs.existsSync(path.join(liveData, "hospital_master.csv"))) {
     fs.mkdirSync(liveData, { recursive: true });
     fs.cpSync(path.join(root, "data"), liveData, { recursive: true, force: true });
+  }
+  for (const filename of managedDataFiles) {
+    fs.copyFileSync(path.join(root, "data", filename), path.join(liveData, filename));
   }
   if (!fs.existsSync(boundaryFile)) {
     fs.copyFileSync(path.join(root, "src", "data", "koreaGeo.json"), boundaryFile);
