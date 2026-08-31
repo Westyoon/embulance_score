@@ -55,7 +55,11 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCodes, s
     return { scale, x: Math.min(maxX, Math.max(-maxX, v.x)), y: Math.min(maxY, Math.max(-maxY, v.y)) };
   };
   const zoomBy = useCallback((factor) => setView((v) => clampView({ ...v, scale: v.scale * factor })), []);
-  const onWheel = (e) => { e.preventDefault(); zoomBy(e.deltaY < 0 ? 1.15 : 1 / 1.15); };
+  const onWheel = (e) => {
+    if (!e.ctrlKey && !e.metaKey) return;
+    e.preventDefault();
+    zoomBy(e.deltaY < 0 ? 1.15 : 1 / 1.15);
+  };
   const onMouseDown = (e) => { dragRef.current = { sx: e.clientX, sy: e.clientY, ox: view.x, oy: view.y }; };
   const onMouseMove = (e) => {
     if (!dragRef.current) return;
@@ -65,7 +69,7 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCodes, s
   const endDrag = () => { dragRef.current = null; };
 
   return (
-    <div ref={containerRef} style={{ position: "relative", flex: 1, overflow: "hidden", borderRadius: 10, background: "#eef2f7", cursor: "grab" }}
+    <div ref={containerRef} style={{ position: "relative", width: "100%", height: "clamp(320px, min(62vw, 72svh), 620px)", overflow: "hidden", borderRadius: 10, background: "#eef2f7", cursor: "grab" }}
       onWheel={onWheel} onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={endDrag} onMouseLeave={endDrag}>
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "100%", display: "block" }}>
         <g style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.scale})`, transformOrigin: "center" }}>
@@ -140,8 +144,8 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCodes, s
       )}
 
       <div style={{ position: "absolute", right: 10, top: 10, display: "flex", flexDirection: "column", gap: 4 }}>
-        {[{ icon: Plus, fn: () => zoomBy(1.3) }, { icon: Minus, fn: () => zoomBy(1 / 1.3) }, { icon: RotateCcw, fn: () => setView({ scale: 1, x: 0, y: 0 }) }].map((b, i) => (
-          <button key={i} onClick={b.fn} style={{ width: 26, height: 26, borderRadius: 7, background: "#ffffff", border: "1px solid #e2e8f0", color: "#0f172a", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 1px 3px rgba(15,23,42,0.08)" }}>
+        {[{ label: "지도 확대", icon: Plus, fn: () => zoomBy(1.3) }, { label: "지도 축소", icon: Minus, fn: () => zoomBy(1 / 1.3) }, { label: "지도 위치 초기화", icon: RotateCcw, fn: () => setView({ scale: 1, x: 0, y: 0 }) }].map((b) => (
+          <button key={b.label} aria-label={b.label} title={b.label} onClick={b.fn} style={{ width: 26, height: 26, borderRadius: 7, background: "#ffffff", border: "1px solid #e2e8f0", color: "#0f172a", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 1px 3px rgba(15,23,42,0.08)" }}>
             <b.icon size={13} />
           </button>
         ))}

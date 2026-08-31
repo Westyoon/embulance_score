@@ -9,7 +9,7 @@
     "start": "next start",
     "start:dynamic": "node scripts/start_dynamic.mjs",
     "lint": "eslint",
-    "test:dashboard": "node --experimental-vm-modules --test tests/test_dashboard_snapshot.mjs tests/test_korea_map_hover.mjs",
+    "test:dashboard": "node --experimental-vm-modules --test tests/test_dashboard_snapshot.mjs tests/test_dashboard_layout.mjs tests/test_korea_map_hover.mjs",
     "update:boundaries": "node scripts/update_boundaries.mjs",
     "validate:frontend-data": "node scripts/validate_frontend_data.mjs"
   },

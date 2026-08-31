@@ -35,7 +35,7 @@ export default function HospitalPopup({ hospital, region, onClose, onBack }) {
   const shownDistanceKm = hasRoadRoute ? hospital.roadDistanceKm : fallbackDistanceKm;
 
   return (
-    <div style={{ ...cardStyle, padding: 20, maxHeight: 560, overflowY: "auto" }}>
+    <div style={{ ...cardStyle, padding: 20 }}>
         <div className="flex items-start justify-between">
           <div>
             {onBack && (

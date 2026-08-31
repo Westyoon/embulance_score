@@ -75,7 +75,7 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
   const shownDistanceKm = hasRoadRoute ? accessibilityRoute.roadDistanceKm : fallbackDistanceKm;
 
   return (
-    <div style={{ ...cardStyle, padding: 20, maxHeight: 560, overflowY: "auto" }}>
+    <div style={{ ...cardStyle, padding: 20 }}>
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-2">

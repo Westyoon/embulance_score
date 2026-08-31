@@ -76,7 +76,7 @@ export default function Dashboard({ data, liveStatus = null }) {
           </div>
         )}
 
-        <div style={{ height: tab === "map" ? 680 : "auto" }}>
+        <div>
           {tab === "map" ? (
             <MapTab data={data} />
           ) : analyticsStale ? (

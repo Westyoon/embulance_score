@@ -20,7 +20,7 @@ function SearchBox({ value, onChange, placeholder }) {
       <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
         style={{ ...searchInputStyle, paddingLeft: 28 }} />
       {value && (
-        <button onClick={() => onChange("")} style={{ position: "absolute", right: 8, background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }}>
+        <button aria-label={`${placeholder} 검색어 지우기`} onClick={() => onChange("")} style={{ position: "absolute", right: 8, background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }}>
           <X size={13} />
         </button>
       )}
@@ -97,14 +97,14 @@ export default function MapTab({ data }) {
   const averageRisk = Number.isFinite(kpi.avg) ? kpi.avg.toFixed(1) : "-";
 
   return (
-    <div className="grid" style={{ gridTemplateColumns: "1fr 320px", gap: 16, height: "100%" }}>
-      <div style={{ ...cardStyle, padding: 16, position: "relative", display: "flex", flexDirection: "column" }}>
+    <div className="grid grid-cols-1 items-start lg:grid-cols-[minmax(0,1fr)_320px]" style={{ gap: 16 }}>
+      <div className="lg:sticky lg:top-4" style={{ ...cardStyle, padding: 16, display: "flex", flexDirection: "column", minWidth: 0 }}>
         <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
           <div className="flex items-center gap-2">
             <MapIcon size={16} color="#38bdf8" />
             <span style={{ fontWeight: 700, fontSize: 14 }}>전국 응급의료 위험도 지도</span>
           </div>
-          <span style={{ fontSize: 10.5, ...mutedText }}>휠로 확대/축소 · 드래그로 이동 · 지역 클릭 시 상세</span>
+          <span style={{ fontSize: 10.5, ...mutedText }}>Ctrl/⌘ + 휠로 확대/축소 · 드래그로 이동 · 지역 클릭 시 상세</span>
         </div>
         <KoreaMap geo={geo} regionIndex={regionIndex} onSelect={openRegion} highlightCodes={highlightCodes}
           selectedHospital={selectedHospital} hospitalRegionCode={selectedHospital?.geoCode ?? hospitalRegion?.code ?? null} />
@@ -126,7 +126,7 @@ export default function MapTab({ data }) {
               <KpiCard label="평균 위험도" value={averageRisk} accent="#38bdf8" icon={Activity} />
               <KpiCard label="고위험 지역" value={kpi.high} sub="50점 초과" accent="#ef4444" icon={AlertTriangle} />
             </div>
-            <div style={{ ...cardStyle, padding: "10px 12px", flex: 1, overflowY: "auto", maxHeight: 380 }}>
+            <div style={{ ...cardStyle, padding: "10px 12px" }}>
               <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
                 <span style={{ fontWeight: 700, fontSize: 12.5 }}>지역별 위험도</span>
                 <span style={{ fontSize: 10, ...mutedText }}>{filteredRanked.length}개 지역 · 클릭 시 지도 연동</span>
@@ -158,7 +158,7 @@ export default function MapTab({ data }) {
             </div>
           </>
         ) : (
-          <div style={{ ...cardStyle, padding: 14, flex: 1, overflowY: "auto", maxHeight: 500 }}>
+          <div style={{ ...cardStyle, padding: 14 }}>
             <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
               <span style={{ fontWeight: 700, fontSize: 12.5 }}>전체 의료기관</span>
               <span style={{ fontSize: 10, ...mutedText }}>{filteredHospitals.length}곳</span>
