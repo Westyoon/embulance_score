@@ -194,6 +194,7 @@ npm run start:dynamic
 
 Railway 1차 운영 구성은 다음 값을 사용합니다.
 
+- 배포 이미지: `backend` CI 검증 후 `ghcr.io/westyoon/embulance-score:backend` 발행
 - 영속 Volume: `/app/runtime`
 - replica: 1개
 - Serverless: 비활성화
@@ -203,7 +204,7 @@ Railway 1차 운영 구성은 다음 값을 사용합니다.
 - 시작 명령: `npm run start:dynamic`
 - 종료 유예: `RAILWAY_DEPLOYMENT_DRAINING_SECONDS=30`
 
-Railway Volume은 replicas와 함께 사용할 수 없고, 현재 파이프라인도 단일 writer와 파일 잠금을 전제로 합니다. 실제 비밀값 등록, 볼륨 설정, health 확인과 `POST /api/ops/refresh` 수동 실행 방법은 [DEPLOYMENT.md](./DEPLOYMENT.md)를 따릅니다.
+Railway Volume은 replicas와 함께 사용할 수 없고, 현재 파이프라인도 단일 writer와 파일 잠금을 전제로 합니다. Railway는 공개 GHCR 이미지의 `backend` 태그를 실행하고 Image Auto Updates로 새 digest를 반영합니다. 실제 비밀값 등록, 볼륨 설정, health 확인과 `POST /api/ops/refresh` 수동 실행 방법은 [DEPLOYMENT.md](./DEPLOYMENT.md)를 따릅니다.
 
 ## 분석 산식
 

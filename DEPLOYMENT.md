@@ -31,19 +31,21 @@ Railway는 볼륨을 빌드나 pre-deploy 단계가 아니라 서비스 시작 �
 
 ## 1. Railway 서비스 만들기
 
-1. Railway에서 새 프로젝트를 만들고 GitHub 저장소를 연결합니다.
-2. 운영할 브랜치를 `backend`로 지정합니다.
-3. 서비스에 Volume을 추가하고 Mount Path를 `/app/runtime`으로 지정합니다.
-4. Settings의 Scale/Regions에서 replica가 1개인지 확인합니다.
-5. Settings의 Serverless를 비활성화합니다.
-6. 저장소의 Dockerfile을 사용해 배포합니다. Railway는 저장소 루트의 Dockerfile을 자동 감지합니다.
-7. Start Command를 별도로 재정의해야 한다면 다음 명령을 사용합니다.
+1. `backend` push 시 GitHub Actions가 애플리케이션·파이프라인·컨테이너를 검증합니다.
+2. 검증을 모두 통과한 동일 이미지를 `ghcr.io/westyoon/embulance-score:backend`에 발행합니다.
+3. Railway에서 새 프로젝트와 서비스를 만들고 이 공개 GHCR 이미지를 Source로 연결합니다.
+4. 서비스에 Volume을 추가하고 Mount Path를 `/app/runtime`으로 지정합니다.
+5. Settings의 Scale/Regions에서 replica가 1개인지 확인합니다.
+6. Settings의 Serverless를 비활성화합니다.
+7. GHCR의 `backend` 태그에 대한 Image Auto Updates를 `Anytime`으로 설정합니다.
+
+이미지에는 다음 시작 명령이 이미 들어 있으므로 Railway Start Command는 비워 두는 것이 기본입니다. 직접 재정의해야 할 때만 다음 명령을 사용합니다.
 
 ```text
 npm run start:dynamic
 ```
 
-Railway가 주입하는 `PORT`를 애플리케이션이 그대로 사용하므로 포트 번호를 직접 고정하지 않습니다. Dockerfile을 사용할 때 start command를 재정의하면 이미지의 `ENTRYPOINT`가 바뀔 수 있으므로, 저장소 설정과 Railway UI 중 한 곳에서만 관리하는 것을 권장합니다. [Railway Start Command](https://docs.railway.com/deployments/start-command)
+Railway가 주입하는 `PORT`를 애플리케이션이 그대로 사용하므로 포트 번호를 직접 고정하지 않습니다. GitHub Actions가 만든 검증 완료 이미지를 그대로 배포하면 Railway 빌더와 CI가 서로 다른 산출물을 만드는 문제도 피할 수 있습니다. 이미지 자동 갱신은 같은 `backend` 태그의 digest가 바뀌면 새 배포를 만듭니다. [Railway Start Command](https://docs.railway.com/deployments/start-command), [Image Auto Updates](https://docs.railway.com/deployments/image-auto-updates)
 
 ## 2. 환경변수 설정
 
@@ -234,7 +236,8 @@ curl.exe -fsS "$env:APP_URL/api/health"
 
 ## 배포 체크리스트
 
-- [ ] `backend` 브랜치가 배포 소스로 연결됨
+- [ ] `backend` 브랜치 CI가 `ghcr.io/westyoon/embulance-score:backend` 발행
+- [ ] Railway Source가 위 공개 GHCR 이미지에 연결되고 Image Auto Updates 활성화
 - [ ] Volume mount가 정확히 `/app/runtime`
 - [ ] replica 1개, Serverless 비활성화
 - [ ] Python 3.12와 Node.js/npm이 모두 포함된 이미지

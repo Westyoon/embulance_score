@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
 
 concurrency:
   group: dynamic-dashboard-${{ github.ref }}
@@ -112,3 +113,21 @@ jobs:
 
           docker logs "$container_name"
           exit 1
+
+      - name: Log in to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish verified production image
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          image=ghcr.io/westyoon/embulance-score
+          docker tag emergency-dashboard:ci "$image:backend"
+          docker tag emergency-dashboard:ci "$image:${GITHUB_SHA}"
+          docker push "$image:backend"
+          docker push "$image:${GITHUB_SHA}"

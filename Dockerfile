@@ -35,6 +35,7 @@ FROM base AS runner
 ENV NODE_ENV=production \
     HOSTNAME=0.0.0.0 \
     PORT=3000
+LABEL org.opencontainers.image.source="https://github.com/Westyoon/embulance_score"
 
 RUN groupadd --system --gid 1001 nodejs \
     && useradd --system --uid 1001 --gid nodejs nextjs \
