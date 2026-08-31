@@ -10,6 +10,7 @@ from urllib.parse import parse_qs, urlparse
 import numpy as np
 import pandas as pd
 
+from build_missingness_report import build_missingness_report
 from common import DATA_DIR, ROOT, read_csv
 from part2_collect_bed_status import fresh_bed_source_at_collection_mask
 from part3_calculate_region_risk import RISK_BINS, RISK_GRADES, RISK_GRADE_NAMES
@@ -152,6 +153,22 @@ def validate_frontend_risk_scale() -> None:
             f"프론트·백엔드 위험등급 기준이 다릅니다: front={list(zip(frontend_names, frontend_maxima))}, "
             f"back={list(zip(RISK_GRADE_NAMES, backend_maxima))}"
         )
+
+
+def validate_missingness_followup() -> int:
+    report_path = DATA_DIR / "missingness_followup.csv"
+    summary_path = DATA_DIR / "missingness_followup_summary.json"
+    if not report_path.exists() or not summary_path.exists():
+        fail("결측 후속조치 리포트 CSV 또는 요약 JSON이 없습니다.")
+    expected_report, expected_summary = build_missingness_report(DATA_DIR)
+    actual_report = pd.read_csv(report_path, dtype="string").fillna("")
+    expected_text = expected_report.astype("string").fillna("")
+    if list(actual_report.columns) != list(expected_text.columns) or not actual_report.equals(expected_text):
+        fail("결측 후속조치 리포트가 현재 원천 산출물과 일치하지 않습니다.")
+    actual_summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    if actual_summary != expected_summary:
+        fail("결측 후속조치 요약이 현재 원천 산출물과 일치하지 않습니다.")
+    return len(actual_report)
 
 
 def validate_boundaries(risk_keys: set[str]) -> tuple[dict, int, int, list[str]]:
@@ -986,11 +1003,13 @@ def main() -> None:
     ):
         fail("백엔드 위험등급 산출물이 공통 기준과 일치하지 않습니다.")
 
+    missingness_items = validate_missingness_followup()
     metadata, direct_matches, aggregate_count, no_nemc_regions = validate_boundaries(risk_keys)
     valid_beds = int(pd.to_numeric(beds["포화율"], errors="coerce").notna().sum())
     print(f"NEMC base population: hospitals={len(master):,}, regions={len(master_region_keys):,}")
     print(f"HIRA enrichment: matched={int(matched_hira.sum()):,}, unmatched={int((~matched_hira).sum()):,}")
     print(f"Usable data: beds={valid_beds:,}, population={len(population):,}, risk={int(complete.sum()):,}")
+    print(f"Missingness follow-up items={missingness_items:,}")
     print(f"Kakao road routes: regions={EXPECTED_NEMC_REGIONS:,}, hospitals={kakao_hospital_success:,}/{kakao_hospital_total:,}")
     print(f"Boundary version={metadata.get('version')}, polygons={direct_matches + aggregate_count + len(no_nemc_regions):,}")
     print(f"Boundary matches: direct={direct_matches:,}, aggregate={aggregate_count:,}")

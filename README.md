@@ -1,6 +1,77 @@
-# embulance_score
+# Emergency Medical Capacity Dashboard
 
-전국 응급의료기관의 실시간 병상 현황과 지역별 의료 접근 위험도를 분석하는 데이터 파이프라인입니다.
+[![CI](https://github.com/Westyoon/embulance_score/actions/workflows/deploy-pages.yml/badge.svg?branch=backend)](https://github.com/Westyoon/embulance_score/actions/workflows/deploy-pages.yml)
+
+전국 응급의료기관의 병상·접근성·인구·응급의학과 전문의 데이터를 하나의 동적 파이프라인으로 결합해, 시군구별 응급의료 취약도를 지도와 분석 화면으로 제공하는 프로젝트입니다.
+
+[라이브 대시보드](https://emergency-dashboard-production-e303.up.railway.app) · [아키텍처](./ARCHITECTURE.md) · [운영·배포 가이드](./DEPLOYMENT.md)
+
+## 프로젝트 한눈에 보기
+
+| 영역 | 구현 내용 |
+|---|---|
+| 프론트엔드 | Next.js 16·React 19 기반 전국 지도, 지역·병원 상세, 구성요인 기여도, 상관관계·군집 분석 |
+| 데이터 분석 | 병상포화도·도로 접근성·인구 대비 병상·의료진 부족을 결합한 `regionRisk`, 회귀·VIF·K-Means |
+| 백엔드 | NEMC·행정안전부·HIRA·카카오 API 수집, 병원 1:1 매칭, 데이터 계약 검증, ETag 기반 JSON API |
+| 동적 운영 | Node 서버와 Python 스케줄러를 한 컨테이너로 운영하고, staging 검증·복구 가능한 승격·영속 Volume 적용 |
+| 배포 | GitHub Actions에서 앱·파이프라인·컨테이너를 검증한 뒤 GHCR 이미지를 발행하고 Railway에 배포 |
+
+현재 검증 산출물은 NEMC 534개 기관과 219개 지역을 유지합니다. HIRA는 532개 기관을 연결했고, 카카오 자동차 경로는 219개 지역과 534개 병원에 연결했습니다. 네 구성점수가 모두 확보된 196개 지역만 최종 위험도를 표시하며, 나머지는 점수를 임의 보간하지 않고 `원천데이터부족`으로 공개합니다.
+
+```mermaid
+flowchart LR
+    subgraph Sources[공공·외부 데이터]
+        NEMC[NEMC 병원·병상]
+        MOIS[행정안전부 인구]
+        HIRA[HIRA 병원·전문의]
+        KAKAO[카카오 자동차 경로]
+        GEO[시군구 경계]
+    end
+
+    subgraph Pipeline[Python·Node 데이터 파이프라인]
+        COLLECT[수집·정규화]
+        MATCH[기관 1:1 매칭·지역 보정]
+        SCORE[구성점수·regionRisk·통계분석]
+        VALIDATE[데이터 계약·프론트 계약 검증]
+        PROMOTE[staging 검증 후 승격]
+    end
+
+    subgraph Runtime[동적 서비스]
+        VOLUME[(Railway Volume)]
+        API[Next.js API]
+        UI[React 대시보드]
+    end
+
+    NEMC & MOIS & HIRA & KAKAO & GEO --> COLLECT
+    COLLECT --> MATCH --> SCORE --> VALIDATE --> PROMOTE
+    PROMOTE --> VOLUME --> API --> UI
+```
+
+설계의 핵심은 화면과 분석 산출물을 따로 관리하지 않는 것입니다. 브라우저는 서버가 같은 검증 CSV와 경계에서 만든 스냅샷을 읽고, 배치 실패 시에는 마지막 정상 버전을 계속 제공합니다. 상세한 컴포넌트 경계, 갱신 시퀀스와 장애 처리 방식은 [ARCHITECTURE.md](./ARCHITECTURE.md)에 정리했습니다.
+
+## 빠른 재현
+
+필수 환경은 Python 3.12 이상과 Node.js 20.12 이상이며, 운영 이미지와 같은 Node.js 22를 권장합니다. 외부 API를 다시 수집하지 않고 저장소의 검증 완료 스냅샷으로 웹만 실행할 수 있습니다.
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+npm ci
+npm run validate:frontend-data
+npm run dev
+```
+
+전체 원천을 재수집하려면 `.env.example`을 `.env`로 복사한 뒤 `DATA_GO_KR_API_KEY`, `HIRA_API_KEY`, `KAKAO_REST_API_KEY`를 설정하고 실행합니다. 실제 `.env`는 Git에서 제외됩니다.
+
+```powershell
+.\run_pipeline.bat
+npm run lint
+npm run test:dashboard
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+npm run build
+```
+
+> 전체 수집은 공공 API와 카카오 API 호출량을 사용합니다. NEMC 병상은 전국 219개 지역 단위 호출이 필요하므로, 키 할당량을 확인하지 않은 상태에서는 저장된 스냅샷으로 UI와 검증 절차부터 재현하는 것을 권장합니다.
 
 ## 현재 진행 상황
 
@@ -20,7 +91,23 @@
 | 최신 시군구 경계 | 완료 | `admdongkor` `20260701`, 256개 경계 |
 | PART 4 과거 시간대 분석 | 미완료 | 2024년 병상 이력 원자료 필요 |
 
-최종 위험도가 없는 23개 지역은 임의 점수로 대체하지 않고 `원천데이터부족`으로 표시합니다. 기존 누락·이상값과 함께, 병원 자체 `API기준시각`이 수집시각보다 12시간 넘게 오래된 23개 병상 행을 최신값으로 오인하지 않도록 제외한 결과입니다.
+최종 위험도가 없는 23개 지역은 임의 점수로 대체하지 않고 `원천데이터부족`으로 표시합니다. 기존 누락·이상값과 함께, 병원 자체 `API기준시각`이 수집시각보다 12시간 넘게 오래된 병상 행을 최신값으로 오인하지 않도록 제외한 결과입니다.
+
+### 결측 후속조치
+
+`beds`와 `full` 갱신은 점수 계산 직후 `scripts/build_missingness_report.py`를 실행합니다. 현재 원천과 리포트가 다르면 데이터 계약 검증이 승격을 중단하므로, 결측 목록이 운영 데이터와 따로 오래되지 않습니다.
+
+- 지역 위험도 결측: 23개 지역
+- 병원 병상 결측: 134개 (`API 무응답 92`, `원천시각 12시간 초과 27`, `총병상 누락 1`, `음수 가용병상 14`)
+- HIRA 수동 확인 대기: 2개 병원(두 지역 모두 현재 80% 품질 기준 통과)
+- 추적 목록: `data/missingness_followup.csv`
+- 요약·품질정책: `data/missingness_followup_summary.json`
+
+각 행에는 우선순위, 원인코드, 확인시각, 상태와 다음 조치가 들어 있습니다. 원천 CSV를 수정하지 않고 리포트만 다시 만들려면 다음 명령을 사용합니다.
+
+```powershell
+.\.venv\Scripts\python.exe scripts\build_missingness_report.py
+```
 
 ## 데이터 출처
 
@@ -72,7 +159,7 @@ HIRA는 NEMC 모집단에 응급의학과 전문의 정보를 붙이는 **LEFT J
 2. 동일 기관임을 확인할 수 있는 경우 NEMC `hpid`와 HIRA 암호화 요양기호의 매핑 테이블에 등록합니다.
 3. 폐업·이전·명칭 변경·기관 분리 여부를 확인할 수 없거나 HIRA에 대응 기관이 없는 경우 HIRA 의료인력 보강값을 결측으로 유지합니다.
 4. 병상·접근성·인구 집계에서는 해당 기관을 포함한 NEMC 모집단을 그대로 사용합니다.
-5. 지역 HIRA 자동매칭률이 80% 미만이면 전문의 수를 신뢰하지 않고 `의료진부족점수`를 결측 처리합니다. 네 구성점수가 모두 있을 때만 `regionRisk`를 산출합니다.
+5. 지역 HIRA 매칭률(자동매칭+수동검증)이 80% 미만이면 전문의 수를 신뢰하지 않고 `의료진부족점수`를 결측 처리합니다. 네 구성점수가 모두 있을 때만 `regionRisk`를 산출합니다.
 
 이 정책은 억지 매칭이나 전문의 수 0명 오판을 막으면서 NEMC 기준 모집단을 보존합니다. HIRA 미매칭은 기관 제외나 전문의 0명을 뜻하지 않습니다. 다만 의료진 점수가 결측인 지역은 최종 위험도 완료 집합에서 빠지므로, 모든 결과에 NEMC 기관 수와 지역별 HIRA 매칭률·산출상태를 함께 기록합니다.
 
@@ -90,124 +177,37 @@ HIRA는 NEMC 모집단에 응급의학과 전문의 정보를 붙이는 **LEFT J
 
 수동 매핑 결과는 재실행 가능한 `data/hira_match_overrides.csv`로 관리하고, 원본 API 응답이나 자동매칭 결과를 직접 덮어쓰지 않는 것을 원칙으로 합니다.
 
-## 설치와 인증
+## 구현 포인트와 코드 탐색
 
-Python 3.12 이상이 필수입니다. 현재 검증 환경은 `requirements.txt`에 `==`로 정확히 고정되어 있으며, 특히 `numpy==2.5.2`를 사용하므로 이전 Python 버전은 지원하지 않습니다.
-
-```powershell
-python -m pip install -r requirements.txt
-```
-
-프로젝트 루트의 `.env`에 세 원천 API 인증키를 설정하고, 동적 운영 시에는 관리자 토큰도 추가합니다. 실제 값이 든 `.env`는 커밋하지 않고, 비밀값이 비어 있는 `.env.example`을 복사해 사용합니다.
-
-```env
-DATA_GO_KR_API_KEY=
-HIRA_API_KEY=
-KAKAO_REST_API_KEY=
-PIPELINE_ADMIN_TOKEN=
-```
-
-`.env`는 Git에서 제외됩니다. 실제 값은 로컬 `.env` 또는 배포 플랫폼의 비밀변수에만 넣습니다. `PIPELINE_ADMIN_TOKEN`은 동적 서버의 수동 갱신 API에만 필요하며 원천 API 키와 마찬가지로 `NEXT_PUBLIC_` 접두사를 사용하면 안 됩니다. Python 수집기와 `start:dynamic` Node 런처가 모두 루트 `.env`를 직접 읽으므로 VS Code의 `python.terminal.useEnvFile` 설정은 필요하지 않습니다. 운영 기본값을 포함한 전체 예시는 `.env.example`을 참고합니다.
-
-## 실행
-
-권장 전체 실행 순서:
-
-```powershell
-python -m pip install -r requirements.txt
-npm ci
-.\run_pipeline.bat
-npm run lint
-npm run build
-```
-
-`run_pipeline.bat`는 `.venv\Scripts\python.exe`가 있으면 이를 우선 선택한 뒤 `scripts/run_pipeline.py` 오케스트레이터를 호출합니다. 경계 갱신에 필요한 Node 의존성은 먼저 `npm ci`로 설치해야 합니다.
-
-오케스트레이터는 실행 잠금을 획득하고 다음 순서로 동작합니다.
+| 역할 | 핵심 구현 | 코드 위치 |
+|---|---|---|
+| 프론트엔드 | 전국 지도, 지역·병원 상세, 기여도·상관관계·군집 화면 | `src/components/`, `src/lib/riskScale.js` |
+| 서버 API | 버전이 있는 대시보드 스냅샷, health, 인증된 수동 갱신 | `src/app/api/`, `src/lib/dashboardSnapshot.js` |
+| 데이터 엔지니어링 | 외부 원천 수집, 정규화, HIRA 1:1 배정, 카카오 경로 캐시 | `scripts/part1_*` ~ `scripts/part3_*` |
+| 데이터 분석 | 네 구성점수, 최종 위험도, 상관관계·VIF·회귀·K-Means | `scripts/part3_calculate_region_risk.py`, `scripts/part4_analyze.py` |
+| 운영 백엔드 | 스케줄링, 실행 잠금, staging 검증, 승격·rollback | `scripts/start_dynamic.mjs`, `scripts/run_pipeline.py`, `scripts/run_bed_refresh.py` |
+| 품질·배포 | Python·Node 계약 테스트, Docker smoke test, GHCR 발행 | `tests/`, `.github/workflows/deploy-pages.yml`, `Dockerfile` |
 
 ```text
-현재 data 복사
-  → 실행별 staging에서 NEMC·인구·HIRA 수집
-  → staging 최신 경계 생성 및 카카오 도로경로 수집
-  → 점수·위험도·통계분석 재계산
-  → staging 데이터·경계·프론트 CSV 파서 계약 검증
-  → 검증 성공 시 data와 koreaGeo.json을 함께 승격
+.
+├─ src/app                   # Next.js 페이지·서버 API
+├─ src/components            # 지도·상세·분석 화면
+├─ src/lib                   # 서버 데이터 로더·등급·지도 로직
+├─ scripts                   # 수집·분석·검증·동적 런처
+├─ data                      # 검증 완료 seed·분석 결과·매칭 감사 자료
+├─ tests                     # Python·Node 회귀 테스트
+├─ Dockerfile                # Python 3.12 + Node.js 22 운영 이미지
+├─ ARCHITECTURE.md           # 컴포넌트·데이터·승격 구조
+└─ DEPLOYMENT.md             # Railway 설정·수동 갱신·복구 절차
 ```
 
-검증 전에 실패하면 운영 중인 `data/`와 `src/data/koreaGeo.json`은 바뀌지 않습니다. 승격 중 일반 오류와 `Ctrl+C`가 발생하면 데이터와 경계 백업을 복구합니다. 파일시스템 강제 종료까지 단일 포인터로 보장하는 구조는 아니므로 `.pipeline.lock`이 남아 있으면 새 실행보다 백업과 운영 파일 상태를 먼저 확인해야 합니다. `npm run update:boundaries`도 오케스트레이터에 포함되므로 전체 실행 전후에 따로 중복 호출할 필요가 없습니다.
+## 인증, 테스트와 동적 운영
 
-수집·분석·경계 갱신·검증 실행:
+전체 재수집에는 루트 `.env`의 `DATA_GO_KR_API_KEY`, `HIRA_API_KEY`, `KAKAO_REST_API_KEY`가 필요합니다. 수동 갱신 API를 켤 때만 `PIPELINE_ADMIN_TOKEN`도 설정합니다. `.env`는 추적하지 않으며 모든 키는 서버 전용이므로 `NEXT_PUBLIC_` 접두사를 사용하지 않습니다.
 
-```powershell
-.\run_pipeline.bat
-```
+GitHub Actions는 프론트 데이터 계약·Node 테스트·lint·build와 Python 단위 테스트·데이터 계약을 병렬 검증합니다. 그 다음 Docker 이미지를 만들고, 패키지 내부 계약과 실제 `/api/health`·HTML·정적 asset·Volume 관리 파일 동기화를 smoke test합니다. 모든 검증을 통과한 `backend` 브랜치 push만 GHCR의 `backend`와 commit SHA 태그로 발행됩니다.
 
-개별 단계 실행 순서:
-
-```powershell
-python scripts\part1_collect_hospital_master.py
-python scripts\part2_collect_bed_status.py
-python scripts\part3_collect_population.py
-python scripts\part3_prepare_population.py
-python scripts\part3_collect_hira_doctors.py
-npm run update:boundaries
-python scripts\part3_collect_kakao_routes.py
-python scripts\part3_build_component_scores.py
-python scripts\part3_calculate_region_risk.py
-python scripts\part4_analyze.py
-python scripts\validate_data_contract.py
-npm run validate:frontend-data
-```
-
-개별 Python 수집·분석 스크립트는 기본적으로 live `data/`를 갱신하므로 개발·진단 목적에만 사용합니다. `npm run update:boundaries`는 임시 경계를 전체 데이터 계약으로 검증한 뒤 live 파일을 교체합니다. 운영 전체 갱신에는 staging 검증과 오류 시 백업 복구를 수행하는 `run_pipeline.bat`를 사용합니다.
-
-`part3_collect_population.py`는 행정안전부의 최신 공표 연월을 자동 선택합니다. 전체 파이프라인의 월을 고정하려면 `.\run_pipeline.bat 202607`처럼 실행합니다. PART 2는 전국 시군구별 API를 호출합니다. HIRA는 재실행마다 약 8만 건의 최신 전체목록을 페이지 단위로 수집하고, 수동검증을 제외한 모든 기관을 시군구 후보 안에서 이름·주소·전화·좌표·시설종별로 다시 검증합니다. 유효 후보는 전역 1:1 배정하며, 수동검증은 ID와 근거를 고정하되 전문의 수는 API에서 다시 조회합니다. 기본 동시 요청은 8개이고 429·5xx·연결 오류를 재시도하며, 필요하면 PowerShell의 `$env:HIRA_WORKERS=4` 또는 `--workers 4`로 낮출 수 있습니다. 카카오 최초 수집은 지역별 직선거리 상위 10개 센터와 병원 팝업 경로를 먼저 호출하고, 현재 최적 도로거리보다 다음 센터의 직선거리 하한이 작은 동안 후보를 한 곳씩 자동 확장합니다. 이 방식으로 전체 권역·지역응급의료센터 중 전역 최단 도로거리를 검증하면서 최초 호출량을 약 2,500~2,800건으로 제한합니다. 성공 경로와 대표점 캐시는 기본 30일 동안만 재사용하며 `KAKAO_ROUTE_CACHE_TTL_DAYS` 또는 `--cache-ttl-days`로 조정할 수 있습니다. 좌표·경계 변경 또는 TTL 만료 경로는 자동 재수집하고, 전체 강제 갱신은 `python scripts\part3_collect_kakao_routes.py --refresh`로 실행합니다. 무료 제공량과 초과 과금은 변경될 수 있으므로 실행 전 [카카오모빌리티 공식 가격표](https://developers.kakaomobility.com/price/)를 확인합니다. NEMC 534기관·219지역, 병상 응답 373기관 이상, HIRA 매칭 517기관 이상·218지역 이상 80% 통과를 검토 기준으로 두어 정상 응답처럼 보이는 원천 급감도 승격 전에 중단합니다. 실제 모집단 개편이 확인되면 기준값과 경계 매핑 allowlist를 함께 재검토해야 합니다.
-
-## 웹 대시보드 실행
-
-Node.js 20.12 이상(운영 이미지와 동일한 Node.js 22 권장)에서 프론트엔드 의존성을 설치하고 Next.js 개발 서버를 실행합니다.
-
-```powershell
-npm ci
-npm run dev
-```
-
-브라우저에서 `http://localhost:3000`을 열면 `data/`의 분석 결과를 사용하는 통합 대시보드를 확인할 수 있습니다. 배포용 빌드는 다음 명령으로 검증합니다.
-
-```powershell
-npm run build
-```
-
-### 동적 런타임
-
-프로덕션형 동적 런타임은 Next.js 서버와 Python 갱신 스케줄러를 함께 실행합니다. 로컬에서는 Python 3.12 가상환경과 두 언어의 의존성을 준비한 뒤 실행합니다.
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-npm ci
-npm run build
-npm run start:dynamic
-```
-
-최초 실행은 저장소의 검증 완료 데이터를 `runtime/`으로 복사합니다. 기본 `.env.example`은 로컬에서 뜻하지 않은 외부 API 호출이 발생하지 않도록 스케줄러가 꺼져 있습니다. 자동 갱신을 시험하려면 실제 세 API 키와 관리자 토큰을 로컬 `.env`에 넣고 `ENABLE_PIPELINE_SCHEDULER=true`로 변경합니다.
-
-Railway 1차 운영 구성은 다음 값을 사용합니다.
-
-- 배포 이미지: `backend` CI 검증 후 `ghcr.io/westyoon/embulance-score:backend` 발행
-- 영속 Volume: `/app/runtime`
-- replica: 1개
-- Serverless: 비활성화
-- Healthcheck Path: `/api/health`
-- 병상 갱신: 8시간 간격(공공데이터 운영 트래픽 10,000회/일 승인 후 60분으로 전환)
-- 전체 갱신: 24시간 간격
-- 전체 갱신의 병상 단계: 최근 12시간 이내 검증 스냅샷 재사용(중복 API 호출 없음)
-- 병원 원천 병상 기준시각: 12시간 초과 행은 결측 처리
-- 갱신 지연 경고: 병상 수집 후 600분, 실제 수치 차단은 병원별 원천 `API기준시각 + 12시간`
-- 시작 명령: `npm run start:dynamic`
-- 종료 유예: `RAILWAY_DEPLOYMENT_DRAINING_SECONDS=30`
-
-Railway Volume은 replicas와 함께 사용할 수 없고, 현재 파이프라인도 단일 writer와 파일 잠금을 전제로 합니다. Railway는 공개 GHCR 이미지의 `backend` 태그를 실행하고 Image Auto Updates로 새 digest를 반영합니다. 실제 비밀값 등록, 볼륨 설정, health 확인과 `POST /api/ops/refresh` 수동 실행 방법은 [DEPLOYMENT.md](./DEPLOYMENT.md)를 따릅니다.
+동적 런타임은 `npm run start:dynamic`으로 Next.js 서버와 Python 스케줄러를 함께 실행합니다. 저장소의 검증 seed를 `runtime/`에 초기화한 뒤, 운영에서는 8시간 `beds` 갱신과 24시간 `full` 갱신을 수행합니다. API 할당량, 단일 replica, Volume, health check, 수동 갱신과 복구 절차는 [DEPLOYMENT.md](./DEPLOYMENT.md)를 따릅니다.
 
 ## 분석 산식
 
@@ -249,7 +249,7 @@ regionRisk =
 
 - 카카오 최단 도로거리, 인구 대비 병상비율, 전문의 1인당 병상 수는 P5~P95 기준 Min-Max 방식으로 0~100점화합니다.
 - 응급의학과 전문의가 실제로 0명인 지역은 의료진 부족 100점으로 처리합니다.
-- HIRA 병원 자동매칭률이 80% 미만인 지역은 전문의 수를 신뢰하지 않고 결측 처리합니다.
+- HIRA 병원 매칭률(자동매칭+수동검증)이 80% 미만인 지역은 전문의 수를 신뢰하지 않고 결측 처리합니다.
 
 ## 분석 결과
 
@@ -309,6 +309,8 @@ k=2~8의 실루엣 점수를 비교했으며 현재 최적값은 k=2입니다.
 - `data/population_bed_score.csv`
 - `data/doctor_score.csv`
 - `data/region_risk_final.csv`
+- `data/missingness_followup.csv`: 지역·병원별 결측 원인, 우선순위와 다음 조치
+- `data/missingness_followup_summary.json`: 결측 유형별 현재 건수와 품질정책
 
 ### 분석 결과
 

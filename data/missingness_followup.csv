@@ -1,0 +1,160 @@
+﻿entity_type,entity_id,region_code,name,missing_fields,reason_code,reason,priority,status,next_action,source_checked_at
+region,경기도|가평군,경기도|가평군,가평군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_SOURCE_STALE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,2026-08-31T11:18:11+00:00
+region,경기도|동두천시,경기도|동두천시,동두천시,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,경기도|양주시,경기도|양주시,양주시,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_SOURCE_STALE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,2026-08-31T11:18:11+00:00
+region,경상남도|남해군,경상남도|남해군,남해군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_TOTAL_MISSING 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,2026-08-31T11:18:11+00:00
+region,경상남도|하동군,경상남도|하동군,하동군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,경상남도|함안군,경상남도|함안군,함안군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,경상북도|봉화군,경상북도|봉화군,봉화군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,경상북도|성주군,경상북도|성주군,성주군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_SOURCE_STALE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,2026-08-31T11:18:11+00:00
+region,경상북도|영덕군,경상북도|영덕군,영덕군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,경상북도|영양군,경상북도|영양군,영양군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,경상북도|의성군,경상북도|의성군,의성군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_SOURCE_STALE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,2026-08-31T11:18:11+00:00
+region,경상북도|칠곡군,경상북도|칠곡군,칠곡군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,대구광역시|달성군,대구광역시|달성군,달성군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,부산광역시|금정구,부산광역시|금정구,금정구,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,부산광역시|사하구,부산광역시|사하구,사하구,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,서울특별시|강북구,서울특별시|강북구,강북구,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 2건, BED_SOURCE_STALE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,2026-08-31T11:18:11+00:00
+region,서울특별시|마포구,서울특별시|마포구,마포구,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,인천광역시|영종구,인천광역시|영종구,영종구,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,전남광주통합특별시|함평군,전남광주통합특별시|함평군,함평군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,충청남도|금산군,충청남도|금산군,금산군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_API_NO_RESPONSE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,
+region,충청남도|부여군,충청남도|부여군,부여군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_SOURCE_STALE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,2026-08-31T11:18:11+00:00
+region,충청북도|보은군,충청북도|보은군,보은군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_SOURCE_STALE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,2026-08-31T11:18:11+00:00
+region,충청북도|음성군,충청북도|음성군,음성군,병상포화도점수|인구대비병상점수|regionRisk|위험등급,REGION_COMPONENT_MISSING,"병상포화도점수, 인구대비병상점수 결측; 소속 병원 원인: BED_SOURCE_STALE 1건",P0,open,소속 병원 결측 해소 후 beds → full 순서로 재실행,2026-08-31T11:18:11+00:00
+hospital_bed,A2200010,강원특별자치도|강릉시,의산의료재단강릉고려병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2200038,강원특별자치도|동해시,근로복지공단동해병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2200033,강원특별자치도|춘천시,인성병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100282,경기도|가평군,에이치제이매그놀리아국제병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2100283,경기도|고양시,의료법인일산복음병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100116,경기도|구리시,윤서병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100208,경기도|남양주시,원병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2120077,경기도|남양주시,혜성병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100135,경기도|동두천시,동두천중앙성모병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100058,경기도|부천시,부천우리병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100001,경기도|성남시,분당서울대학교병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A2106200,경기도|성남시,바른마디병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2115807,경기도|성남시,성모윌병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100206,경기도|수원시,수원중앙병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2119276,경기도|수원시,매듭병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100162,경기도|안산시,동안산병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2119939,경기도|안산시,클래스병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100010,경기도|안양시,인산의료재단메트로병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100134,경기도|양주시,양주예쓰병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2100173,경기도|여주시,연세새로운병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100180,경기도|이천시,바른병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100083,경기도|파주시,무척조은병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100130,경기도|파주시,문산중앙병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100255,경기도|평택시,성심중앙병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2100301,경기도|평택시,의료법인청파의료재단송탄중앙병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2116685,경기도|화성시,화성유일병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2803447,경상남도|고성군,더조은병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2800063,경상남도|김해시,의료법인 지평의료재단 메가병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2800146,경상남도|김해시,의료법인신의료재단김해삼승병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2800094,경상남도|남해군,의료법인 이도의료재단 남해병원,전체병상|포화율,BED_TOTAL_MISSING,전체병상 누락 또는 0 이하,P1,open,NEMC 전체병상 원천값 재조회 및 기관 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A2800042,경상남도|밀양시,행복한병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2800057,경상남도|밀양시,의료법인 생명사랑의료재단 밀양윤병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2804216,경상남도|사천시,하나병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2803867,경상남도|양산시,본바른병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2800044,경상남도|진주시,진주세란병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2800045,경상남도|진주시,의료법인 바른의료재단 바른병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2800012,경상남도|창원시,근로복지공단 창원병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2800018,경상남도|창원시,의료법인석영의료재단창원제일종합병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2800826,경상남도|하동군,하동중앙의원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2800138,경상남도|함안군,시영의료재단 영동병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2700071,경상북도|봉화군,봉화해성병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2700030,경상북도|성주군,의료법인석촌의료재단성주병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2700073,경상북도|영덕군,영덕아산병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2700026,경상북도|영양군,의료법인명성의료재단영양병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2700063,경상북도|의성군,의료법인영제의료재단영남제일병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2700066,경상북도|칠곡군,의료법인왜관병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1304119,대구광역시|남구,대구예스병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1303449,대구광역시|달성군,행복한병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1300033,대구광역시|동구,의료법인백천의료재단바로본병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1300005,대구광역시|북구,대구가톨릭대학교칠곡가톨릭병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A1300065,대구광역시|서구,새동산병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1303923,대구광역시|서구,더필병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1300063,대구광역시|중구,MS재건병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1600009,대전광역시|대덕구,근로복지공단대전병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1600014,대전광역시|동구,대전화병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1600001,대전광역시|중구,충남대학교병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A1200081,부산광역시|금정구,의료법인 라움의료재단 세웅병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1200027,부산광역시|동구,재단법인일신기독교선교회 일신기독병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1200111,부산광역시|동구,세일병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1206845,부산광역시|동래구,빌리브세웅병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1200110,부산광역시|북구,재단법인 베스티안재단 베스티안부산병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1200101,부산광역시|사상구,의료법인센텀의료재단 서부산센텀병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1200089,부산광역시|사하구,큐병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1207152,부산광역시|연제구,비에스길종합병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1200048,부산광역시|해운대구,효성시티병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100010,서울특별시|강남구,삼성서울병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A1100057,서울특별시|강남구,차의과학대학교강남차병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100141,서울특별시|강남구,강남베드로병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1123234,서울특별시|강남구,더드림병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100030,서울특별시|강북구,의료법인성화의료재단대한병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1100172,서울특별시|강북구,서울현대병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1121842,서울특별시|강북구,강북으뜸병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100042,서울특별시|강서구,우리들병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100046,서울특별시|강서구,미즈메디병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1117285,서울특별시|강서구,강서케이병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1120796,서울특별시|강서구,이화여자대학교의과대학부속서울병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A1100047,서울특별시|관악구,강남고려병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1100076,서울특별시|관악구,강남힐병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100148,서울특별시|관악구,사랑의병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100014,서울특별시|구로구,고려대학교의과대학부속구로병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A1126226,서울특별시|동작구,낭만병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100063,서울특별시|마포구,신촌연세병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100012,서울특별시|서초구,학교법인가톨릭학원가톨릭대학교서울성모병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A1120432,서울특별시|서초구,올바로병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1122381,서울특별시|성동구,재단법인베스티안재단베스티안서울병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100009,서울특별시|송파구,재단법인아산사회복지재단서울아산병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A1125429,서울특별시|송파구,강철병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100038,서울특별시|영등포구,한림대학교한강성심병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1100163,서울특별시|영등포구,한강수병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100255,서울특별시|영등포구,의료법인인봉의료재단영등포병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100152,서울특별시|은평구,은평연세병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1117070,서울특별시|은평구,최원호병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1100006,서울특별시|종로구,강북삼성병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A1100017,서울특별시|종로구,서울대학교병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A1107402,서울특별시|종로구,서울대학교치과병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1800441,세종특별자치시|세종시,세종충남대학교병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1700010,울산광역시|남구,굿모닝병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1700023,울산광역시|남구,(의)내경의료재단울산제일병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1700007,울산광역시|북구,울산엘리야병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1700036,울산광역시|중구,의료법인에스엠씨의료재단울산세민병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1701489,울산광역시|중구,의료법인동강의료재단동천동강병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1403121,인천광역시|계양구,인천더드림병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1400045,인천광역시|남동구,국제바로병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1404358,인천광역시|미추홀구,더나눔병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1400032,인천광역시|부평구,근로복지공단인천병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1400015,인천광역시|서해구,가톨릭관동대학교국제성모병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1403699,인천광역시|영종구,(의)성세의료재단 영종국제병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2600068,전남광주통합특별시|고흥군,의료법인장호의료재단녹동현대병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A1500043,전남광주통합특별시|광산구,광주열린병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1500071,전남광주통합특별시|광산구,송정사랑병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A1500078,전남광주통합특별시|남구,빛고을전남대학교병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1500057,전남광주통합특별시|북구,해피뷰병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A1502006,전남광주통합특별시|서구,선한병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2600012,전남광주통합특별시|순천시,근로복지공단순천병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2600019,전남광주통합특별시|순천시,성가롤로병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A2601742,전남광주통합특별시|여수시,여수한국병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2600667,전남광주통합특별시|완도군,금일마취통증의학과의원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,E2600362,전남광주통합특별시|완도군,완도군노화읍보건지소,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2600090,전남광주통합특별시|함평군,의료법인인성의료재단함평성심병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2600043,전남광주통합특별시|화순군,화순성심병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2600048,전남광주통합특별시|화순군,화순고려병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2500003,전북특별자치도|전주시,전주고려병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2900001,제주특별자치도|제주시,제주한라병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A2900007,제주특별자치도|제주시,제주대학교병원,가용병상|포화율,BED_AVAILABLE_NEGATIVE,가용병상 음수 이상값,P1,open,NEMC 음수 가용병상 재조회 및 이상값 확인,2026-08-31T20:18:11+09:00
+hospital_bed,A2400019,충청남도|금산군,새금산병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2400038,충청남도|부여군,학교법인건양교육재단건양대학교부여병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2400015,충청남도|예산군,예산명지병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2402812,충청남도|천안시,나은필병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2300017,충청북도|보은군,의료법인정민의료재단보은한양병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2300015,충청북도|음성군,의료법인태성의료재단제일조은병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2300021,충청북도|청주시,오창중앙병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2300039,충청북도|청주시,의료법인송암의료재단마이크로병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_bed,A2302011,충청북도|청주시,재단법인베스티안재단베스티안병원,가용병상|전체병상|포화율,BED_SOURCE_STALE,병원 API기준시각이 수집시각보다 12시간 초과,P1,open,NEMC 원천 API기준시각 갱신 여부 확인 후 beds 재수집,2026-08-31T20:18:11+09:00
+hospital_bed,A2302306,충청북도|충주시,충주미래병원,가용병상|전체병상|포화율,BED_API_NO_RESPONSE,NEMC 병상 API 응답 없음,P1,open,NEMC 운영 쿼터·응답 상태 확인 후 beds 재수집,
+hospital_hira,A2100283,경기도|고양시,의료법인일산복음병원,HIRA식별자|응급의학과전문의수,HIRA_MATCH_DEFERRED,HIRA 후보를 1:1로 확정할 근거 부족 (후보모호),P2,open,HIRA 공식 상세에서 이름·주소·전화·요양기호 수동검증,2026-08-31T11:18:19+00:00
+hospital_hira,A2300039,충청북도|청주시,의료법인송암의료재단마이크로병원,HIRA식별자|응급의학과전문의수,HIRA_MATCH_DEFERRED,HIRA 후보를 1:1로 확정할 근거 부족 (후보모호),P2,open,HIRA 공식 상세에서 이름·주소·전화·요양기호 수동검증,2026-08-31T11:18:19+00:00

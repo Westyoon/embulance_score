@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "source_checked_at": "2026-08-31T11:18:19+00:00",
+  "total_open_items": 159,
+  "entity_counts": {
+    "hospital_bed": 134,
+    "hospital_hira": 2,
+    "region": 23
+  },
+  "reason_counts": {
+    "BED_API_NO_RESPONSE": 92,
+    "BED_AVAILABLE_NEGATIVE": 14,
+    "BED_SOURCE_STALE": 27,
+    "BED_TOTAL_MISSING": 1,
+    "HIRA_MATCH_DEFERRED": 2
+  },
+  "missing_region_components": {
+    "병상포화도점수": 23,
+    "인구대비병상점수": 23
+  },
+  "policy": {
+    "bed_source_max_age_hours": 12,
+    "risk_imputation": false,
+    "hira_region_minimum_match_rate": 0.8
+  }
+}

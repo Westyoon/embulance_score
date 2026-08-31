@@ -111,6 +111,7 @@ def main() -> None:
         run([python, "scripts/part2_collect_bed_status.py"], environment)
         run([python, "scripts/part3_build_component_scores.py"], environment)
         run([python, "scripts/part3_calculate_region_risk.py"], environment)
+        run([python, "scripts/build_missingness_report.py"], environment)
         run([python, "scripts/part4_analyze.py"], environment)
         run([python, "scripts/validate_data_contract.py"], environment)
         run([node, "scripts/validate_frontend_data.mjs"], environment)

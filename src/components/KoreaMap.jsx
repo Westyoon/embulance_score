@@ -26,6 +26,9 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCodes, s
   const { paths, project } = mapGeometry;
   const highlightedCodeSet = useMemo(() => new Set(highlightCodes ?? []), [highlightCodes]);
   const highlighted = paths.filter((path) => highlightedCodeSet.has(path.code));
+  const hoveredPath = hoverInfo?.type !== "hospital" && hoverInfo?.code
+    ? paths.find((path) => path.code === hoverInfo.code) ?? null
+    : null;
 
   // 병원 상세 패널이 열려있는 동안만 지도에 마커 1개를 띄운다 — 별도 state 없이
   // selectedHospital 하나에서 파생시켜, 패널을 닫으면 마커도 자동으로 사라진다.
@@ -74,12 +77,24 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCodes, s
               <path key={p.code} d={p.d} fill={fill} fillOpacity={isHi ? 1 : 0.92}
                 stroke={isHi ? "#0f172a" : "#cbd5e1"} strokeWidth={(isHi ? 2.2 : 0.5) / view.scale}
                 onClick={() => r && onSelect(r)}
-                onMouseEnter={(e) => setHoverInfo({ name: r?.name ?? p.name, risk: r?.missing ? null : r?.risk, x: e.clientX, y: e.clientY })}
+                onMouseEnter={(e) => setHoverInfo({ code: p.code, name: r?.name ?? p.name, risk: r?.missing ? null : r?.risk, x: e.clientX, y: e.clientY })}
                 onMouseMove={(e) => setHoverInfo((h) => (h ? { ...h, x: e.clientX, y: e.clientY } : h))}
                 onMouseLeave={() => setHoverInfo(null)}
                 style={{ cursor: "pointer" }} />
             );
           })}
+          {hoveredPath && !highlightedCodeSet.has(hoveredPath.code) && (
+            <path
+              data-map-hover-outline={hoveredPath.code}
+              d={hoveredPath.d}
+              fill="none"
+              stroke="#1e293b"
+              strokeWidth={1.8 / view.scale}
+              strokeLinejoin="round"
+              pointerEvents="none"
+              aria-hidden="true"
+            />
+          )}
           {highlighted.map((path) => (
             <g key={`highlight-${path.code}`} style={{ pointerEvents: "none" }}>
               <circle cx={path.cx} cy={path.cy} r={6 / view.scale} fill="none" stroke="#0f172a" strokeWidth={1.4 / view.scale}>
