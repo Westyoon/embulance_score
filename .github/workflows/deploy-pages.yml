@@ -100,22 +100,43 @@ jobs:
             --env PORT=3000 \
             emergency-dashboard:ci
 
-          for attempt in {1..30}; do
-            if curl --fail --silent --show-error http://127.0.0.1:3000/api/health >/dev/null; then
-              html=$(curl --fail --silent --show-error http://127.0.0.1:3000/)
-              asset=$(printf '%s' "$html" | grep -oE '/_next/static/[^" ]+' | head -n 1)
-              test -n "$asset"
-              curl --fail --silent --show-error "http://127.0.0.1:3000$asset" >/dev/null
-              exit 0
-            fi
-            sleep 2
+          wait_until_healthy() {
+            for attempt in {1..30}; do
+              if curl --fail --silent --show-error http://127.0.0.1:3000/api/health >/dev/null; then
+                return 0
+              fi
+              sleep 2
+            done
+            return 1
+          }
+
+          if ! wait_until_healthy; then
+            docker logs "$container_name"
+            exit 1
+          fi
+          html=$(curl --fail --silent --show-error http://127.0.0.1:3000/)
+          asset=$(printf '%s' "$html" | grep -oE '/_next/static/[^" ]+' | head -n 1)
+          test -n "$asset"
+          curl --fail --silent --show-error "http://127.0.0.1:3000$asset" >/dev/null
+
+          docker exec --user root "$container_name" \
+            sh -c 'printf stale > /app/runtime/data/hira_match_overrides.csv'
+          docker restart "$container_name" >/dev/null
+          if ! wait_until_healthy; then
+            docker logs "$container_name"
+            exit 1
+          fi
+          for filename in \
+            hira_match_exclusions.csv \
+            hira_match_overrides.csv \
+            hospital_coordinate_overrides.csv \
+            hospital_region_overrides.csv; do
+            docker exec "$container_name" \
+              cmp "/app/data/$filename" "/app/runtime/data/$filename"
           done
 
-          docker logs "$container_name"
-          exit 1
-
       - name: Log in to GitHub Container Registry
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/backend' && github.event_name != 'pull_request'
         uses: docker/login-action@v4
         with:
           registry: ghcr.io
@@ -123,7 +144,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish verified production image
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/backend' && github.event_name != 'pull_request'
         shell: bash
         run: |
           image=ghcr.io/westyoon/embulance-score
