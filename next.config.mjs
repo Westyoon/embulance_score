@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = process.env.DEPLOY_TARGET === "github-pages"
-  ? {
-      output: "export",
-      basePath: process.env.PAGES_BASE_PATH ?? "",
-    }
-  : {};
+const nextConfig = {
+  output: "standalone",
+  outputFileTracingExcludes: {
+    "/api/*": ["./data/**/*", "./src/data/**/*", ".env", ".env.*"],
+  },
+};
 
 export default nextConfig;

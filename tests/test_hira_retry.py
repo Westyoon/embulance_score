@@ -13,6 +13,34 @@ import part3_collect_hira_doctors as hira
 
 
 class HiraHttpRetryTests(unittest.TestCase):
+    def test_catalog_retries_transient_empty_success_response(self) -> None:
+        catalog_row = {"ykiho": "A" * 80, "yadmNm": "테스트병원"}
+
+        with (
+            patch.object(
+                hira,
+                "fetch_catalog_page",
+                side_effect=[([], 0), ([catalog_row], 1)],
+            ) as fetch_page,
+            patch.object(hira.time, "sleep") as sleep,
+        ):
+            result = hira.fetch_hira_catalog("local-test-key", workers=1, page_size=1000)
+
+        self.assertEqual(result, [catalog_row])
+        self.assertEqual(fetch_page.call_count, 2)
+        sleep.assert_called_once_with(0.75)
+
+    def test_catalog_rejects_repeated_empty_success_responses(self) -> None:
+        with (
+            patch.object(hira, "fetch_catalog_page", return_value=([], 0)) as fetch_page,
+            patch.object(hira.time, "sleep") as sleep,
+        ):
+            with self.assertRaises(RuntimeError):
+                hira.fetch_hira_catalog("local-test-key", workers=1, page_size=1000)
+
+        self.assertEqual(fetch_page.call_count, hira.REQUEST_ATTEMPTS)
+        self.assertEqual(sleep.call_count, hira.REQUEST_ATTEMPTS - 1)
+
     def test_retries_retry_after_throttling_then_succeeds(self) -> None:
         throttled = Mock(status_code=429, headers={"Retry-After": "0"})
         success = Mock(status_code=200, headers={}, content=b"<response />")

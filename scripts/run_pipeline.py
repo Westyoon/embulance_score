@@ -1,6 +1,7 @@
 import argparse
 import os
 from pathlib import Path
+import signal
 import shutil
 import subprocess
 import sys
@@ -8,8 +9,18 @@ from uuid import uuid4
 
 from common import ROOT
 
-LIVE_DATA = ROOT / "data"
-LIVE_BOUNDARY = ROOT / "src" / "data" / "koreaGeo.json"
+LIVE_DATA = Path(os.getenv("PIPELINE_LIVE_DATA_DIR", ROOT / "data")).resolve()
+LIVE_BOUNDARY = Path(
+    os.getenv("BOUNDARY_FILE", ROOT / "src" / "data" / "koreaGeo.json")
+).resolve()
+PIPELINE_STATE_DIR = Path(os.getenv("PIPELINE_STATE_DIR", ROOT)).resolve()
+
+
+def install_shutdown_handler() -> None:
+    def terminate(_signum: int, _frame: object) -> None:
+        raise KeyboardInterrupt("파이프라인 종료 신호를 받았습니다.")
+
+    signal.signal(signal.SIGTERM, terminate)
 
 
 def run(command: list[str], environment: dict[str, str]) -> None:
@@ -44,6 +55,7 @@ def promote(
 
 
 def main() -> None:
+    install_shutdown_handler()
     parser = argparse.ArgumentParser(
         description="모든 산출물을 staging에서 검증한 뒤 백업과 함께 승격하는 전체 데이터 파이프라인"
     )
@@ -54,18 +66,21 @@ def main() -> None:
     if args.period and (len(args.period) != 6 or not args.period.isdigit()):
         raise ValueError("period는 YYYYMM 형식이어야 합니다.")
 
-    lock_path = ROOT / ".pipeline.lock"
+    PIPELINE_STATE_DIR.mkdir(parents=True, exist_ok=True)
+    LIVE_DATA.parent.mkdir(parents=True, exist_ok=True)
+    LIVE_BOUNDARY.parent.mkdir(parents=True, exist_ok=True)
+    lock_path = PIPELINE_STATE_DIR / ".pipeline.lock"
     try:
         lock_fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
     except FileExistsError as exc:
         raise RuntimeError(f"다른 파이프라인 실행 중이거나 이전 lock이 남았습니다: {lock_path}") from exc
 
     run_id = uuid4().hex
-    staging_root = ROOT / f".pipeline-staging-{run_id}"
+    staging_root = PIPELINE_STATE_DIR / f".pipeline-staging-{run_id}"
     staged_data = staging_root / "data"
     staged_boundary = staging_root / "koreaGeo.json"
-    backup_data = ROOT / f".pipeline-backup-{run_id}"
-    backup_boundary = ROOT / f".pipeline-backup-{run_id}.koreaGeo.json"
+    backup_data = PIPELINE_STATE_DIR / f".pipeline-backup-{run_id}"
+    backup_boundary = PIPELINE_STATE_DIR / f".pipeline-backup-{run_id}.koreaGeo.json"
     try:
         os.write(lock_fd, str(os.getpid()).encode("ascii"))
         shutil.copytree(LIVE_DATA, staged_data)

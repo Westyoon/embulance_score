@@ -1,7 +1,5 @@
-import Dashboard from "@/components/Dashboard";
-import { loadDashboardData } from "@/lib/loadDashboardData";
+import DashboardLoader from "@/components/DashboardLoader";
 
 export default function Home() {
-  const data = loadDashboardData();
-  return <Dashboard data={data} />;
+  return <DashboardLoader />;
 }

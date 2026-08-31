@@ -1,7 +1,19 @@
-import { readCsv, readJson } from "./csvServer";
+import { readBoundaryJson, readCsv, readJson } from "./csvServer";
 import { CLUSTER_LABELS } from "./riskScale";
 import { corrLevel, CORR_INSIGHTS } from "./correlationScale";
-import koreaGeo from "@/data/koreaGeo.json";
+
+export const DASHBOARD_SOURCE_FILES = [
+  "region_risk_final.csv",
+  "cluster_result.csv",
+  "cluster_profile.csv",
+  "bed_status.csv",
+  "accessibility_score.csv",
+  "kakao_hospital_routes.csv",
+  "hospital_master.csv",
+  "correlation_matrix.csv",
+  "regression_result.csv",
+  "regression_metrics.json",
+];
 
 const COMPONENT_KEYS = [
   { field: "병상포화도점수", short: "병상포화도" },
@@ -106,7 +118,7 @@ function toRegion(row, clusterByKey, clusterMetaById, hospitalsByKey, accessibil
 // 2) 안 되면 "OO시 + 구" 형태를 부모 도시(OO시) 단위 파이프라인 로우로 대체
 //    (예: 수원시영통구 -> 경기도|수원시 값을 그대로 적용).
 // 3) 그래도 없으면 원천데이터 자체가 없는 지역으로 보고 회색 처리.
-function buildRegionIndexByGeoCode(regionsByKey) {
+function buildRegionIndexByGeoCode(regionsByKey, koreaGeo) {
   const index = {};
   for (const feature of koreaGeo.features) {
     const { code, name, sido } = feature.properties;
@@ -140,7 +152,7 @@ function buildClusterMeta(clusterProfileRows) {
   return metaById;
 }
 
-function hospitalGeoCode(hospital) {
+function hospitalGeoCode(hospital, koreaGeo) {
   const address = String(hospital["주소"] ?? "").replace(/\s+/g, "");
   const candidates = koreaGeo.features.filter((feature) => (
     feature.properties.sido === hospital["시도"]
@@ -150,7 +162,7 @@ function hospitalGeoCode(hospital) {
   return candidates[0]?.properties.code ?? null;
 }
 
-function buildHospitals(routeByCode) {
+function buildHospitals(routeByCode, koreaGeo) {
   const hospitals = readCsv("hospital_master.csv");
   const bedStatus = readCsv("bed_status.csv");
   const bedByCode = new Map(bedStatus.map((r) => [r["기관코드"], r]));
@@ -170,7 +182,7 @@ function buildHospitals(routeByCode) {
       phone: h["전화"],
       latitude: h["위도"],
       longitude: h["경도"],
-      geoCode: hospitalGeoCode(h),
+      geoCode: hospitalGeoCode(h, koreaGeo),
       status: bed?.["상태"] ?? "결측",
       availableBeds: bed?.["가용병상"] ?? null,
       totalBeds: bed?.["전체병상"] ?? null,
@@ -237,6 +249,7 @@ function latestTimestamp(bedStatus) {
 }
 
 export function loadDashboardData() {
+  const koreaGeo = readBoundaryJson();
   const riskRows = readCsv("region_risk_final.csv");
   const clusterRows = readCsv("cluster_result.csv");
   const clusterProfileRows = readCsv("cluster_profile.csv");
@@ -254,13 +267,13 @@ export function loadDashboardData() {
     row["기관코드"],
     normalizeHospitalRoute(row),
   ]));
-  const { byKey: hospitalsByKey, all: allHospitals } = buildHospitals(routeByCode);
+  const { byKey: hospitalsByKey, all: allHospitals } = buildHospitals(routeByCode, koreaGeo);
 
   const regions = riskRows.map((row) => (
     toRegion(row, clusterByKey, clusterMetaById, hospitalsByKey, accessibilityByKey)
   ));
   const regionsByKey = new Map(regions.map((r) => [r.key, r]));
-  const regionIndex = buildRegionIndexByGeoCode(regionsByKey);
+  const regionIndex = buildRegionIndexByGeoCode(regionsByKey, koreaGeo);
 
   const complete = regions.filter((r) => !r.missing);
   const ranked = [...complete].sort((a, b) => b.risk - a.risk);

@@ -2,6 +2,7 @@
 .env
 .venv/
 .pipeline-staging-*/
+.hira-staging-*/
 .pipeline-backup-*
 .pipeline.lock
 __pycache__/
@@ -23,6 +24,7 @@ __pycache__/
 /.next/
 /out/
 /build
+/runtime/
 
 # Local and deployment files
 .DS_Store
@@ -34,6 +36,7 @@ yarn-error.log*
 .env*
 !.env.example
 .vercel
+/.railway/
 
 # TypeScript
 *.tsbuildinfo

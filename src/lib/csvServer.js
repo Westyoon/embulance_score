@@ -2,9 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import Papa from "papaparse";
 
-const DATA_DIR = process.env.PIPELINE_DATA_DIR
+export const DATA_DIR = process.env.PIPELINE_DATA_DIR
   ? path.resolve(process.env.PIPELINE_DATA_DIR)
   : path.join(process.cwd(), "data");
+
+export const BOUNDARY_FILE = process.env.BOUNDARY_FILE
+  ? path.resolve(process.env.BOUNDARY_FILE)
+  : path.join(process.cwd(), "src", "data", "koreaGeo.json");
 
 // 서버 컴포넌트/로더에서만 사용. papaparse로 CSV를 파싱해 객체 배열로 반환한다.
 export function readCsv(filename) {
@@ -29,5 +33,10 @@ export function readCsv(filename) {
 
 export function readJson(filename) {
   const raw = fs.readFileSync(path.join(DATA_DIR, filename), "utf-8");
+  return JSON.parse(raw);
+}
+
+export function readBoundaryJson() {
+  const raw = fs.readFileSync(BOUNDARY_FILE, "utf-8");
   return JSON.parse(raw);
 }

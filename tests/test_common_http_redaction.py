@@ -64,6 +64,25 @@ class RequestXmlRedactionTests(unittest.TestCase):
         response.raise_for_status.assert_not_called()
         response.close.assert_called_once()
 
+    def test_rate_limit_preserves_only_retry_metadata(self) -> None:
+        response = Mock(
+            status_code=429,
+            content=LEAKY_BODY.encode("utf-8"),
+            headers={"Retry-After": "7"},
+        )
+
+        with (
+            patch.object(common, "api_key", return_value=SECRET),
+            patch.object(common.requests, "get", return_value=response),
+            self.assertRaises(common.PublicDataApiError) as caught,
+        ):
+            common.request_xml("rate-limited", {"pageNo": 1})
+
+        self.assertEqual(caught.exception.status_code, 429)
+        self.assertEqual(caught.exception.retry_after, "7")
+        self.assert_redacted(caught.exception)
+        response.close.assert_called_once()
+
     def test_application_error_does_not_expose_upstream_message(self) -> None:
         response = Mock(
             status_code=200,
@@ -84,6 +103,28 @@ class RequestXmlRedactionTests(unittest.TestCase):
         self.assert_redacted(caught.exception)
         response.close.assert_called_once()
 
+    def test_portal_error_schema_preserves_safe_reason_code(self) -> None:
+        response = Mock(
+            status_code=200,
+            content=(
+                "<OpenAPI_ServiceResponse><cmmMsgHeader>"
+                "<returnReasonCode>22</returnReasonCode>"
+                f"<errMsg>{SECRET} {LEAKY_BODY}</errMsg>"
+                "</cmmMsgHeader></OpenAPI_ServiceResponse>"
+            ).encode("utf-8"),
+        )
+
+        with (
+            patch.object(common, "api_key", return_value=SECRET),
+            patch.object(common.requests, "get", return_value=response),
+            self.assertRaises(common.PublicDataApiError) as caught,
+        ):
+            common.request_xml("rate-limited-in-xml", {"pageNo": 1})
+
+        self.assertEqual(caught.exception.result_code, "22")
+        self.assert_redacted(caught.exception)
+        response.close.assert_called_once()
+
     def test_malformed_xml_is_reported_without_payload(self) -> None:
         response = Mock(status_code=200, content=f"<broken>{SECRET}".encode("utf-8"))
 
@@ -95,6 +136,23 @@ class RequestXmlRedactionTests(unittest.TestCase):
             common.request_xml("malformed", {"pageNo": 1})
 
         self.assertEqual(str(caught.exception), "공공데이터 API 응답 형식을 해석할 수 없습니다.")
+        self.assert_redacted(caught.exception)
+        response.close.assert_called_once()
+
+    def test_well_formed_response_without_result_code_is_retryable_parse_error(self) -> None:
+        response = Mock(
+            status_code=200,
+            content=f"<html><body>{SECRET} {LEAKY_BODY}</body></html>".encode("utf-8"),
+        )
+
+        with (
+            patch.object(common, "api_key", return_value=SECRET),
+            patch.object(common.requests, "get", return_value=response),
+            self.assertRaises(common.PublicDataApiError) as caught,
+        ):
+            common.request_xml("gateway-html", {"pageNo": 1})
+
+        self.assertEqual(caught.exception.kind, "parse")
         self.assert_redacted(caught.exception)
         response.close.assert_called_once()
 

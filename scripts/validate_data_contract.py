@@ -3,7 +3,9 @@ import math
 import os
 import re
 from collections.abc import Iterable
+from datetime import date, datetime
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
 import numpy as np
 import pandas as pd
@@ -42,7 +44,24 @@ EXPECTED_BOUNDARY_VERSION = "20260701"
 EXPECTED_NEMC_HOSPITALS = 534
 EXPECTED_NEMC_REGIONS = 219
 MIN_LIVE_MATCHES = 373
-MIN_HIRA_MATCHES = 400
+MIN_HIRA_MATCHES = 517
+MIN_HIRA_USABLE_REGIONS = 218
+TARGET_HIRA_USABLE_REGIONS = 219
+MIN_COMPLETE_RISK_REGIONS = 197
+EXPECTED_HIRA_LOGIC_VERSION = "hira-catalog-v3"
+MAX_HIRA_EXCLUSION_AGE_DAYS = 30
+ALLOWED_HIRA_EXCLUSION_REASONS = {"HIRA_SOURCE_NOT_FOUND"}
+HIRA_IDENTIFIER_PATTERN = re.compile(r"[A-Za-z0-9_-]{80}")
+ALLOWED_HIRA_MATCH_STATES = {
+    "자동매칭",
+    "수동검증",
+    "미매칭",
+    "낮은유사도",
+    "후보모호",
+    "식별자충돌검토필요",
+    "중복식별자검토필요",
+    "HIRA원천불일치",
+}
 EXPECTED_AGGREGATE_MAPPINGS = {
     "41111": ("경기도|수원시장안구", "경기도|수원시"),
     "41113": ("경기도|수원시권선구", "경기도|수원시"),
@@ -565,14 +584,323 @@ def main() -> None:
     require_unique(hira_detail, ["기관코드"], "HIRA 기관 연결")
     if set(hira_detail["기관코드"]) != set(master["기관코드"]):
         fail("HIRA 기관 연결 데이터가 NEMC 기관 모집단을 보존하지 못합니다.")
+    raw_hira_states = hira_detail["매칭상태"].astype("string").fillna("")
+    normalized_hira_states = raw_hira_states.str.strip()
+    hira_states = set(normalized_hira_states)
+    unknown_hira_states = hira_states - ALLOWED_HIRA_MATCH_STATES
+    if raw_hira_states.ne(normalized_hira_states).any() or "" in hira_states or unknown_hira_states:
+        fail(
+            "HIRA 기관 연결 데이터에 비어 있거나 정의되지 않은 매칭상태가 있습니다: "
+            f"{sorted(unknown_hira_states)}"
+        )
     matched_hira = hira_detail["매칭상태"].isin(["자동매칭", "수동검증"])
     matched_identifiers = hira_detail.loc[matched_hira, "암호화요양기호"]
-    if matched_identifiers.isna().any() or matched_identifiers.duplicated().any():
-        fail("매칭된 HIRA 요양기관 식별자가 비어 있거나 중복됩니다.")
+    matched_specialists = pd.to_numeric(
+        hira_detail.loc[matched_hira, "응급의학과전문의수"],
+        errors="coerce",
+    )
+    if (
+        matched_identifiers.isna().any()
+        or matched_identifiers.astype("string").str.strip().eq("").any()
+        or matched_identifiers.duplicated().any()
+        or matched_specialists.isna().any()
+        or matched_specialists.lt(0).any()
+        or matched_specialists.mod(1).ne(0).any()
+    ):
+        fail("매칭된 HIRA 요양기관 식별자 또는 전문의 수가 비어 있거나 올바르지 않습니다.")
     if int(matched_hira.sum()) > len(master):
         fail("HIRA 보강 모집단이 NEMC 기준 모집단보다 커졌습니다. 기준 모집단을 재검토하세요.")
     if int(matched_hira.sum()) < MIN_HIRA_MATCHES:
         fail(f"HIRA 매칭 수가 검토 기준보다 적습니다: {int(matched_hira.sum())} < {MIN_HIRA_MATCHES}")
+
+    hira_override_path = DATA_DIR / "hira_match_overrides.csv"
+    if not hira_override_path.exists():
+        fail("HIRA 수동 검증 근거 파일이 없습니다.")
+    hira_overrides = read_csv(hira_override_path)
+    required_hira_override_columns = {
+        "기관코드", "HIRA병원명", "HIRA주소", "암호화요양기호",
+        "응급의학과전문의수", "근거URL", "확인일",
+    }
+    if not required_hira_override_columns.issubset(hira_overrides.columns):
+        fail(
+            "HIRA 수동 검증 필수 컬럼 누락: "
+            f"{sorted(required_hira_override_columns - set(hira_overrides.columns))}"
+        )
+    require_unique(hira_overrides, ["기관코드"], "HIRA 수동 검증")
+    require_unique(hira_overrides, ["암호화요양기호"], "HIRA 수동 검증 요양기호")
+    override_text = hira_overrides[
+        ["기관코드", "HIRA병원명", "HIRA주소", "암호화요양기호", "근거URL", "확인일"]
+    ].astype("string").apply(lambda column: column.str.strip())
+    override_specialists = pd.to_numeric(
+        hira_overrides["응급의학과전문의수"],
+        errors="coerce",
+    )
+    if (
+        override_text.isna().any().any()
+        or override_text.eq("").any().any()
+        or not override_text["근거URL"].str.fullmatch(r"https://(?:[^/]+\.)?hira\.or\.kr/\S+").all()
+        or pd.to_datetime(override_text["확인일"], format="%Y-%m-%d", errors="coerce").isna().any()
+        or override_specialists.isna().any()
+        or override_specialists.lt(0).any()
+        or override_specialists.mod(1).ne(0).any()
+    ):
+        fail("HIRA 수동 검증의 병원 식별정보·전문의수·근거 URL·확인일이 올바르지 않습니다.")
+    manual_codes = set(override_text["기관코드"])
+    detail_manual_codes = set(
+        hira_detail.loc[hira_detail["매칭상태"].eq("수동검증"), "기관코드"].astype("string")
+    )
+    if manual_codes != detail_manual_codes:
+        fail("HIRA 수동 검증 파일과 기관 연결 결과의 수동검증 집합이 다릅니다.")
+
+    hira_exclusion_path = DATA_DIR / "hira_match_exclusions.csv"
+    if not hira_exclusion_path.exists():
+        fail("HIRA 원천 불일치 근거 파일이 없습니다.")
+    hira_exclusions = read_csv(hira_exclusion_path)
+    required_hira_exclusion_columns = {
+        "기관코드",
+        "병원명",
+        "사유코드",
+        "사유",
+        "확인요양기호",
+        "근거URL",
+        "확인일",
+    }
+    if not required_hira_exclusion_columns.issubset(hira_exclusions.columns):
+        fail(
+            "HIRA 원천 불일치 필수 컬럼 누락: "
+            f"{sorted(required_hira_exclusion_columns - set(hira_exclusions.columns))}"
+        )
+    require_unique(hira_exclusions, ["기관코드"], "HIRA 원천 불일치")
+    require_unique(hira_exclusions, ["확인요양기호"], "HIRA 원천 불일치 확인요양기호")
+    exclusion_text_columns = [
+        "기관코드",
+        "병원명",
+        "사유코드",
+        "사유",
+        "확인요양기호",
+        "근거URL",
+        "확인일",
+    ]
+    exclusion_text = hira_exclusions[exclusion_text_columns].astype("string").apply(
+        lambda column: column.fillna("").str.strip()
+    )
+    if (
+        exclusion_text.eq("").any().any()
+        or exclusion_text["기관코드"].duplicated().any()
+        or exclusion_text["확인요양기호"].duplicated().any()
+        or not exclusion_text["확인요양기호"].str.fullmatch(HIRA_IDENTIFIER_PATTERN).all()
+        or not exclusion_text["사유코드"].isin(ALLOWED_HIRA_EXCLUSION_REASONS).all()
+    ):
+        fail("HIRA 원천 불일치 식별정보·사유·근거가 비어 있거나 올바르지 않습니다.")
+    for row in exclusion_text.to_dict("records"):
+        parsed = urlparse(row["근거URL"])
+        hostname = (parsed.hostname or "").lower()
+        if parsed.scheme != "https" or not (
+            hostname == "hira.or.kr" or hostname.endswith(".hira.or.kr")
+        ):
+            fail("HIRA 원천 불일치 근거URL은 공식 HIRA HTTPS 주소여야 합니다.")
+        if parse_qs(parsed.query).get("ykiho", [""])[0] != row["확인요양기호"]:
+            fail("HIRA 원천 불일치 근거URL과 확인요양기호가 다릅니다.")
+        try:
+            confirmed_date = datetime.strptime(row["확인일"], "%Y-%m-%d").date()
+        except ValueError:
+            fail("HIRA 원천 불일치 확인일은 YYYY-MM-DD 형식이어야 합니다.")
+        if confirmed_date.strftime("%Y-%m-%d") != row["확인일"]:
+            fail("HIRA 원천 불일치 확인일은 YYYY-MM-DD 형식이어야 합니다.")
+        age_days = (date.today() - confirmed_date).days
+        if age_days < 0 or age_days > MAX_HIRA_EXCLUSION_AGE_DAYS:
+            fail("HIRA 원천 불일치 확인일이 미래이거나 재검증 주기 30일을 초과했습니다.")
+
+    exclusion_codes = set(exclusion_text["기관코드"])
+    detail_exclusion_codes = set(
+        hira_detail.loc[
+            hira_detail["매칭상태"].eq("HIRA원천불일치"),
+            "기관코드",
+        ].astype("string")
+    )
+    if exclusion_codes != detail_exclusion_codes:
+        fail("HIRA 원천 불일치 근거와 기관 연결 결과의 상태 집합이 다릅니다.")
+    if exclusion_codes & manual_codes:
+        fail("HIRA 원천 불일치 기관이 수동 매칭에도 중복 등록되어 있습니다.")
+    confirmed_exclusion_identifiers = set(exclusion_text["확인요양기호"])
+    if confirmed_exclusion_identifiers & set(matched_identifiers.astype("string").str.strip()):
+        fail("HIRA 원천 불일치의 이전 요양기호가 최종 매칭에도 사용됐습니다.")
+    master_names = master.set_index("기관코드")["병원명"].astype("string").str.strip()
+    for row in exclusion_text.to_dict("records"):
+        if row["기관코드"] not in master_names.index:
+            fail(f"HIRA 원천 불일치 기관이 NEMC 모집단에 없습니다: {row['기관코드']}")
+        if master_names.loc[row["기관코드"]] != row["병원명"]:
+            fail(f"HIRA 원천 불일치 병원명이 NEMC 모집단과 다릅니다: {row['기관코드']}")
+    excluded_detail = hira_detail[hira_detail["기관코드"].isin(exclusion_codes)]
+    excluded_identity = excluded_detail[
+        ["HIRA병원명", "HIRA주소", "암호화요양기호"]
+    ].astype("string").fillna("").apply(lambda column: column.str.strip())
+    excluded_specialists = pd.to_numeric(
+        excluded_detail["응급의학과전문의수"],
+        errors="coerce",
+    )
+    if not excluded_identity.eq("").all().all() or excluded_specialists.notna().any():
+        fail("HIRA 원천 불일치 기관에는 HIRA 식별정보나 전문의 수를 저장할 수 없습니다.")
+
+    candidate_audit_path = DATA_DIR / "hira_match_candidates.csv"
+    manifest_path = DATA_DIR / "hira_catalog_manifest.json"
+    if not candidate_audit_path.exists() or not manifest_path.exists():
+        fail("HIRA 전체목록 매칭 감사 파일 또는 카탈로그 매니페스트가 없습니다.")
+    candidate_audit = read_csv(candidate_audit_path)
+    required_candidate_columns = {
+        "기관코드", "후보순위", "암호화요양기호", "매칭점수", "자동확정",
+        "자동확정기준", "시설종별일치", "거리m", "수집시각UTC", "API근거",
+        "매칭로직버전",
+    }
+    if not required_candidate_columns.issubset(candidate_audit.columns):
+        fail(
+            "HIRA 후보 감사 필수 컬럼 누락: "
+            f"{sorted(required_candidate_columns - set(candidate_audit.columns))}"
+        )
+    require_unique(candidate_audit, ["기관코드", "후보순위"], "HIRA 후보 감사 순위")
+    audit_codes = set(candidate_audit["기관코드"].astype("string"))
+    expected_audit_codes = set(master["기관코드"].astype("string")) - manual_codes
+    if audit_codes != expected_audit_codes:
+        fail("HIRA 후보 감사 파일이 수동검증을 제외한 NEMC 기관 모집단과 다릅니다.")
+    selected_candidates = candidate_audit[
+        candidate_audit["자동확정"].astype("string").str.lower().eq("true")
+    ].copy()
+    require_unique(selected_candidates, ["기관코드"], "HIRA 자동확정 후보")
+    automatic_detail = hira_detail[hira_detail["매칭상태"].eq("자동매칭")].copy()
+    selected_joined = automatic_detail[
+        ["기관코드", "암호화요양기호", "매칭점수"]
+    ].merge(
+        selected_candidates[
+            ["기관코드", "암호화요양기호", "매칭점수", "자동확정기준", "시설종별일치"]
+        ],
+        on="기관코드",
+        how="outer",
+        suffixes=("_detail", "_audit"),
+        indicator=True,
+        validate="one_to_one",
+    )
+    if (
+        not selected_joined["_merge"].eq("both").all()
+        or not selected_joined["암호화요양기호_detail"].eq(selected_joined["암호화요양기호_audit"]).all()
+        or not np.allclose(
+            pd.to_numeric(selected_joined["매칭점수_detail"], errors="coerce"),
+            pd.to_numeric(selected_joined["매칭점수_audit"], errors="coerce"),
+            rtol=0,
+            atol=1e-12,
+        )
+        or not selected_joined["자동확정기준"].astype("string").str.lower().eq("true").all()
+        or not selected_joined["시설종별일치"].astype("string").str.lower().eq("true").all()
+    ):
+        fail("HIRA 자동확정 후보 감사 기록이 최종 기관 연결 결과와 일치하지 않습니다.")
+    if (
+        candidate_audit["수집시각UTC"].astype("string").str.strip().eq("").any()
+        or pd.to_datetime(candidate_audit["수집시각UTC"], errors="coerce", utc=True).isna().any()
+        or not candidate_audit["API근거"].eq(
+            "https://apis.data.go.kr/B551182/hospInfoServicev2/getHospBasisList"
+        ).all()
+        or not candidate_audit["매칭로직버전"].eq(EXPECTED_HIRA_LOGIC_VERSION).all()
+    ):
+        fail("HIRA 후보 감사의 수집시각·API 근거·매칭 로직 버전이 올바르지 않습니다.")
+    excluded_audit = candidate_audit[
+        candidate_audit["기관코드"].astype("string").isin(exclusion_codes)
+    ]
+    if exclusion_codes and excluded_audit.empty:
+        fail("HIRA 원천 불일치 기관의 최신 후보 감사 기록이 없습니다.")
+    excluded_audit_automatic = (
+        excluded_audit["자동확정"].astype("string").str.lower().eq("true")
+    )
+    excluded_audit_gate = (
+        excluded_audit["자동확정기준"].astype("string").str.lower().eq("true")
+    )
+    confirmed_identifiers = set(exclusion_text["확인요양기호"])
+    audited_identifiers = set(
+        excluded_audit["암호화요양기호"].astype("string").fillna("").str.strip()
+    ) - {""}
+    if (
+        excluded_audit_automatic.any()
+        or excluded_audit_gate.any()
+        or bool(confirmed_identifiers & audited_identifiers)
+    ):
+        fail("HIRA 원천 불일치 기관에 최신 자동확정 후보 또는 기존 요양기호가 나타났습니다.")
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    usable_doctor_count = int(doctors["데이터품질"].eq("사용가능").sum())
+    manifest_gap_keys = {
+        f"{row.get('province')}|{row.get('district')}"
+        for row in manifest.get("regional_quality_gaps", [])
+    }
+    doctor_gap_keys = region_keys(doctors[doctors["데이터품질"].ne("사용가능")])
+    doctor_gap_rows = doctors[doctors["데이터품질"].ne("사용가능")].copy()
+    doctor_gap_rows["추가필요기관수"] = (
+        (pd.to_numeric(doctor_gap_rows["전체기관수"], errors="coerce") * 0.8).apply(math.ceil)
+        - pd.to_numeric(doctor_gap_rows["매칭기관수"], errors="coerce")
+    ).clip(lower=0)
+    expected_gap_records = []
+    for row in doctor_gap_rows.to_dict("records"):
+        regional_exclusion_codes = sorted(
+            hira_detail.loc[
+                hira_detail["시도"].eq(row["시도"])
+                & hira_detail["시군구"].eq(row["시군구"])
+                & hira_detail["매칭상태"].eq("HIRA원천불일치"),
+                "기관코드",
+            ].astype("string")
+        )
+        additional_needed = int(row["추가필요기관수"])
+        if additional_needed > len(regional_exclusion_codes):
+            fail(
+                "HIRA 80% 미달 지역이 검증된 원천 불일치 기관으로 설명되지 않습니다: "
+                f"{row['시도']} {row['시군구']}"
+            )
+        expected_gap_records.append(
+            {
+                "province": str(row["시도"]),
+                "district": str(row["시군구"]),
+                "total_hospitals": int(row["전체기관수"]),
+                "matched_hospitals": int(row["매칭기관수"]),
+                "additional_matches_needed": additional_needed,
+                "source_exclusion_codes": regional_exclusion_codes,
+            }
+        )
+    expected_gap_records.sort(key=lambda row: (row["province"], row["district"]))
+    manifest_gap_records = sorted(
+        manifest.get("regional_quality_gaps", []),
+        key=lambda row: (str(row.get("province", "")), str(row.get("district", ""))),
+    )
+    expected_source_exclusions = sorted(
+        [
+            {
+                "institution_code": row["기관코드"],
+                "hospital_name": row["병원명"],
+                "reason_code": row["사유코드"],
+                "reason": row["사유"],
+                "confirmed_identifier": row["확인요양기호"],
+                "evidence_url": row["근거URL"],
+                "confirmed_at": row["확인일"],
+            }
+            for row in exclusion_text.to_dict("records")
+        ],
+        key=lambda row: row["institution_code"],
+    )
+    if (
+        manifest.get("matching_logic_version") != EXPECTED_HIRA_LOGIC_VERSION
+        or int(manifest.get("catalog_rows", 0)) <= len(master)
+        or int(manifest.get("matched_hospitals", -1)) != int(matched_hira.sum())
+        or int(manifest.get("manual_matches", -1)) != len(manual_codes)
+        or set(manifest.get("manual_match_codes", [])) != manual_codes
+        or int(manifest.get("automatic_matches", -1)) != len(automatic_detail)
+        or int(manifest.get("deferred_matches", -1)) != int((~matched_hira).sum())
+        or int(manifest.get("algorithmic_deferred_matches", -1))
+        != int((~matched_hira).sum()) - len(exclusion_codes)
+        or int(manifest.get("source_exclusion_count", -1)) != len(exclusion_codes)
+        or set(manifest.get("source_exclusion_codes", [])) != exclusion_codes
+        or manifest.get("source_exclusions") != expected_source_exclusions
+        or not set(manifest.get("source_exclusion_transitions", [])).issubset(exclusion_codes)
+        or int(manifest.get("usable_regions", -1)) != usable_doctor_count
+        or int(manifest.get("target_usable_regions", -1)) != TARGET_HIRA_USABLE_REGIONS
+        or manifest_gap_keys != doctor_gap_keys
+        or manifest_gap_records != expected_gap_records
+    ):
+        fail("HIRA 카탈로그 매니페스트가 최종 연결·지역 집계와 일치하지 않습니다.")
     no_search = read_csv(DATA_DIR / "hira_no_search_results.csv")
     other_review = read_csv(DATA_DIR / "hira_low_similarity.csv")
     require_unique(no_search, ["기관코드"], "HIRA 검색결과 없음 검토목록")
@@ -588,14 +916,41 @@ def main() -> None:
     ):
         fail("HIRA 수동검토 큐가 최신 기관 매칭 결과의 미매칭 집합과 일치하지 않습니다.")
     require_unique(doctors, ["시도", "시군구"], "HIRA 지역 집계")
+    doctor_match_rates = pd.to_numeric(doctors["매칭률"], errors="coerce")
+    expected_doctor_quality = doctor_match_rates.ge(0.8).map(
+        {True: "사용가능", False: "검토필요"}
+    )
+    doctor_specialists = pd.to_numeric(doctors["응급의학과전문의수"], errors="coerce")
+    if (
+        len(doctors) != EXPECTED_NEMC_REGIONS
+        or doctor_match_rates.isna().any()
+        or usable_doctor_count < MIN_HIRA_USABLE_REGIONS
+        or not doctors["데이터품질"].eq(expected_doctor_quality).all()
+        or doctor_specialists.loc[doctors["데이터품질"].eq("사용가능")].isna().any()
+        or doctor_specialists.loc[doctors["데이터품질"].eq("검토필요")].notna().any()
+    ):
+        fail("HIRA 지역 집계가 최소 218곳 80% 매칭 및 품질 결측 계약을 충족하지 못했습니다.")
 
     require_unique(risk, ["시군구코드"], "지역 위험도")
     doctor_keys = region_keys(doctors)
     risk_keys = set(risk["시군구코드"])
     if doctor_keys != master_region_keys or risk_keys != master_region_keys:
         fail("HIRA 보강 또는 위험도 산출 과정에서 NEMC 지역 모집단이 줄었습니다.")
+    risk_doctor_missing_keys = set(
+        risk.loc[
+            pd.to_numeric(risk["의료진부족점수"], errors="coerce").isna(),
+            "시군구코드",
+        ].astype("string")
+    )
+    if risk_doctor_missing_keys != doctor_gap_keys:
+        fail("HIRA 80% 미달 지역과 최종 위험도의 의료진 점수 결측 지역이 다릅니다.")
     validate_frontend_risk_scale()
     complete = risk["regionRisk"].notna()
+    if int(complete.sum()) < MIN_COMPLETE_RISK_REGIONS:
+        fail(
+            "HIRA 보강 후 완성 위험도 지역 수가 검토 기준보다 적습니다: "
+            f"{int(complete.sum())} < {MIN_COMPLETE_RISK_REGIONS}"
+        )
     if not risk.loc[complete, "산출상태"].eq("완료").all() or not risk.loc[~complete, "산출상태"].eq("원천데이터부족").all():
         fail("regionRisk 결측 여부와 산출상태가 일치하지 않습니다.")
     numeric_risk = pd.to_numeric(risk.loc[complete, "regionRisk"], errors="coerce")

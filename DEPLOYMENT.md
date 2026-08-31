@@ -1,0 +1,253 @@
+# Railway 동적 운영 배포
+
+이 문서는 Next.js 화면과 Python 데이터 파이프라인을 Railway의 **단일 서비스**에서 운영하는 1차 배포 절차입니다. 웹은 현재 검증된 데이터를 계속 제공하고, 같은 프로세스 관리자가 병상 갱신과 전체 갱신을 별도 자식 프로세스로 실행합니다.
+
+```text
+Railway public domain
+  └─ npm run start:dynamic
+      ├─ Next.js
+      │   ├─ GET  /api/dashboard
+      │   ├─ GET  /api/health
+      │   └─ POST /api/ops/refresh
+      └─ Python pipeline scheduler
+          ├─ beds: 60분 간격
+          └─ full: 24시간 간격
+
+Railway Volume: /app/runtime
+  ├─ data/
+  ├─ state/
+  └─ koreaGeo.json
+```
+
+## 운영 전제
+
+- Railway Volume을 서비스에 연결하고 마운트 경로를 정확히 `/app/runtime`으로 지정합니다.
+- replica는 반드시 **1개**만 사용합니다. Railway Volume은 replicas와 함께 사용할 수 없고, 이 애플리케이션의 스케줄러와 파일 잠금도 단일 writer를 전제로 합니다.
+- Railway의 Serverless 기능은 끕니다. 프로세스 내부 타이머가 60분·24시간 주기를 관리하므로 서비스가 sleep 상태가 되면 정기 실행을 보장할 수 없습니다.
+- 실제 API 키와 관리자 토큰은 Git이나 Docker 이미지에 넣지 않고 Railway Variables에 저장합니다.
+- 전체 갱신에는 Python 3.12 환경과 Node.js/npm이 모두 필요합니다. 배포 이미지는 프론트 전용 Node 이미지가 아니라 `requirements.txt`까지 설치된 동적 런타임 이미지여야 합니다.
+
+Railway는 볼륨을 빌드나 pre-deploy 단계가 아니라 서비스 시작 시 마운트합니다. 따라서 `/app/runtime` 초기화는 start command에서 수행하며, 볼륨이 비어 있으면 저장소에 포함된 검증 완료 데이터와 경계를 최초 데이터로 복사합니다. 자세한 플랫폼 동작은 [Railway Volumes](https://docs.railway.com/volumes), [Volumes 제한](https://docs.railway.com/volumes/reference), [Serverless](https://docs.railway.com/deployments/serverless) 문서를 참고합니다.
+
+## 1. Railway 서비스 만들기
+
+1. Railway에서 새 프로젝트를 만들고 GitHub 저장소를 연결합니다.
+2. 운영할 브랜치를 `backend`로 지정합니다.
+3. 서비스에 Volume을 추가하고 Mount Path를 `/app/runtime`으로 지정합니다.
+4. Settings의 Scale/Regions에서 replica가 1개인지 확인합니다.
+5. Settings의 Serverless를 비활성화합니다.
+6. 저장소의 Dockerfile을 사용해 배포합니다. Railway는 저장소 루트의 Dockerfile을 자동 감지합니다.
+7. Start Command를 별도로 재정의해야 한다면 다음 명령을 사용합니다.
+
+```text
+npm run start:dynamic
+```
+
+Railway가 주입하는 `PORT`를 애플리케이션이 그대로 사용하므로 포트 번호를 직접 고정하지 않습니다. Dockerfile을 사용할 때 start command를 재정의하면 이미지의 `ENTRYPOINT`가 바뀔 수 있으므로, 저장소 설정과 Railway UI 중 한 곳에서만 관리하는 것을 권장합니다. [Railway Start Command](https://docs.railway.com/deployments/start-command)
+
+## 2. 환경변수 설정
+
+Railway 서비스의 Variables 탭에서 다음 값을 설정합니다. 아래 블록은 키 이름과 비밀값이 아닌 운영 기본값만 보여주는 예시입니다.
+
+```env
+DATA_GO_KR_API_KEY=<Railway에서 설정>
+HIRA_API_KEY=<Railway에서 설정>
+KAKAO_REST_API_KEY=<Railway에서 설정>
+PIPELINE_ADMIN_TOKEN=<Railway에서 생성한 임의의 긴 값>
+
+PIPELINE_RUNTIME_DIR=/app/runtime
+ENABLE_PIPELINE_SCHEDULER=true
+FAST_REFRESH_INTERVAL_MINUTES=60
+FULL_REFRESH_INTERVAL_HOURS=24
+PIPELINE_FAILURE_RETRY_MINUTES=15
+BED_API_MAX_ATTEMPTS=3
+RUN_FAST_REFRESH_ON_START=false
+CLEAR_STALE_PIPELINE_LOCK_ON_START=true
+BED_HISTORY_RETENTION_DAYS=30
+NEXT_PUBLIC_DASHBOARD_POLL_SECONDS=60
+RAILWAY_RUN_UID=0
+RAILWAY_DEPLOYMENT_DRAINING_SECONDS=30
+```
+
+비밀값 네 개는 각각 실제 값을 입력한 뒤 Railway에서 Seal 처리합니다.
+
+- `DATA_GO_KR_API_KEY`: NEMC 공공데이터포털 디코딩 키
+- `HIRA_API_KEY`: HIRA 공공데이터포털 디코딩 키
+- `KAKAO_REST_API_KEY`: 카카오모빌리티 REST API 키
+- `PIPELINE_ADMIN_TOKEN`: 수동 갱신 API의 Bearer 토큰
+
+관리자 토큰은 로컬에서 다음과 같이 생성할 수 있습니다. 생성된 값은 Railway에만 저장하고 명령 기록, 문서, 이슈, 채팅에 붙여 넣지 않습니다.
+
+```powershell
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+다음 변수는 직접 만들 필요가 없습니다.
+
+- `PORT`: Railway가 자동 주입
+- `RAILWAY_VOLUME_MOUNT_PATH`: `/app/runtime` 볼륨을 붙이면 Railway가 자동 주입
+- `PIPELINE_DATA_DIR`, `PIPELINE_LIVE_DATA_DIR`, `PIPELINE_STATE_DIR`, `BOUNDARY_FILE`: `start:dynamic`이 볼륨 하위 경로로 설정
+- `PIPELINE_MUTATIONS_ENABLED`: 스케줄러 활성화 여부에 맞춰 웹 자식 프로세스에 설정
+
+`RAILWAY_VOLUME_MOUNT_PATH`는 Railway 제공 변수이므로 같은 이름을 수동으로 덮어쓰지 않습니다. 현재는 의도를 명확하게 하기 위해 `PIPELINE_RUNTIME_DIR=/app/runtime`도 설정합니다. Railway Variables는 빌드와 런타임에 전달되며, 비밀값은 sealed variable로 관리할 수 있습니다. [Railway Variables](https://docs.railway.com/variables), [제공 변수 목록](https://docs.railway.com/variables/reference)
+
+현재 Dockerfile은 기본적으로 non-root 사용자로 실행되지만 Railway Volume은 root 소유로 마운트됩니다. Railway가 런타임 사용자를 root로 지정해 `/app/runtime`에 쓸 수 있도록 `RAILWAY_RUN_UID=0`을 설정합니다. 이 값은 비밀이 아니며 Railway 배포에만 필요합니다.
+
+## 3. Health check와 공개 도메인
+
+Railway 서비스 Settings에서 다음 값을 지정합니다.
+
+```text
+Healthcheck Path: /api/health
+Healthcheck Timeout: 300 seconds
+```
+
+그다음 Networking에서 Railway 도메인을 생성합니다. 배포가 끝나면 다음 요청이 HTTP 200인지 확인합니다.
+
+```powershell
+$env:APP_URL = "https://your-service.up.railway.app"
+curl.exe -fsS "$env:APP_URL/api/health"
+```
+
+정상 응답에는 현재 데이터 버전, 데이터 기준시각, 전체·완료 지역 수와 파이프라인 상태가 포함됩니다.
+
+```json
+{
+  "status": "ok",
+  "dataVersion": "...",
+  "dataAsOf": "...",
+  "regions": 219,
+  "completeRegions": 197,
+  "pipeline": {
+    "state": "idle"
+  }
+}
+```
+
+`/api/health`는 현재 운영 데이터가 읽히지 않을 때만 503을 반환합니다. 최근 배치가 실패했더라도 마지막 검증 데이터가 정상이라면 화면을 계속 제공하고, `pipeline.state`를 `failed`로 표시합니다.
+
+Railway health check는 새 deployment가 트래픽을 받을 준비가 됐는지 확인하는 용도이며 배포 후 지속 모니터링은 아닙니다. 지속 감시가 필요하면 외부 uptime monitor에서 같은 경로를 호출합니다. 볼륨이 연결된 서비스는 이전 deployment와 새 deployment가 동시에 같은 볼륨을 마운트할 수 없어 재배포 때 짧은 중단이 생길 수 있습니다. [Railway Healthchecks](https://docs.railway.com/deployments/healthchecks)
+
+## 4. 자동 갱신 주기
+
+기본 운영 주기는 다음과 같습니다.
+
+| 모드 | 간격 | 실행 내용 |
+|---|---:|---|
+| `beds` | 60분 | NEMC 병상, 구성점수, 위험도, 분석, 데이터 계약 검증 |
+| `full` | 24시간 | NEMC 기관, 병상, 인구, HIRA, 경계, 카카오 경로, 전체 분석·검증 |
+
+고정 시각 cron이 아니라 상태 파일의 `schedulerStartedAt`과 모드별 최근 성공 시각을 기준으로 다음 실행을 계산합니다. 이 값은 영속 Volume에 남으므로 재배포나 재시작이 주기를 0부터 되돌리지 않습니다. 실패하거나 배포 중 중단된 작업은 정상 주기 전체를 기다리지 않고 `PIPELINE_FAILURE_RETRY_MINUTES`(기본 15분) 후 다시 시도합니다.
+
+동시에 실행되는 파이프라인은 최대 하나입니다. 실행 중 다른 정기 작업 시각이 오면 작업 종료 후 다음 scheduler tick에서 overdue 여부를 다시 계산하고 `full`을 `beds`보다 먼저 실행합니다. 운영 데이터는 기존 검증 버전을 계속 제공합니다. 각 작업은 별도 staging에서 실행되고 모든 검증을 통과한 뒤에만 `/app/runtime/data`를 승격합니다.
+
+`RUN_FAST_REFRESH_ON_START=false`를 권장합니다. 이를 `true`로 바꾸면 매 배포 시작 약 30초 뒤 병상 API를 호출하므로 잦은 재배포가 공공 API 트래픽을 불필요하게 사용할 수 있습니다.
+
+## 5. 수동 갱신 API
+
+수동 갱신은 다음 endpoint에 인증된 POST 요청을 보내 예약합니다.
+
+```text
+POST /api/ops/refresh
+Authorization: Bearer <PIPELINE_ADMIN_TOKEN>
+Content-Type: application/json
+```
+
+병상 중심의 빠른 갱신:
+
+```powershell
+$env:APP_URL = "https://your-service.up.railway.app"
+$env:PIPELINE_ADMIN_TOKEN = "로컬 셸에만 입력"
+curl.exe -fsS -X POST "$env:APP_URL/api/ops/refresh" `
+  -H "Authorization: Bearer $env:PIPELINE_ADMIN_TOKEN" `
+  -H "Content-Type: application/json" `
+  --data-raw '{"mode":"beds"}'
+```
+
+전체 원천 갱신:
+
+```powershell
+curl.exe -fsS -X POST "$env:APP_URL/api/ops/refresh" `
+  -H "Authorization: Bearer $env:PIPELINE_ADMIN_TOKEN" `
+  -H "Content-Type: application/json" `
+  --data-raw '{"mode":"full"}'
+```
+
+Bash에서는 다음과 같습니다.
+
+```bash
+curl -fsS -X POST "$APP_URL/api/ops/refresh" \
+  -H "Authorization: Bearer $PIPELINE_ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  --data '{"mode":"beds"}'
+```
+
+성공 시 HTTP 202와 다음 형식이 반환됩니다.
+
+```json
+{"accepted":true,"mode":"beds"}
+```
+
+202는 **갱신 완료가 아니라 요청 파일이 접수됐음**을 뜻합니다. 스케줄러는 최대 약 5초 안에 요청을 확인하며, 다른 작업이 실행 중이면 끝난 뒤 처리합니다. 대기 중인 요청은 완전한 메시지 큐가 아니라 단일 파일이므로 완료를 확인하기 전에 여러 수동 요청을 연속으로 보내지 않습니다.
+
+오류 응답은 다음과 같습니다.
+
+- 400: JSON이 아니거나 `mode`가 `beds`/`full`이 아님
+- 401: Bearer 토큰 누락 또는 불일치
+- 503: `ENABLE_PIPELINE_SCHEDULER`가 활성화되지 않아 변경 작업이 차단됨
+
+토큰을 query string에 넣지 말고, `NEXT_PUBLIC_` 접두사를 붙이지 않으며, 브라우저 코드에서 이 endpoint를 직접 호출하지 않습니다.
+
+## 6. 갱신 상태와 로그 확인
+
+현재 상태는 `/api/health`의 `pipeline` 객체와 Railway deployment 로그에서 확인합니다.
+
+```powershell
+curl.exe -fsS "$env:APP_URL/api/health"
+```
+
+주요 상태값:
+
+- `running`: `mode`, `trigger`, `startedAt` 확인
+- `idle`: 최근 작업이 정상 종료됨
+- `failed`: `lastFailureAt`과 Railway 로그 확인
+- `lastSuccessAt`, `lastSuccessfulMode`: 마지막 정상 승격 시각과 모드
+
+대시보드 데이터 자체는 `GET /api/dashboard`에서 확인할 수 있습니다. 이 endpoint는 데이터 파일과 경계의 버전을 ETag로 제공하며, 브라우저 화면은 기본 60초마다 새 버전을 확인합니다.
+
+## 7. 볼륨과 복구
+
+`/app/runtime` 전체를 한 볼륨에 둡니다. `/app/runtime/data`만 별도로 마운트하면 상태 파일과 경계가 재배포 때 사라지므로 잘못된 구성입니다.
+
+- `data/`: 마지막 검증 완료 CSV·JSON과 병상 이력
+- `koreaGeo.json`: 현재 대시보드 경계
+- `state/pipeline_status.json`: 작업 상태
+- `state/.pipeline.lock`: 실행 중 중복 작업 방지
+- `state/.pipeline-*-staging-*`, `state/.bed-refresh-*`: 실행 중 staging과 복구용 임시 파일
+- `state/interrupted-*`, `state/recovered-*`, `state/superseded-*`: 비정상 종료 복구 시 보존한 진단용 사본
+
+갱신 실패 시 staging만 제거하고 기존 운영 데이터는 유지합니다. 승격 중 일반 오류가 발생하면 백업을 복구합니다. `CLEAR_STALE_PIPELINE_LOCK_ON_START`의 기본값은 `false`입니다. Railway처럼 볼륨을 한 인스턴스만 마운트하고 이전 컨테이너 종료 후 새 컨테이너가 시작되는 구성에서만 `true`로 설정할 수 있습니다. 실행 중인 컨테이너의 `.pipeline.lock`은 임의로 지우면 안 됩니다.
+
+시작 시 중단된 승격 backup을 발견하면 이미지 seed보다 먼저 마지막 정상본으로 되돌리고, 당시 live와 backup은 위 진단용 이름으로 보존합니다. `/api/health`의 `pipeline.recoveredAt`과 `recoveredFrom`을 확인한 다음 필요 시 별도 백업하고 오래된 진단용 사본을 정리합니다.
+
+병상 이력은 기본 30일만 유지합니다. 시간대별 히트맵에는 충분한 기간을 남기면서 매시간 staging 복사와 pandas 재계산 비용을 제한하기 위한 초기 운영값입니다. 60분 주기 이력과 staging 복사 여유를 고려해 볼륨 사용량을 감시하고 정기 백업을 설정합니다. 장기 원시 이력이 필요해지면 CSV 한 파일을 계속 키우지 말고 날짜별 파티션이나 별도 저장소로 분리합니다. Railway CLI의 `railway volume browse /` 또는 Railway의 Volume backup 기능으로 내용을 점검할 수 있습니다.
+
+## 배포 체크리스트
+
+- [ ] `backend` 브랜치가 배포 소스로 연결됨
+- [ ] Volume mount가 정확히 `/app/runtime`
+- [ ] replica 1개, Serverless 비활성화
+- [ ] Python 3.12와 Node.js/npm이 모두 포함된 이미지
+- [ ] `RAILWAY_RUN_UID=0`으로 `/app/runtime` 쓰기 권한 확보
+- [ ] 세 원천 API 키와 `PIPELINE_ADMIN_TOKEN`을 Railway Variables에 저장·Seal
+- [ ] `ENABLE_PIPELINE_SCHEDULER=true`
+- [ ] 단일 Volume 서비스에서만 `CLEAR_STALE_PIPELINE_LOCK_ON_START=true`
+- [ ] `RAILWAY_DEPLOYMENT_DRAINING_SECONDS=30`
+- [ ] `FAST_REFRESH_INTERVAL_MINUTES=60`
+- [ ] `FULL_REFRESH_INTERVAL_HOURS=24`
+- [ ] `PIPELINE_FAILURE_RETRY_MINUTES=15`
+- [ ] Healthcheck Path `/api/health`
+- [ ] Railway 공개 도메인 생성
+- [ ] `/api/health` HTTP 200 확인
+- [ ] `beds` 수동 갱신 202 접수 후 `lastSuccessAt` 갱신 확인
+- [ ] 첫 `full` 실행 전 공공데이터·HIRA·카카오 API 할당량 확인
