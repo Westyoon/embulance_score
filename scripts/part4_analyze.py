@@ -17,7 +17,11 @@ FINAL = DATA_DIR / "region_risk_final.csv"
 
 def build_heatmap() -> None:
     history = read_csv(HISTORY)
-    history["수집시각"] = pd.to_datetime(history["수집시각"], errors="coerce")
+    history["수집시각"] = pd.to_datetime(
+        history["수집시각"],
+        errors="coerce",
+        utc=True,
+    ).dt.tz_convert("Asia/Seoul")
     history["포화율"] = pd.to_numeric(history["포화율"], errors="coerce")
     history = history.dropna(subset=["수집시각", "포화율"])
     day_names = {0: "월", 1: "화", 2: "수", 3: "목", 4: "금", 5: "토", 6: "일"}
