@@ -36,6 +36,9 @@ jobs:
       - name: Validate frontend data
         run: npm run validate:frontend-data
 
+      - name: Test dashboard freshness behavior
+        run: npm run test:dashboard
+
       - name: Lint application
         run: npm run lint
 

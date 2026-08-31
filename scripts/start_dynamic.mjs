@@ -3,9 +3,14 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
+const localEnvFile = path.join(root, ".env");
+if (fs.existsSync(localEnvFile)) process.loadEnvFile(localEnvFile);
+
+const railwayVolumeMount = process.env.RAILWAY_VOLUME_MOUNT_PATH?.trim() || "";
+const configuredRuntimeRoot = process.env.PIPELINE_RUNTIME_DIR?.trim() || "";
 const runtimeRoot = path.resolve(
-  process.env.PIPELINE_RUNTIME_DIR
-    || process.env.RAILWAY_VOLUME_MOUNT_PATH
+  railwayVolumeMount
+    || configuredRuntimeRoot
     || path.join(root, "runtime"),
 );
 const liveData = path.join(runtimeRoot, "data");
@@ -14,6 +19,7 @@ const boundaryFile = path.join(runtimeRoot, "koreaGeo.json");
 const statusFile = path.join(stateDir, "pipeline_status.json");
 const requestFile = path.join(stateDir, "refresh_request.json");
 const lockFile = path.join(stateDir, ".pipeline.lock");
+const fullBedReuseFile = path.join(stateDir, "full_bed_reuse.json");
 const managedDataFiles = [
   "hira_match_exclusions.csv",
   "hira_match_overrides.csv",
@@ -27,9 +33,17 @@ const python = process.env.PIPELINE_PYTHON || (
 );
 const port = process.env.PORT || "3000";
 const schedulerEnabled = process.env.ENABLE_PIPELINE_SCHEDULER === "true";
-const fastIntervalMinutes = positiveNumber("FAST_REFRESH_INTERVAL_MINUTES", 60);
+const fastIntervalMinutes = positiveNumber("FAST_REFRESH_INTERVAL_MINUTES", 480);
 const fullIntervalHours = positiveNumber("FULL_REFRESH_INTERVAL_HOURS", 24);
-const failureRetryMinutes = positiveNumber("PIPELINE_FAILURE_RETRY_MINUTES", 15);
+const failureRetryMinutes = positiveNumber("PIPELINE_FAILURE_RETRY_MINUTES", 60);
+const bedsFailureRetryMinutes = positiveNumber(
+  "BEDS_FAILURE_RETRY_MINUTES",
+  480,
+);
+const fullFailureRetryMinutes = positiveNumber(
+  "FULL_FAILURE_RETRY_MINUTES",
+  failureRetryMinutes,
+);
 const schedulerTickMilliseconds = 60_000;
 
 let currentJob = null;
@@ -37,6 +51,30 @@ let pendingJob = null;
 let webProcess = null;
 let previousStatus = readJson(statusFile) || {};
 let shuttingDown = false;
+let runtimeSeeded = false;
+let refreshStartedSinceBoot = false;
+
+validateRuntimeConfiguration();
+
+function validateRuntimeConfiguration() {
+  const onRailway = Boolean(process.env.RAILWAY_ENVIRONMENT_ID || process.env.RAILWAY_PROJECT_ID);
+  if (schedulerEnabled && onRailway && !railwayVolumeMount) {
+    throw new Error(
+      "ENABLE_PIPELINE_SCHEDULER=true on Railway requires a persistent Volume "
+      + "and RAILWAY_VOLUME_MOUNT_PATH.",
+    );
+  }
+  if (
+    schedulerEnabled
+    && railwayVolumeMount
+    && configuredRuntimeRoot
+    && path.resolve(railwayVolumeMount) !== path.resolve(configuredRuntimeRoot)
+  ) {
+    throw new Error(
+      "PIPELINE_RUNTIME_DIR must match RAILWAY_VOLUME_MOUNT_PATH when the scheduler is enabled.",
+    );
+  }
+}
 
 function positiveNumber(name, fallback) {
   const value = Number(process.env[name] || fallback);
@@ -134,6 +172,7 @@ function seedRuntime() {
   if (!fs.existsSync(path.join(liveData, "hospital_master.csv"))) {
     fs.mkdirSync(liveData, { recursive: true });
     fs.cpSync(path.join(root, "data"), liveData, { recursive: true, force: true });
+    runtimeSeeded = true;
   }
   for (const filename of managedDataFiles) {
     fs.copyFileSync(path.join(root, "data", filename), path.join(liveData, filename));
@@ -176,9 +215,11 @@ function runJob(mode, trigger) {
     }
     return false;
   }
+  refreshStartedSinceBoot = true;
   const command = mode === "full" ? "scripts/run_pipeline.py" : "scripts/run_bed_refresh.py";
   const startedAt = new Date().toISOString();
   const attemptField = mode === "full" ? "lastFullAttemptAt" : "lastBedsAttemptAt";
+  if (mode === "full") fs.rmSync(fullBedReuseFile, { force: true });
   updateStatus({
     state: "running",
     mode,
@@ -205,12 +246,29 @@ function runJob(mode, trigger) {
   currentJob.once("close", (code, signal) => {
     const finishedAt = new Date().toISOString();
     const success = !spawnError && code === 0;
-  const successfulTimestamps = success
+    const bedReuseAudit = mode === "full" ? readJson(fullBedReuseFile) : null;
+    if (mode === "full") fs.rmSync(fullBedReuseFile, { force: true });
+    const reusedBedSnapshot = bedReuseAudit?.reused === true;
+    const fullBedReuseStatus = mode === "full" && success
+      ? {
+          lastFullReusedBedSnapshot: reusedBedSnapshot,
+          lastFullBedSnapshotAt: bedReuseAudit?.snapshotCollectedAt || null,
+          lastFullBedSnapshotAgeMinutes: bedReuseAudit?.snapshotAgeMinutes ?? null,
+          lastFullBedUsableHospitals: bedReuseAudit?.usableHospitals ?? null,
+          lastFullBedStaleSourceHospitals: bedReuseAudit?.staleSourceHospitals ?? null,
+          lastFullBedSanitizedSourceHospitals: bedReuseAudit?.sanitizedSourceHospitals ?? null,
+          lastFullBedSourceMaxAgeHours: bedReuseAudit?.sourceMaxAgeHours ?? null,
+        }
+      : {};
+    const successfulTimestamps = success
       ? {
           lastSuccessAt: finishedAt,
           lastSuccessfulMode: mode,
           ...(mode === "full"
-            ? { lastFullSuccessAt: finishedAt, lastBedsSuccessAt: finishedAt }
+            ? {
+                lastFullSuccessAt: finishedAt,
+                ...(!reusedBedSnapshot ? { lastBedsSuccessAt: finishedAt } : {}),
+              }
             : { lastBedsSuccessAt: finishedAt }),
         }
       : {
@@ -227,6 +285,7 @@ function runJob(mode, trigger) {
       error: success
         ? null
         : (spawnError ? `process failed to start (${spawnError.code || spawnError.name})` : `process exited (${signal || code || "unknown"})`),
+      ...fullBedReuseStatus,
       ...successfulTimestamps,
     });
     console.log(`[pipeline] ${mode} refresh ${success ? "completed" : "failed"}`);
@@ -264,7 +323,8 @@ function retryCooldownElapsed(mode, now) {
     Number.isFinite(modeFailure) ? modeFailure : 0,
     Number.isFinite(legacyFailure) ? legacyFailure : 0,
   );
-  return lastFailure === 0 || now - lastFailure >= failureRetryMinutes * 60_000;
+  const retryMinutes = mode === "full" ? fullFailureRetryMinutes : bedsFailureRetryMinutes;
+  return lastFailure === 0 || now - lastFailure >= retryMinutes * 60_000;
 }
 
 function runDueScheduledJob() {
@@ -306,13 +366,21 @@ function startScheduler() {
     fastIntervalMinutes,
     fullIntervalHours,
     failureRetryMinutes,
+    bedsFailureRetryMinutes,
+    fullFailureRetryMinutes,
     schedulerStartedAt,
   });
   setInterval(consumeManualRequest, 5_000);
   setInterval(runDueScheduledJob, schedulerTickMilliseconds);
   setTimeout(runDueScheduledJob, 1_000);
-  if (process.env.RUN_FAST_REFRESH_ON_START === "true") {
-    setTimeout(() => runJob("beds", "startup"), 30_000);
+  if (runtimeSeeded || process.env.RUN_FAST_REFRESH_ON_START === "true") {
+    setTimeout(() => {
+      if (refreshStartedSinceBoot) {
+        console.log("[pipeline] skipped startup beds refresh; another refresh already started");
+        return;
+      }
+      runJob("beds", "startup");
+    }, 30_000);
   }
 }
 

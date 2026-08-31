@@ -42,9 +42,8 @@ function findRegionForHospital(regionsByKey, h) {
 
 export default function MapTab({ data }) {
   const { geo, regionIndex, regionsByKey, ranked, kpi, allHospitals } = data;
-  const [selected, setSelected] = useState(null);
-  const [selectedHospital, setSelectedHospital] = useState(null);
-  const [highlightCodes, setHighlightCodes] = useState([]);
+  const [selectedRegionRef, setSelectedRegionRef] = useState(null);
+  const [selectedHospitalCode, setSelectedHospitalCode] = useState(null);
   const [sidePanel, setSidePanel] = useState("summary");
   const [regionQuery, setRegionQuery] = useState("");
   const [hospitalQuery, setHospitalQuery] = useState("");
@@ -52,26 +51,50 @@ export default function MapTab({ data }) {
   const codesForRegion = (region) => (
     region?.geoCodes?.length ? region.geoCodes : (region?.code ? [region.code] : [])
   );
-  const openRegion = (r) => { setHighlightCodes(codesForRegion(r)); setSelected(r); setSelectedHospital(null); };
+  const selected = selectedRegionRef
+    ? (
+      (selectedRegionRef.code ? regionIndex[selectedRegionRef.code] : null)
+      ?? (selectedRegionRef.key ? regionsByKey[selectedRegionRef.key] : null)
+    )
+    : null;
+  const selectedHospitalBase = selectedHospitalCode
+    ? allHospitals.find((hospital) => hospital.orgCode === selectedHospitalCode) ?? null
+    : null;
+  const selectedHospital = selectedHospitalBase ? enrichHospital(selectedHospitalBase) : null;
+  const hospitalRegion = selectedHospitalBase
+    ? findRegionForHospital(regionsByKey, selectedHospitalBase)
+    : null;
+  const highlightCodes = selected
+    ? codesForRegion(selected)
+    : (selectedHospitalBase?.geoCode
+      ? [selectedHospitalBase.geoCode]
+      : codesForRegion(hospitalRegion));
+
+  const openRegion = (r) => {
+    setSelectedRegionRef({ key: r.key ?? null, code: r.code ?? null });
+    setSelectedHospitalCode(null);
+  };
   const openHospital = (h) => {
-    const region = findRegionForHospital(regionsByKey, h);
-    setSelectedHospital(enrichHospital(h));
-    setSelected(null);
-    setHighlightCodes(h.geoCode ? [h.geoCode] : codesForRegion(region));
+    setSelectedHospitalCode(h.orgCode);
+    setSelectedRegionRef(null);
   };
   const backToRegion = () => {
-    const region = findRegionForHospital(regionsByKey, selectedHospital);
-    setSelectedHospital(null);
+    const region = findRegionForHospital(regionsByKey, selectedHospitalBase);
+    setSelectedHospitalCode(null);
     if (region) openRegion(region);
   };
-  const hospitalRegion = selectedHospital ? findRegionForHospital(regionsByKey, selectedHospital) : null;
 
   // 탭을 클릭하면 열려있던 상세 패널을 닫고 해당 리스트로 전환한다.
-  const changeSidePanel = (key) => { setSidePanel(key); setSelected(null); setSelectedHospital(null); };
+  const changeSidePanel = (key) => {
+    setSidePanel(key);
+    setSelectedRegionRef(null);
+    setSelectedHospitalCode(null);
+  };
 
   const filteredRanked = regionQuery.trim() ? ranked.filter((r) => r.name.includes(regionQuery.trim())) : ranked;
   const hq = hospitalQuery.trim();
   const filteredHospitals = hq ? allHospitals.filter((h) => h.name.includes(hq) || h.region.includes(hq)) : allHospitals;
+  const averageRisk = Number.isFinite(kpi.avg) ? kpi.avg.toFixed(1) : "-";
 
   return (
     <div className="grid" style={{ gridTemplateColumns: "1fr 320px", gap: 16, height: "100%" }}>
@@ -93,14 +116,14 @@ export default function MapTab({ data }) {
           active={sidePanel} onChange={changeSidePanel} />
 
         {selected ? (
-          <RegionPopup region={selected} onClose={() => setSelected(null)} onSelectHospital={openHospital} />
+          <RegionPopup region={selected} onClose={() => setSelectedRegionRef(null)} onSelectHospital={openHospital} />
         ) : selectedHospital ? (
           <HospitalPopup hospital={selectedHospital} region={hospitalRegion}
-            onClose={() => setSelectedHospital(null)} onBack={hospitalRegion ? backToRegion : undefined} />
+            onClose={() => setSelectedHospitalCode(null)} onBack={hospitalRegion ? backToRegion : undefined} />
         ) : sidePanel === "summary" ? (
           <>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <KpiCard label="평균 위험도" value={kpi.avg.toFixed(1)} accent="#38bdf8" icon={Activity} />
+              <KpiCard label="평균 위험도" value={averageRisk} accent="#38bdf8" icon={Activity} />
               <KpiCard label="고위험 지역" value={kpi.high} sub="50점 초과" accent="#ef4444" icon={AlertTriangle} />
             </div>
             <div style={{ ...cardStyle, padding: "10px 12px", flex: 1, overflowY: "auto", maxHeight: 380 }}>

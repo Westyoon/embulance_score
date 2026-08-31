@@ -10,7 +10,7 @@ Railway public domain
       │   ├─ GET  /api/health
       │   └─ POST /api/ops/refresh
       └─ Python pipeline scheduler
-          ├─ beds: 60분 간격
+          ├─ beds: 8시간 간격 (API 증설 전 안전값)
           └─ full: 24시간 간격
 
 Railway Volume: /app/runtime
@@ -23,7 +23,7 @@ Railway Volume: /app/runtime
 
 - Railway Volume을 서비스에 연결하고 마운트 경로를 정확히 `/app/runtime`으로 지정합니다.
 - replica는 반드시 **1개**만 사용합니다. Railway Volume은 replicas와 함께 사용할 수 없고, 이 애플리케이션의 스케줄러와 파일 잠금도 단일 writer를 전제로 합니다.
-- Railway의 Serverless 기능은 끕니다. 프로세스 내부 타이머가 60분·24시간 주기를 관리하므로 서비스가 sleep 상태가 되면 정기 실행을 보장할 수 없습니다.
+- Railway의 Serverless 기능은 끕니다. 프로세스 내부 타이머가 8시간·24시간 주기를 관리하므로 서비스가 sleep 상태가 되면 정기 실행을 보장할 수 없습니다.
 - 실제 API 키와 관리자 토큰은 Git이나 Docker 이미지에 넣지 않고 Railway Variables에 저장합니다.
 - 전체 갱신에는 Python 3.12 환경과 Node.js/npm이 모두 필요합니다. 배포 이미지는 프론트 전용 Node 이미지가 아니라 `requirements.txt`까지 설치된 동적 런타임 이미지여야 합니다.
 
@@ -47,7 +47,7 @@ HIRA 수동 매칭·원천 제외와 병원 좌표·지역 보정 CSV는 저장�
 npm run start:dynamic
 ```
 
-Railway가 주입하는 `PORT`를 애플리케이션이 그대로 사용하므로 포트 번호를 직접 고정하지 않습니다. GitHub Actions가 만든 검증 완료 이미지를 그대로 배포하면 Railway 빌더와 CI가 서로 다른 산출물을 만드는 문제도 피할 수 있습니다. 이미지 자동 갱신은 같은 `backend` 태그의 digest가 바뀌면 새 배포를 만듭니다. [Railway Start Command](https://docs.railway.com/deployments/start-command), [Image Auto Updates](https://docs.railway.com/deployments/image-auto-updates)
+Railway가 주입하는 `PORT`를 애플리케이션이 그대로 사용하므로 포트 번호를 직접 고정하지 않습니다. GitHub Actions가 만든 검증 완료 이미지를 그대로 배포하면 Railway 빌더와 CI가 서로 다른 산출물을 만드는 문제도 피할 수 있습니다. 이미지 자동 갱신은 같은 `backend` 태그의 digest가 바뀌면 새 배포를 만들지만 감지가 수 시간 지연될 수 있습니다. 이번 릴리스처럼 즉시 반영해야 할 때는 CI 발행 성공 뒤 Railway redeploy를 명시적으로 실행합니다. 재배포가 실행 중인 배치를 중단하면 검증 전 운영본은 보존되지만 그 배치가 이미 사용한 API 호출은 되돌릴 수 없습니다. [Railway Start Command](https://docs.railway.com/deployments/start-command), [Image Auto Updates](https://docs.railway.com/deployments/image-auto-updates)
 
 ## 2. 환경변수 설정
 
@@ -59,16 +59,20 @@ HIRA_API_KEY=<Railway에서 설정>
 KAKAO_REST_API_KEY=<Railway에서 설정>
 PIPELINE_ADMIN_TOKEN=<Railway에서 생성한 임의의 긴 값>
 
-PIPELINE_RUNTIME_DIR=/app/runtime
 ENABLE_PIPELINE_SCHEDULER=true
-FAST_REFRESH_INTERVAL_MINUTES=60
+FAST_REFRESH_INTERVAL_MINUTES=480
 FULL_REFRESH_INTERVAL_HOURS=24
-PIPELINE_FAILURE_RETRY_MINUTES=15
+PIPELINE_FAILURE_RETRY_MINUTES=60
+BEDS_FAILURE_RETRY_MINUTES=480
+FULL_FAILURE_RETRY_MINUTES=60
+FULL_REFRESH_REUSE_BEDS=true
+FULL_REFRESH_BED_MAX_AGE_HOURS=12
+BED_SOURCE_MAX_AGE_HOURS=12
+DASHBOARD_DATA_STALE_AFTER_MINUTES=600
 BED_API_MAX_ATTEMPTS=3
 RUN_FAST_REFRESH_ON_START=false
 CLEAR_STALE_PIPELINE_LOCK_ON_START=true
 BED_HISTORY_RETENTION_DAYS=30
-NEXT_PUBLIC_DASHBOARD_POLL_SECONDS=60
 RAILWAY_RUN_UID=0
 RAILWAY_DEPLOYMENT_DRAINING_SECONDS=30
 ```
@@ -93,7 +97,9 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
 - `PIPELINE_DATA_DIR`, `PIPELINE_LIVE_DATA_DIR`, `PIPELINE_STATE_DIR`, `BOUNDARY_FILE`: `start:dynamic`이 볼륨 하위 경로로 설정
 - `PIPELINE_MUTATIONS_ENABLED`: 스케줄러 활성화 여부에 맞춰 웹 자식 프로세스에 설정
 
-`RAILWAY_VOLUME_MOUNT_PATH`는 Railway 제공 변수이므로 같은 이름을 수동으로 덮어쓰지 않습니다. 현재는 의도를 명확하게 하기 위해 `PIPELINE_RUNTIME_DIR=/app/runtime`도 설정합니다. Railway Variables는 빌드와 런타임에 전달되며, 비밀값은 sealed variable로 관리할 수 있습니다. [Railway Variables](https://docs.railway.com/variables), [제공 변수 목록](https://docs.railway.com/variables/reference)
+`RAILWAY_VOLUME_MOUNT_PATH`는 Railway 제공 변수이므로 같은 이름을 수동으로 덮어쓰지 않고, Railway에서는 `PIPELINE_RUNTIME_DIR`도 만들지 않습니다. 스케줄러가 켜진 Railway 런타임에서 실제 Volume mount 변수가 없으면 애플리케이션은 임시 디스크로 우회하지 않고 시작을 거부합니다. 로컬에서만 `.env`의 `PIPELINE_RUNTIME_DIR=./runtime`을 사용합니다. Railway Variables는 빌드와 런타임에 전달되며, 비밀값은 sealed variable로 관리할 수 있습니다. [Railway Variables](https://docs.railway.com/variables), [제공 변수 목록](https://docs.railway.com/variables/reference)
+
+`NEXT_PUBLIC_DASHBOARD_POLL_SECONDS`는 브라우저 번들 빌드 시 고정되는 값입니다. Railway 런타임 Variables가 아니라 GitHub Actions 이미지 빌드 환경에서만 바꾸며, 현재 이미지는 기본 60초를 사용합니다.
 
 현재 Dockerfile은 기본적으로 non-root 사용자로 실행되지만 Railway Volume은 root 소유로 마운트됩니다. Railway가 런타임 사용자를 root로 지정해 `/app/runtime`에 쓸 수 있도록 `RAILWAY_RUN_UID=0`을 설정합니다. 이 값은 비밀이 아니며 Railway 배포에만 필요합니다.
 
@@ -121,14 +127,14 @@ curl.exe -fsS "$env:APP_URL/api/health"
   "dataVersion": "...",
   "dataAsOf": "...",
   "regions": 219,
-  "completeRegions": 202,
+  "completeRegions": 196,
   "pipeline": {
     "state": "idle"
   }
 }
 ```
 
-`/api/health`는 현재 운영 데이터가 읽히지 않을 때만 503을 반환합니다. 최근 배치가 실패했더라도 마지막 검증 데이터가 정상이라면 화면을 계속 제공하고, `pipeline.state`를 `failed`로 표시합니다.
+`/api/health`는 현재 운영 데이터가 읽히지 않을 때만 503을 반환합니다. 최근 배치가 실패했더라도 마지막 검증 데이터가 정상이라면 화면을 계속 제공하고, `pipeline.state`를 `failed`로 표시합니다. 가장 오래된 병상 수집시각이 `DASHBOARD_DATA_STALE_AFTER_MINUTES`(운영 600분)를 넘으면 HTTP 200은 유지하되 `status=degraded`, `dataStale=true`로 갱신 지연을 경고합니다. 실제 수치 차단은 더 정확한 병원별 `API기준시각 + BED_SOURCE_MAX_AGE_HOURS`를 사용하며, 만료 병원이 점수에 포함된 지역만 위험도와 병상 의존 점수를 숨깁니다.
 
 Railway health check는 새 deployment가 트래픽을 받을 준비가 됐는지 확인하는 용도이며 배포 후 지속 모니터링은 아닙니다. 지속 감시가 필요하면 외부 uptime monitor에서 같은 경로를 호출합니다. 볼륨이 연결된 서비스는 이전 deployment와 새 deployment가 동시에 같은 볼륨을 마운트할 수 없어 재배포 때 짧은 중단이 생길 수 있습니다. [Railway Healthchecks](https://docs.railway.com/deployments/healthchecks)
 
@@ -138,14 +144,20 @@ Railway health check는 새 deployment가 트래픽을 받을 준비가 됐는�
 
 | 모드 | 간격 | 실행 내용 |
 |---|---:|---|
-| `beds` | 60분 | NEMC 병상, 구성점수, 위험도, 분석, 데이터 계약 검증 |
-| `full` | 24시간 | NEMC 기관, 병상, 인구, HIRA, 경계, 카카오 경로, 전체 분석·검증 |
+| `beds` | 8시간 | NEMC 병상, 구성점수, 위험도, 분석, 데이터 계약 검증 |
+| `full` | 24시간 | NEMC 기관·인구·HIRA·경계·카카오 경로, 전체 분석·검증. 병상은 최근 검증 스냅샷 재사용 |
 
-고정 시각 cron이 아니라 상태 파일의 `schedulerStartedAt`과 모드별 최근 성공 시각을 기준으로 다음 실행을 계산합니다. 이 값은 영속 Volume에 남으므로 재배포나 재시작이 주기를 0부터 되돌리지 않습니다. 실패하거나 배포 중 중단된 작업은 정상 주기 전체를 기다리지 않고 `PIPELINE_FAILURE_RETRY_MINUTES`(기본 15분) 후 다시 시도합니다.
+NEMC 실시간 병상 API는 공식 계약상 `STAGE1`(시도)과 `STAGE2`(시군구)가 모두 필수라 전국 219개 지역을 한 번 갱신할 때 219회가 필요합니다. 시간당 갱신은 성공 호출만 하루 5,256회이므로, 현재 운영계정 호출량이 확인·증설되기 전에는 8시간 주기(하루 657회)를 사용합니다. 시간당 갱신이 필요하면 공공데이터포털 해당 활용신청 상세에서 운영 트래픽을 최소 7,000회/일, 권장 10,000회/일 이상으로 증설한 뒤 `FAST_REFRESH_INTERVAL_MINUTES=60`으로 바꿉니다. 429·한도초과(`22`)·키 일시중지(`21`) 응답은 `Retry-After`를 최대 60초까지만 반영해 전체 실행에서 단 한 번 복구 재시도합니다. 다시 실패하면 공유 회로 차단기가 아직 시작하지 않은 지역 호출을 취소하고 운영 CSV는 그대로 보존합니다.
+
+전체 갱신은 `FULL_REFRESH_REUSE_BEDS=true`일 때 병상 API를 중복 호출하지 않습니다. 기존 병상 스냅샷이 새 NEMC 기관코드 집합과 정확히 일치하고, 유효 기관이 373개 이상이며, 가장 오래된 수집시각이 `FULL_REFRESH_BED_MAX_AGE_HOURS` 이내일 때만 병원 메타데이터를 새 마스터 기준으로 다시 결합합니다. 병원이 보고한 `API기준시각`도 한국 시간으로 해석해 `BED_SOURCE_MAX_AGE_HOURS`(운영값 12시간)를 넘긴 행은 병상값을 결측 처리한 뒤 유효 기관 기준을 다시 검사합니다. HIRA·경계·카카오 수집이 끝난 뒤 점수 계산 직전에도 다시 검사하고, 그 사이 새로 만료된 행을 제외한 데이터로 점수와 분석을 재계산합니다. 검증 실패 시 API fallback 없이 전체 갱신을 중단하고 기존 운영본을 보존합니다. 병상 이력에는 재사용본을 새 관측처럼 추가하지 않으며, `/api/health`의 `lastFullReusedBedSnapshot`, `lastFullBedSnapshotAt`, `lastFullBedStaleSourceHospitals`, `lastFullBedSanitizedSourceHospitals`로 재사용·원천 제외 여부를 확인할 수 있습니다.
+
+지역 병상 구성점수는 해당 시점에 유효하게 보고한 NEMC 기관을 분석 모집단으로 사용합니다. 일부 미보고 기관을 0병상으로 간주하지 않으며, 화면의 지역 상세에 `병상 API 반영 기관 / 전체 NEMC 기관`을 함께 표시해 부분 응답 범위를 숨기지 않습니다.
+
+고정 시각 cron이 아니라 상태 파일의 `schedulerStartedAt`과 모드별 최근 성공 시각을 기준으로 다음 실행을 계산합니다. 이 값은 영속 Volume에 남으므로 재배포나 재시작이 주기를 0부터 되돌리지 않습니다. `BEDS_FAILURE_RETRY_MINUTES`와 `FULL_FAILURE_RETRY_MINUTES`가 모드별 실패 재시도를 제어합니다. 값이 없을 때의 안전 기본값은 각각 480분과 60분이며, 기존 호환용 `PIPELINE_FAILURE_RETRY_MINUTES`는 상태 표시와 별도 운영 설정에만 남겨 둡니다.
 
 동시에 실행되는 파이프라인은 최대 하나입니다. 실행 중 다른 정기 작업 시각이 오면 작업 종료 후 다음 scheduler tick에서 overdue 여부를 다시 계산하고 `full`을 `beds`보다 먼저 실행합니다. 운영 데이터는 기존 검증 버전을 계속 제공합니다. 각 작업은 별도 staging에서 실행되고 모든 검증을 통과한 뒤에만 `/app/runtime/data`를 승격합니다.
 
-`RUN_FAST_REFRESH_ON_START=false`를 권장합니다. 이를 `true`로 바꾸면 매 배포 시작 약 30초 뒤 병상 API를 호출하므로 잦은 재배포가 공공 API 트래픽을 불필요하게 사용할 수 있습니다.
+`RUN_FAST_REFRESH_ON_START=false`를 권장합니다. 이를 `true`로 바꾸면 매 배포 시작 약 30초 뒤 병상 API를 호출하므로 잦은 재배포가 공공 API 트래픽을 불필요하게 사용할 수 있습니다. 단, 비어 있는 Volume을 이미지의 검증 데이터로 처음 채운 경우에는 이 값이 `false`여도 최초 1회 병상 갱신을 자동 실행합니다. 그 30초 동안 수동 또는 주기 갱신이 먼저 시작되면 startup 갱신은 건너뛰어 중복 호출하지 않습니다.
 
 ## 5. 수동 갱신 API
 
@@ -161,7 +173,10 @@ Content-Type: application/json
 
 ```powershell
 $env:APP_URL = "https://your-service.up.railway.app"
-$env:PIPELINE_ADMIN_TOKEN = "로컬 셸에만 입력"
+$secureToken = Read-Host "PIPELINE_ADMIN_TOKEN" -AsSecureString
+$tokenPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureToken)
+$env:PIPELINE_ADMIN_TOKEN = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($tokenPointer)
+[Runtime.InteropServices.Marshal]::ZeroFreeBSTR($tokenPointer)
 curl.exe -fsS -X POST "$env:APP_URL/api/ops/refresh" `
   -H "Authorization: Bearer $env:PIPELINE_ADMIN_TOKEN" `
   -H "Content-Type: application/json" `
@@ -201,6 +216,7 @@ curl -fsS -X POST "$APP_URL/api/ops/refresh" \
 - 503: `ENABLE_PIPELINE_SCHEDULER`가 활성화되지 않아 변경 작업이 차단됨
 
 토큰을 query string에 넣지 말고, `NEXT_PUBLIC_` 접두사를 붙이지 않으며, 브라우저 코드에서 이 endpoint를 직접 호출하지 않습니다.
+호출 확인 뒤에는 `Remove-Item Env:PIPELINE_ADMIN_TOKEN`으로 현재 셸에서도 토큰을 제거합니다.
 
 ## 6. 갱신 상태와 로그 확인
 
@@ -234,7 +250,7 @@ curl.exe -fsS "$env:APP_URL/api/health"
 
 시작 시 중단된 승격 backup을 발견하면 이미지 seed보다 먼저 마지막 정상본으로 되돌리고, 당시 live와 backup은 위 진단용 이름으로 보존합니다. `/api/health`의 `pipeline.recoveredAt`과 `recoveredFrom`을 확인한 다음 필요 시 별도 백업하고 오래된 진단용 사본을 정리합니다.
 
-병상 이력은 기본 30일만 유지합니다. 시간대별 히트맵에는 충분한 기간을 남기면서 매시간 staging 복사와 pandas 재계산 비용을 제한하기 위한 초기 운영값입니다. 60분 주기 이력과 staging 복사 여유를 고려해 볼륨 사용량을 감시하고 정기 백업을 설정합니다. 장기 원시 이력이 필요해지면 CSV 한 파일을 계속 키우지 말고 날짜별 파티션이나 별도 저장소로 분리합니다. Railway CLI의 `railway volume browse /` 또는 Railway의 Volume backup 기능으로 내용을 점검할 수 있습니다.
+병상 이력은 기본 30일만 유지합니다. 시간대별 히트맵에는 충분한 기간을 남기면서 staging 복사와 pandas 재계산 비용을 제한하기 위한 초기 운영값입니다. 진단용 `interrupted-*`, `recovered-*`, `superseded-*` 사본은 자동 삭제하지 않으므로 주 1회 용량을 확인하고, 원인 확인과 별도 백업 뒤에만 명시적으로 정리합니다. 현재 8시간 주기와 향후 증설 후 60분 주기 모두를 고려해 볼륨 사용량을 감시하고 정기 백업을 설정합니다. 장기 원시 이력이 필요해지면 CSV 한 파일을 계속 키우지 말고 날짜별 파티션이나 별도 저장소로 분리합니다. Railway CLI의 `railway volume browse /` 또는 Railway의 Volume backup 기능으로 내용을 점검할 수 있습니다.
 
 ## 배포 체크리스트
 
@@ -248,11 +264,16 @@ curl.exe -fsS "$env:APP_URL/api/health"
 - [ ] `ENABLE_PIPELINE_SCHEDULER=true`
 - [ ] 단일 Volume 서비스에서만 `CLEAR_STALE_PIPELINE_LOCK_ON_START=true`
 - [ ] `RAILWAY_DEPLOYMENT_DRAINING_SECONDS=30`
-- [ ] `FAST_REFRESH_INTERVAL_MINUTES=60`
+- [ ] `FAST_REFRESH_INTERVAL_MINUTES=480` (운영 트래픽 10,000회/일 승인 후 `60`)
 - [ ] `FULL_REFRESH_INTERVAL_HOURS=24`
-- [ ] `PIPELINE_FAILURE_RETRY_MINUTES=15`
+- [ ] `BEDS_FAILURE_RETRY_MINUTES=480`
+- [ ] `FULL_FAILURE_RETRY_MINUTES=60`
+- [ ] `FULL_REFRESH_REUSE_BEDS=true`
+- [ ] `FULL_REFRESH_BED_MAX_AGE_HOURS=12`
+- [ ] `BED_SOURCE_MAX_AGE_HOURS=12`
+- [ ] `DASHBOARD_DATA_STALE_AFTER_MINUTES=600`
 - [ ] Healthcheck Path `/api/health`
 - [ ] Railway 공개 도메인 생성
 - [ ] `/api/health` HTTP 200 확인
-- [ ] `beds` 수동 갱신 202 접수 후 `lastSuccessAt` 갱신 확인
+- [ ] 빈 Volume 최초 배포는 자동 `beds` 갱신 완료와 `lastSuccessAt` 갱신을 먼저 확인(실패했거나 기존 Volume일 때만 수동 갱신)
 - [ ] 첫 `full` 실행 전 공공데이터·HIRA·카카오 API 할당량 확인

@@ -199,7 +199,7 @@ class BedRefreshPromotionTests(unittest.TestCase):
             )
             self.assertFalse(backup_data.exists())
 
-    def test_successful_promotion_replaces_live_data_and_removes_backup(self) -> None:
+    def test_successful_promotion_replaces_live_data_and_leaves_safe_commit_witness(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             live_data = root / "data"
@@ -218,6 +218,96 @@ class BedRefreshPromotionTests(unittest.TestCase):
                 "new-data",
             )
             self.assertFalse(backup_data.exists())
+            self.assertTrue(run_bed_refresh.committed_backup_path(backup_data).exists())
+
+    def test_post_commit_cleanup_failure_does_not_fail_bed_refresh(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            live_data = root / "data"
+            staging_root = root / "staging"
+            backup_data = root / ".bed-refresh-backup-test"
+            committed_data = run_bed_refresh.committed_backup_path(backup_data)
+            lock_path = root / ".pipeline.lock"
+            live_data.mkdir()
+            staging_root.mkdir()
+            committed_data.mkdir()
+            lock_fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+
+            with patch.object(
+                run_bed_refresh.shutil,
+                "rmtree",
+                side_effect=PermissionError("simulated post-commit cleanup failure"),
+            ):
+                run_bed_refresh.cleanup_bed_refresh_run(
+                    staging_root=staging_root,
+                    backup_data=backup_data,
+                    lock_fd=lock_fd,
+                    lock_path=lock_path,
+                    promotion_committed=True,
+                )
+
+            self.assertTrue(live_data.exists())
+            self.assertFalse(lock_path.exists())
+
+    def test_pre_commit_cleanup_retries_data_rollback_without_losing_backup(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            live_data = root / "data"
+            staging_root = root / "staging"
+            staged_data = staging_root / "data"
+            backup_data = root / ".bed-refresh-backup-test"
+            committed_data = run_bed_refresh.committed_backup_path(backup_data)
+            lock_path = root / ".pipeline.lock"
+            live_data.mkdir()
+            staged_data.mkdir(parents=True)
+            (live_data / "marker.txt").write_text("old-data", encoding="utf-8")
+            (staged_data / "marker.txt").write_text("new-data", encoding="utf-8")
+            lock_fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+
+            original_replace = os.replace
+            data_restore_attempts = 0
+
+            def fail_commit_and_first_data_restore(source, target):
+                nonlocal data_restore_attempts
+                source_path, target_path = Path(source), Path(target)
+                if source_path == backup_data and target_path == committed_data:
+                    raise PermissionError("simulated commit rename failure")
+                if (
+                    source_path == live_data
+                    and target_path.parent == staging_root
+                    and target_path.name.startswith("failed-live-data-")
+                ):
+                    data_restore_attempts += 1
+                    if data_restore_attempts == 1:
+                        raise PermissionError("simulated first data rollback failure")
+                return original_replace(source, target)
+
+            with (
+                patch.object(run_bed_refresh, "LIVE_DATA", live_data),
+                patch.object(
+                    run_bed_refresh.os,
+                    "replace",
+                    side_effect=fail_commit_and_first_data_restore,
+                ),
+            ):
+                with self.assertRaises(PermissionError):
+                    run_bed_refresh.promote_data(staged_data, backup_data)
+                self.assertTrue(backup_data.exists())
+                run_bed_refresh.cleanup_bed_refresh_run(
+                    staging_root=staging_root,
+                    backup_data=backup_data,
+                    lock_fd=lock_fd,
+                    lock_path=lock_path,
+                    promotion_committed=False,
+                )
+
+            self.assertEqual(
+                (live_data / "marker.txt").read_text(encoding="utf-8"),
+                "old-data",
+            )
+            self.assertEqual(data_restore_attempts, 2)
+            self.assertFalse(backup_data.exists())
+            self.assertFalse(lock_path.exists())
 
 
 if __name__ == "__main__":

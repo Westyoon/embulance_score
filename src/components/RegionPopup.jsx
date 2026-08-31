@@ -14,10 +14,32 @@ function isFiniteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
 }
 
+function BedCoverageDisclosure({ region }) {
+  const bedDataHospitals = isFiniteNumber(region.bedDataHospitals)
+    ? region.bedDataHospitals
+    : 0;
+  const totalHospitals = isFiniteNumber(region.totalHospitals)
+    ? region.totalHospitals
+    : (region.hospitals?.length ?? 0);
+  return (
+    <div style={{ fontSize: 10.5, ...mutedText, marginTop: 8 }}>
+      병상 API 반영 기관 {bedDataHospitals} / {totalHospitals}
+      {isFiniteNumber(region.bedDataCoverage)
+        ? ` (${Math.round(region.bedDataCoverage * 100)}%)`
+        : ""}
+      {region.bedDataQuality ? ` · ${region.bedDataQuality}` : ""}
+      <br />병상 구성점수는 해당 시점에 유효하게 보고한 기관 기준
+    </div>
+  );
+}
+
 export default function RegionPopup({ region, onClose, onSelectHospital }) {
   if (!region) return null;
 
   if (region.missing) {
+    const missingComponents = region.missingComponents?.length
+      ? region.missingComponents.join("·")
+      : "필수 구성점수";
     return (
       <div style={{ ...cardStyle, padding: 20 }}>
         <div className="flex items-start justify-between">
@@ -29,9 +51,10 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
         </div>
         <div style={{ fontSize: 12, ...mutedText, marginTop: 14, lineHeight: 1.6, background: "#f8fafc", border: "1px solid #e2e8f0", padding: "12px 14px", borderRadius: 10 }}>
           {region.key
-            ? <>구성점수 중 일부(주로 의료진부족점수)가 HIRA 매칭 기준을 충족하지 못해 최종 위험도가 <b style={{ color: "#0f172a" }}>산출되지 않은 지역</b>입니다. &quot;의료진 부족 0점&quot;이 아니라 <b style={{ color: "#0f172a" }}>&quot;데이터 부족으로 미산출&quot;</b>로 표시해야 합니다.</>
+            ? <><b style={{ color: "#0f172a" }}>{missingComponents}</b> 원천값이 검증 기준을 충족하지 못해 최종 위험도가 <b style={{ color: "#0f172a" }}>산출되지 않은 지역</b>입니다. 0점이 아니라 <b style={{ color: "#0f172a" }}>&quot;데이터 부족으로 미산출&quot;</b>입니다.</>
             : <>행정안전부 2026-07-01 행정구역 체계를 반영한 최신 경계 데이터셋에 대응하는 <b style={{ color: "#0f172a" }}>원천 데이터가 없는 지역</b>입니다. 행정구역 개편이나 데이터 매칭 누락으로 아직 위험도가 연결되지 않았습니다.</>}
         </div>
+        <BedCoverageDisclosure region={region} />
       </div>
     );
   }
@@ -95,6 +118,8 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
           네 요인 중 <b style={{ color: "#0f172a" }}>{top1.name}</b>({top1.value.toFixed(0)}점)과{" "}
           <b style={{ color: "#0f172a" }}>{top2.name}</b>({top2.value.toFixed(0)}점)이 가장 큰 영향을 주고 있어{region.clusterLabel ? <>, <b style={{ color: region.clusterColor }}>{region.clusterLabel}</b> 지역으로 분석됩니다.</> : "입니다."}
         </div>
+
+        <BedCoverageDisclosure region={region} />
 
         <div style={{ marginTop: 12, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 12px" }}>
           <div style={{ fontSize: 10, ...mutedText }}>접근성 선정 센터</div>

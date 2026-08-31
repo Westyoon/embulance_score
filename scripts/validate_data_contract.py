@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from common import DATA_DIR, ROOT, read_csv
+from part2_collect_bed_status import fresh_bed_source_at_collection_mask
 from part3_calculate_region_risk import RISK_BINS, RISK_GRADES, RISK_GRADE_NAMES
 
 EXPECTED_INCHEON = {
@@ -47,7 +48,9 @@ MIN_LIVE_MATCHES = 373
 MIN_HIRA_MATCHES = 517
 MIN_HIRA_USABLE_REGIONS = 218
 TARGET_HIRA_USABLE_REGIONS = 219
-MIN_COMPLETE_RISK_REGIONS = 197
+# Reviewed 2026-08-31 baseline is 196 after excluding hospital-reported bed
+# observations older than 12 hours. Preserve five-region regression headroom.
+MIN_COMPLETE_RISK_REGIONS = 191
 EXPECTED_HIRA_LOGIC_VERSION = "hira-catalog-v3"
 MAX_HIRA_EXCLUSION_AGE_DAYS = 30
 ALLOWED_HIRA_EXCLUSION_REASONS = {"HIRA_SOURCE_NOT_FOUND"}
@@ -550,6 +553,18 @@ def main() -> None:
     live_matches = int(beds[["가용병상", "전체병상", "API기준시각"]].notna().any(axis=1).sum())
     if live_matches < MIN_LIVE_MATCHES:
         fail(f"실시간 병상 응답 기관 수가 검토 기준보다 적습니다: {live_matches} < {MIN_LIVE_MATCHES}")
+    bed_available = pd.to_numeric(beds["가용병상"], errors="coerce")
+    bed_total = pd.to_numeric(beds["전체병상"], errors="coerce")
+    bed_saturation = pd.to_numeric(beds["포화율"], errors="coerce")
+    bed_source_valid = bed_total.gt(0) & bed_available.ge(0) & bed_saturation.notna()
+    bed_source_fresh_at_collection = fresh_bed_source_at_collection_mask(
+        beds["API기준시각"],
+        beds["수집시각"],
+    )
+    if (bed_source_valid & ~bed_source_fresh_at_collection).any():
+        fail("수집 당시 허용 시간을 넘긴 병원 원천 병상값이 결측 처리되지 않았습니다.")
+    if int((bed_source_valid & bed_source_fresh_at_collection).sum()) < MIN_LIVE_MATCHES:
+        fail("원천 기준시각까지 유효한 병상 기관 수가 검토 기준보다 적습니다.")
     require_unique(population, ["시도", "시군구"], "인구 지역")
     population_keys = region_keys(population)
     population_values = pd.to_numeric(population["인구"], errors="coerce")

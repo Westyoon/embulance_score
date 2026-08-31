@@ -22,11 +22,39 @@ const COMPONENT_KEYS = [
   { field: "의료진부족점수", short: "의료진부족" },
 ];
 const SUCCESS_ROUTE_STATUSES = new Set(["성공", "성공:출도착5m이내"]);
+const BED_SOURCE_MAX_AGE_HOURS = positiveNumber("BED_SOURCE_MAX_AGE_HOURS", 12);
+
+function positiveNumber(name, fallback) {
+  const value = Number(process.env[name] || fallback);
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new Error(`${name} must be a positive number`);
+  }
+  return value;
+}
 
 function finiteNumber(value) {
   if (value == null || value === "") return null;
   const number = Number(value);
   return Number.isFinite(number) ? number : null;
+}
+
+function bedSourceValidUntil(value) {
+  const text = String(value ?? "").trim().replace(/\.0+$/, "");
+  const match = text.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/);
+  if (!match) return null;
+  const [, year, month, day, hour, minute, second] = match.map(Number);
+  const localAsUtc = Date.UTC(year, month - 1, day, hour, minute, second);
+  const localCheck = new Date(localAsUtc);
+  if (
+    localCheck.getUTCFullYear() !== year
+    || localCheck.getUTCMonth() !== month - 1
+    || localCheck.getUTCDate() !== day
+    || localCheck.getUTCHours() !== hour
+    || localCheck.getUTCMinutes() !== minute
+    || localCheck.getUTCSeconds() !== second
+  ) return null;
+  const sourceUtc = localAsUtc - 9 * 3_600_000;
+  return new Date(sourceUtc + BED_SOURCE_MAX_AGE_HOURS * 3_600_000).toISOString();
 }
 
 function readOptionalCsv(filename) {
@@ -91,6 +119,21 @@ function normalizeAccessibilityRoute(row) {
 function toRegion(row, clusterByKey, clusterMetaById, hospitalsByKey, accessibilityByKey) {
   const key = row["시군구코드"];
   const complete = row["산출상태"] === "완료";
+  const hospitals = hospitalsByKey.get(key) ?? [];
+  const bedDataHospitals = finiteNumber(row["병상데이터기관수"]) ?? 0;
+  const contributingHospitals = hospitals.filter((hospital) => (
+    finiteNumber(hospital.saturation) != null
+  ));
+  const validUntilTimes = contributingHospitals
+    .map((hospital) => Date.parse(hospital.bedValidUntil || ""))
+    .filter(Number.isFinite);
+  const bedRiskFreshnessUnknown = (
+    contributingHospitals.length !== bedDataHospitals
+    || validUntilTimes.length !== bedDataHospitals
+  );
+  const bedRiskValidUntil = !bedRiskFreshnessUnknown && validUntilTimes.length > 0
+    ? new Date(Math.min(...validUntilTimes)).toISOString()
+    : null;
   const clusterRow = clusterByKey.get(key);
   const cluster = clusterRow != null ? clusterRow["클러스터"] : null;
   const meta = cluster != null ? clusterMetaById[cluster] : null;
@@ -103,11 +146,22 @@ function toRegion(row, clusterByKey, clusterMetaById, hospitalsByKey, accessibil
     access: row["접근성점수"],
     popBed: row["인구대비병상점수"],
     doc: row["의료진부족점수"],
+    missingComponents: COMPONENT_KEYS
+      .filter(({ field }) => finiteNumber(row[field]) == null)
+      .map(({ short }) => short),
+    bedDataHospitals,
+    totalHospitals: hospitals.length,
+    bedDataCoverage: hospitals.length > 0 ? bedDataHospitals / hospitals.length : null,
+    bedDataQuality: bedDataHospitals === 0
+      ? "결측"
+      : (bedDataHospitals === hospitals.length ? "전체응답" : "부분응답"),
+    bedRiskValidUntil,
+    bedRiskFreshnessUnknown,
     risk: complete ? row["regionRisk"] : null,
     cluster,
     clusterLabel: meta?.label ?? null,
     clusterColor: meta?.color ?? null,
-    hospitals: hospitalsByKey.get(key) ?? [],
+    hospitals,
     accessibilityRoute: accessibilityByKey.get(key) ?? null,
   };
 }
@@ -172,6 +226,16 @@ function buildHospitals(routeByCode, koreaGeo) {
     const key = `${h["시도"]}|${h["시군구"]}`;
     const bed = bedByCode.get(h["기관코드"]);
     const route = routeByCode.get(h["기관코드"]);
+    const availableBeds = finiteNumber(bed?.["가용병상"]);
+    const totalBeds = finiteNumber(bed?.["전체병상"]);
+    const saturation = finiteNumber(bed?.["포화율"]);
+    const usableBed = (
+      availableBeds != null
+      && availableBeds >= 0
+      && totalBeds != null
+      && totalBeds > 0
+      && saturation != null
+    );
     const entry = {
       name: h["병원명"],
       grade: h["등급"],
@@ -183,11 +247,13 @@ function buildHospitals(routeByCode, koreaGeo) {
       latitude: h["위도"],
       longitude: h["경도"],
       geoCode: hospitalGeoCode(h, koreaGeo),
-      status: bed?.["상태"] ?? "결측",
-      availableBeds: bed?.["가용병상"] ?? null,
-      totalBeds: bed?.["전체병상"] ?? null,
-      saturation: bed?.["포화율"] ?? null,
+      status: usableBed ? (bed?.["상태"] ?? "결측") : "결측",
+      availableBeds: usableBed ? availableBeds : null,
+      totalBeds: usableBed ? totalBeds : null,
+      saturation: usableBed ? saturation : null,
       updatedAt: bed?.["수집시각"] ?? null,
+      sourceUpdatedAt: bed?.["API기준시각"] ?? null,
+      bedValidUntil: usableBed ? bedSourceValidUntil(bed?.["API기준시각"]) : null,
       straightDistanceKm: route?.straightDistanceKm ?? null,
       roadDistanceKm: route?.roadDistanceKm ?? null,
       distanceKm: route?.distanceKm ?? null,
@@ -238,14 +304,19 @@ function buildRegression() {
   return { coef, r2: metrics.r2, mae: metrics.mae, rows: metrics.rows };
 }
 
-function latestTimestamp(bedStatus) {
-  let latest = null;
+function oldestSnapshotTimestamp(bedStatus) {
+  let oldest = null;
+  let oldestMillis = Number.POSITIVE_INFINITY;
   for (const r of bedStatus) {
     const t = r["수집시각"];
     if (!t) continue;
-    if (!latest || t > latest) latest = t;
+    const millis = Date.parse(t);
+    if (Number.isFinite(millis) && millis < oldestMillis) {
+      oldest = t;
+      oldestMillis = millis;
+    }
   }
-  return latest;
+  return oldest;
 }
 
 export function loadDashboardData() {
@@ -303,7 +374,7 @@ export function loadDashboardData() {
       complete: complete.length,
       total: regions.length,
       missing: regions.length - complete.length,
-      asOf: latestTimestamp(bedStatus),
+      asOf: oldestSnapshotTimestamp(bedStatus),
     },
     clusterProfile,
     clusterIds,
