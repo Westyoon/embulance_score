@@ -53,6 +53,64 @@ def write_bed_reuse_fixture(
     return master_path, bed_path
 
 
+class ManagedInputGenerationTests(unittest.TestCase):
+    def test_explicit_fresh_bed_full_refresh_mode_is_supported(self) -> None:
+        with patch.dict(os.environ, {"FULL_REFRESH_REUSE_BEDS": "false"}):
+            self.assertFalse(run_pipeline.reuse_beds_enabled())
+
+    def test_full_refresh_replaces_only_staged_managed_inputs(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_data = root / "image-data"
+            live_data = root / "live-data"
+            staged_data = root / "staged-data"
+            source_data.mkdir()
+            live_data.mkdir()
+            staged_data.mkdir()
+
+            for filename in run_pipeline.MANAGED_INPUT_FILENAMES:
+                (source_data / filename).write_text(
+                    f"image:{filename}",
+                    encoding="utf-8",
+                )
+                (live_data / filename).write_text(
+                    f"live:{filename}",
+                    encoding="utf-8",
+                )
+                (staged_data / filename).write_text(
+                    f"old-stage:{filename}",
+                    encoding="utf-8",
+                )
+
+            run_pipeline.copy_managed_inputs(staged_data, source_data)
+
+            for filename in run_pipeline.MANAGED_INPUT_FILENAMES:
+                self.assertEqual(
+                    (staged_data / filename).read_text(encoding="utf-8"),
+                    f"image:{filename}",
+                )
+                self.assertEqual(
+                    (live_data / filename).read_text(encoding="utf-8"),
+                    f"live:{filename}",
+                )
+
+    def test_full_refresh_rejects_missing_managed_input_before_copy(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_data = root / "image-data"
+            staged_data = root / "staged-data"
+            source_data.mkdir()
+            staged_data.mkdir()
+            missing = run_pipeline.MANAGED_INPUT_FILENAMES[-1]
+            for filename in run_pipeline.MANAGED_INPUT_FILENAMES[:-1]:
+                (source_data / filename).write_text("image", encoding="utf-8")
+
+            with self.assertRaisesRegex(FileNotFoundError, missing):
+                run_pipeline.copy_managed_inputs(staged_data, source_data)
+
+            self.assertEqual(list(staged_data.iterdir()), [])
+
+
 class BedSnapshotReuseTests(unittest.TestCase):
     NOW = pd.Timestamp("2026-08-31T10:00:00+00:00")
 

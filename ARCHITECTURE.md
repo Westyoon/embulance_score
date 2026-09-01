@@ -1,6 +1,6 @@
 # 시스템 아키텍처
 
-이 문서는 Emergency Medical Capacity Dashboard의 프론트엔드, 데이터 분석, 백엔드, 동적 배포가 어떻게 하나의 운영 흐름으로 연결되는지 설명합니다. 실행 명령과 Railway 설정값은 [README.md](./README.md)와 [DEPLOYMENT.md](./DEPLOYMENT.md)를 함께 참고합니다.
+이 문서는 Emergency Medical Capacity Dashboard의 프론트엔드, 데이터 분석, 백엔드, 동적 배포가 어떻게 하나의 운영 흐름으로 연결되는지 설명합니다. 원천별 수집·결측 처리와 데이터 계보는 [DATA_PIPELINE.md](./DATA_PIPELINE.md), 실행 명령과 Railway 설정값은 [README.md](./README.md)와 [DEPLOYMENT.md](./DEPLOYMENT.md)를 함께 참고합니다.
 
 ## 1. 설계 목표
 
@@ -87,7 +87,7 @@ flowchart TB
 
 | 단계 | 주요 스크립트 | 결과 |
 |---|---|---|
-| 기관 모집단 | `part1_collect_hospital_master.py` | NEMC 534개 기관과 지역·좌표 |
+| 기관 모집단 | `part1_collect_hospital_master.py` | 현재 NEMC 기관 모집단과 지역·좌표 |
 | 실시간 병상 | `part2_collect_bed_status.py` | 가용·전체 병상, 포화율, 수집·원천 기준시각 |
 | 인구 | `part3_collect_population.py`, `part3_prepare_population.py` | 최신 공표 월의 시군구 인구 |
 | 의료진 | `part3_collect_hira_doctors.py` | HIRA 병원 1:1 매칭과 응급의학과 전문의 |
@@ -102,7 +102,7 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    N[NEMC 534개 기관] --> C[같은 시군구 HIRA 후보]
+    N[NEMC 기관 모집단] --> C[같은 시군구 HIRA 후보]
     C --> S[이름·주소·전화·좌표·시설종별 점수]
     S --> A[전역 1:1 배정]
     A --> Q{자동 확정 가능?}
@@ -128,7 +128,7 @@ regionRisk =
   + 0.15 × 의료진부족점수
 ```
 
-네 항목이 모두 존재할 때만 최종 점수를 계산합니다. 현재 219개 지역 중 196개가 이 조건을 충족합니다. 이 값은 의료적 진단이나 이송 지시가 아니라 데이터 기반 지역 비교 지표입니다.
+네 항목이 모두 존재할 때만 최종 점수를 계산합니다. 모집단·완료·최근 계산·만료 지역 수는 배치마다 달라지므로 `/api/health`의 `regions`, `completeRegions`, `scoredRegions`, `expiredScoreRegions`를 기준으로 확인합니다. 이 값은 의료적 진단이나 이송 지시가 아니라 데이터 기반 지역 비교 지표입니다.
 
 신뢰성 방어선은 다음과 같습니다.
 
@@ -140,9 +140,11 @@ regionRisk =
 - 최신 경계와 NEMC 지역이 완전한 1:1 관계가 아님을 명시하고, 상위 시 집계와 기관 없는 경계를 구분합니다.
 - 카카오 성공 경로는 요청 키와 TTL로 캐시하며 좌표·경계가 바뀌면 다시 조회합니다.
 
+서버 스냅샷은 현재 운영값과 최근 계산값을 구분합니다. 현재 시각에 병상 유효기간이 지난 지역은 메인 지도와 상세에서 위험도를 마스킹합니다. 다만 마지막 계산 결과 자체는 `analysisSnapshot`에 계산시각, 현재 만료 여부와 계산 당시 원천정책 충족 여부를 붙여 분석 화면에서 참고용으로 제공합니다. 따라서 “점수가 존재함”과 “현재 운영에 유효함”을 같은 상태로 취급하지 않습니다.
+
 ## 6. 갱신과 승격 시퀀스
 
-`beds`는 병상과 이에 의존하는 점수·분석만 갱신하고, `full`은 기관·인구·HIRA·경계·카카오까지 다시 계산합니다. 운영 `full`은 최근 검증 병상 스냅샷을 재사용해 NEMC 병상 API를 중복 호출하지 않습니다.
+`beds`는 병상과 이에 의존하는 점수·분석만 갱신하고, `full`은 기관·인구·HIRA·경계·카카오까지 다시 계산합니다. 운영 `full`은 조건을 충족하는 최근 검증 병상 스냅샷을 재사용해 NEMC 병상 API를 중복 호출하지 않습니다. 재사용 검증 실패 시 병상 API로 자동 fallback하지 않고 live generation을 유지합니다.
 
 ```mermaid
 sequenceDiagram
@@ -154,7 +156,9 @@ sequenceDiagram
     participant W as Next.js
 
     S->>P: beds 또는 full 실행
-    P->>T: 현재 live 복사 후 수집·재계산
+    P->>T: 현재 live generation 복사
+    P->>T: full이면 관리 입력을 staging에만 반영
+    P->>T: 수집·모든 종속 산출물 재계산
     P->>V: Python 데이터 계약 검증
     P->>V: Node 프론트 계약 검증
     alt 검증 성공
@@ -168,6 +172,8 @@ sequenceDiagram
 ```
 
 승격은 실행별 staging과 복구 백업을 사용합니다. 데이터와 경계 교체가 commit point에 도달하기 전 실패하면 기존 버전을 복구하고, commit 이후 정리 실패는 성공한 갱신을 실패로 뒤집지 않습니다. 비정상 종료 시 남은 복구 백업은 다음 시작에서 우선 처리합니다.
+
+빈 Volume은 이미지의 검증 seed로 한 번만 초기화합니다. 기존 Volume은 재시작 때 관리 CSV를 live에 직접 덮어쓰지 않습니다. HIRA 수동 확정·제외와 병원 좌표·지역 보정 파일은 `full` staging에만 주입하고, 기관 매칭과 모든 파생 결과를 다시 만든 뒤 하나의 generation으로 승격합니다. `beds`는 NEMC API를 호출하기 전에 현재 live의 전체 데이터 계약을 검사해 서로 다른 세대가 섞였으면 즉시 중단합니다.
 
 ## 7. 런타임과 배포
 
@@ -195,7 +201,7 @@ npm run build
 .\.venv\Scripts\python.exe scripts\validate_data_contract.py
 ```
 
-CI는 Docker 이미지를 빌드한 뒤 컨테이너 내부에서 두 데이터 계약을 다시 실행합니다. 실제 서버를 띄워 `/api/health`, 초기 HTML과 정적 asset을 확인하며, 컨테이너 재시작 시 저장소 기준 관리 CSV가 Volume에 동기화되는지도 검사합니다. 이미지 발행은 `backend` 브랜치 push에서만 수행합니다.
+CI는 Docker 이미지를 빌드한 뒤 컨테이너 내부에서 두 데이터 계약을 다시 실행합니다. 실제 서버를 띄워 `/api/health`, 초기 HTML과 정적 asset을 확인합니다. 컨테이너 smoke test는 빈 Volume seed와 기존 live의 재시작 불변성을, Python 회귀 테스트는 관리 입력이 `full` staging에서만 반영되는지를 검사합니다. 이미지 발행은 `backend` 브랜치 push에서만 수행합니다.
 
 ## 9. 저장소 구조와 추적 정책
 
@@ -210,18 +216,19 @@ CI는 Docker 이미지를 빌드한 뒤 컨테이너 내부에서 두 데이터 
 ├─ src/data/koreaGeo.json        # 검증된 지도 경계 seed
 ├─ Dockerfile                    # Python+Node production image
 ├─ .github/workflows             # 검증·GHCR 발행
+├─ DATA_PIPELINE.md              # 수집원·계보·결측·원자적 갱신
 ├─ DEPLOYMENT.md                 # Railway 운영 절차
 └─ README.md                     # 프로젝트 개요·재현 방법
 ```
 
 `data/`의 CSV·JSON은 단순 생성 부산물이 아니라 빈 Volume 부팅, 프론트 데이터 계약 검사, 결과 재현에 사용하는 검증 seed입니다. HIRA 수동 매칭과 좌표·지역 보정 파일은 운영 근거이므로 함께 추적합니다. 반대로 `.env`, `runtime/`, `.next/`, 가상환경, 의존성 폴더와 실행별 staging·backup은 `.gitignore`와 `.dockerignore`에서 제외합니다.
 
-`ANALYSIS_REPORT.md`와 `REGION_RISK_INTERPRETATION_REPORT.md`는 과거 분석 분포를 보존하는 문서입니다. 두 문서 상단에서 현재 검증 산출물과 구분하며, 최신 수치는 README와 현재 CSV를 우선합니다.
+`ANALYSIS_REPORT.md`와 `REGION_RISK_INTERPRETATION_REPORT.md`는 과거 분석 분포를 보존하는 문서입니다. 두 문서 상단에서 현재 검증 산출물과 구분하며, 운영 수치는 `/api/health`와 현재 live CSV를 우선합니다.
 
 ## 10. 알려진 제약
 
 - 현재 NEMC API는 과거 시점 병상 이력을 제공하지 않아 2024년 시간대·계절 분석은 완료되지 않았습니다.
-- 병상 갱신 1회에 219개 지역 요청이 필요합니다. 현재 8시간 주기는 API 할당량을 고려한 안전 설정이며, 시간당 운영에는 별도 트래픽 증설이 필요합니다.
+- 병상 갱신은 현재 NEMC 분석 지역별 API 요청이 필요합니다. 기본 8시간 주기는 API 할당량을 고려한 안전 설정이며, 시간당 운영에는 현재 모집단 기준 호출량을 다시 계산해 별도 트래픽 증설이 필요합니다.
 - Railway Volume과 파일 잠금 구조는 단일 writer·단일 replica를 전제로 합니다.
 - 경계는 웹 시각화용 단순화 자료이며 법적·측량·주소 판정에 사용할 수 없습니다.
 - `regionRisk`는 원천 품질과 현재 가중치에 의존하는 상대 비교 지표이며 의료적 의사결정 모델이 아닙니다.

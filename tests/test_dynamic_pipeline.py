@@ -160,6 +160,50 @@ class BedHistoryRetentionTests(unittest.TestCase):
                         part2_collect_bed_status.trim_history(history)
 
 
+class BedRefreshBaselineValidationTests(unittest.TestCase):
+    def test_invalid_baseline_stops_before_bed_api_collection(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            live_data = root / "data"
+            state_dir = root / "state"
+            live_data.mkdir()
+            state_dir.mkdir()
+            (live_data / "marker.txt").write_text("live", encoding="utf-8")
+            commands = []
+
+            def reject_invalid_contract(command, _environment):
+                commands.append(command)
+                raise RuntimeError("invalid live generation")
+
+            with (
+                patch.object(run_bed_refresh, "LIVE_DATA", live_data),
+                patch.object(run_bed_refresh, "PIPELINE_STATE_DIR", state_dir),
+                patch.object(run_bed_refresh, "install_shutdown_handler"),
+                patch.object(run_bed_refresh.shutil, "which", return_value="node"),
+                patch.object(
+                    run_bed_refresh,
+                    "run",
+                    side_effect=reject_invalid_contract,
+                ),
+                self.assertRaisesRegex(RuntimeError, "invalid live generation"),
+            ):
+                run_bed_refresh.main()
+
+            self.assertEqual(
+                commands,
+                [[sys.executable, "scripts/validate_data_contract.py"]],
+            )
+            self.assertEqual(
+                (live_data / "marker.txt").read_text(encoding="utf-8"),
+                "live",
+            )
+            self.assertFalse((state_dir / ".pipeline.lock").exists())
+            self.assertEqual(
+                list(state_dir.glob(".bed-refresh-staging-*")),
+                [],
+            )
+
+
 class BedRefreshPromotionTests(unittest.TestCase):
     def test_keyboard_interrupt_restores_previous_live_data(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

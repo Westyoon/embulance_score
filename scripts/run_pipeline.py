@@ -20,6 +20,12 @@ LIVE_BOUNDARY = Path(
 ).resolve()
 PIPELINE_STATE_DIR = Path(os.getenv("PIPELINE_STATE_DIR", ROOT)).resolve()
 FULL_BED_REUSE_MARKER = PIPELINE_STATE_DIR / "full_bed_reuse.json"
+MANAGED_INPUT_FILENAMES = (
+    "hira_match_exclusions.csv",
+    "hira_match_overrides.csv",
+    "hospital_coordinate_overrides.csv",
+    "hospital_region_overrides.csv",
+)
 MIN_LIVE_MATCHES = 373
 MAX_BED_FUTURE_SKEW_MINUTES = 5.0
 BED_COLUMNS = [
@@ -216,6 +222,31 @@ def run(command: list[str], environment: dict[str, str]) -> None:
     subprocess.run(command, cwd=ROOT, env=environment, check=True)
 
 
+def copy_managed_inputs(
+    staged_data: Path,
+    source_data: Path | None = None,
+) -> None:
+    """Copy image-managed inputs into a full-refresh staging generation.
+
+    These files affect downstream HIRA matching and hospital normalization, so
+    they must never be copied directly into the persistent live generation.
+    A full refresh recalculates every dependent artifact in staging and promotes
+    the inputs and outputs together only after the complete contract passes.
+    """
+    source = ROOT / "data" if source_data is None else source_data
+    missing = [
+        filename
+        for filename in MANAGED_INPUT_FILENAMES
+        if not (source / filename).is_file()
+    ]
+    if missing:
+        raise FileNotFoundError(
+            "전체 갱신 관리 입력 파일이 없습니다: " + ", ".join(missing)
+        )
+    for filename in MANAGED_INPUT_FILENAMES:
+        shutil.copy2(source / filename, staged_data / filename)
+
+
 def committed_backup_path(backup_path: Path) -> Path:
     return backup_path.with_name(f"committed-{backup_path.name.lstrip('.')}")
 
@@ -367,6 +398,7 @@ def main() -> None:
         os.write(lock_fd, str(os.getpid()).encode("ascii"))
         FULL_BED_REUSE_MARKER.unlink(missing_ok=True)
         shutil.copytree(LIVE_DATA, staged_data)
+        copy_managed_inputs(staged_data)
         environment = os.environ.copy()
         environment["PIPELINE_DATA_DIR"] = str(staged_data)
         environment["BOUNDARY_OUTPUT"] = str(staged_boundary)

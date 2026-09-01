@@ -20,12 +20,6 @@ const statusFile = path.join(stateDir, "pipeline_status.json");
 const requestFile = path.join(stateDir, "refresh_request.json");
 const lockFile = path.join(stateDir, ".pipeline.lock");
 const fullBedReuseFile = path.join(stateDir, "full_bed_reuse.json");
-const managedDataFiles = [
-  "hira_match_exclusions.csv",
-  "hira_match_overrides.csv",
-  "hospital_coordinate_overrides.csv",
-  "hospital_region_overrides.csv",
-];
 const python = process.env.PIPELINE_PYTHON || (
   process.platform === "win32"
     ? path.join(root, ".venv", "Scripts", "python.exe")
@@ -174,9 +168,9 @@ function seedRuntime() {
     fs.cpSync(path.join(root, "data"), liveData, { recursive: true, force: true });
     runtimeSeeded = true;
   }
-  for (const filename of managedDataFiles) {
-    fs.copyFileSync(path.join(root, "data", filename), path.join(liveData, filename));
-  }
+  // An existing data directory is one validated generation. Repository-managed
+  // inputs enter it only through a full pipeline staging promotion, together
+  // with every artifact that depends on them.
   if (!fs.existsSync(boundaryFile)) {
     fs.copyFileSync(path.join(root, "src", "data", "koreaGeo.json"), boundaryFile);
   }

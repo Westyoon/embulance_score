@@ -108,6 +108,10 @@ def main() -> None:
         if not node:
             raise RuntimeError("node 실행 파일을 찾지 못했습니다.")
 
+        # A beds-only refresh must inherit one already validated data generation.
+        # Fail before the quota-consuming NEMC calls if managed inputs and their
+        # dependent HIRA artifacts (or any other live contract) are inconsistent.
+        run([python, "scripts/validate_data_contract.py"], environment)
         run([python, "scripts/part2_collect_bed_status.py"], environment)
         run([python, "scripts/part3_build_component_scores.py"], environment)
         run([python, "scripts/part3_calculate_region_risk.py"], environment)

@@ -122,13 +122,6 @@ jobs:
           test -n "$asset"
           curl --fail --silent --show-error "http://127.0.0.1:3000$asset" >/dev/null
 
-          docker exec --user root "$container_name" \
-            sh -c 'printf stale > /app/runtime/data/hira_match_overrides.csv'
-          docker restart "$container_name" >/dev/null
-          if ! wait_until_healthy; then
-            docker logs "$container_name"
-            exit 1
-          fi
           for filename in \
             hira_match_exclusions.csv \
             hira_match_overrides.csv \
@@ -137,6 +130,18 @@ jobs:
             docker exec "$container_name" \
               cmp "/app/data/$filename" "/app/runtime/data/$filename"
           done
+
+          docker exec --user root "$container_name" \
+            sh -c 'printf stale > /app/runtime/data/hira_match_overrides.csv'
+          docker restart "$container_name" >/dev/null
+          if ! wait_until_healthy; then
+            docker logs "$container_name"
+            exit 1
+          fi
+          test "$(docker exec "$container_name" \
+            sh -c 'cat /app/runtime/data/hira_match_overrides.csv')" = stale
+          docker exec "$container_name" \
+            sh -c '! cmp /app/data/hira_match_overrides.csv /app/runtime/data/hira_match_overrides.csv'
 
       - name: Log in to GitHub Container Registry
         if: github.ref == 'refs/heads/backend' && github.event_name != 'pull_request'
