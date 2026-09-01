@@ -8,7 +8,7 @@ import { BOUNDARY_FILE, DATA_DIR } from "./csvServer";
 import { DASHBOARD_SOURCE_FILES, loadDashboardData } from "./loadDashboardData";
 
 const CACHE_KEY = Symbol.for("embulance-score.dashboard-snapshot");
-const DASHBOARD_SCHEMA_VERSION = "dashboard-api-v2";
+const DASHBOARD_SCHEMA_VERSION = "dashboard-api-v3";
 const PIPELINE_STATE_DIR = process.env.PIPELINE_STATE_DIR
   ? path.resolve(process.env.PIPELINE_STATE_DIR)
   : path.join(process.cwd(), "runtime", "state");
@@ -200,6 +200,67 @@ function maskAnalyticsPayload(data) {
   };
 }
 
+function analysisRegion(region, expiredRegionKeys, asOfMillis) {
+  const validUntilMillis = Date.parse(region.bedRiskValidUntil || "");
+  return {
+    key: region.key,
+    name: region.name,
+    sido: region.sido,
+    bed: region.bed,
+    access: region.access,
+    popBed: region.popBed,
+    doc: region.doc,
+    risk: region.risk,
+    cluster: region.cluster,
+    clusterLabel: region.clusterLabel,
+    clusterColor: region.clusterColor,
+    bedRiskValidUntil: region.bedRiskValidUntil,
+    sourcePolicyValidAtCalculation: (
+      Number.isFinite(validUntilMillis) && validUntilMillis > asOfMillis
+    ),
+    scoreExpired: expiredRegionKeys.has(region.key),
+  };
+}
+
+function buildAnalysisSnapshot(data, expiredRegionKeys) {
+  const asOfMillis = Date.parse(data.kpi.asOf || "");
+  if (!Number.isFinite(asOfMillis)) return null;
+  const ranked = data.ranked.map((region) => (
+    analysisRegion(region, expiredRegionKeys, asOfMillis)
+  ));
+  const missingRegions = Object.values(data.regionsByKey)
+    .filter((region) => region.missing)
+    .map((region) => ({
+      key: region.key,
+      name: region.name,
+      sido: region.sido,
+      missingComponents: [...(region.missingComponents || [])],
+    }))
+    .sort((left, right) => String(left.key).localeCompare(String(right.key), "ko"));
+  const currentComplete = ranked.filter((region) => !region.scoreExpired).length;
+  const sourcePolicyValid = ranked.filter((region) => (
+    region.sourcePolicyValidAtCalculation
+  )).length;
+
+  return {
+    ranked,
+    kpi: { ...data.kpi },
+    clusterProfile: data.clusterProfile,
+    clusterIds: data.clusterIds,
+    clusterMetaById: data.clusterMetaById,
+    correlation: data.correlation,
+    regression: data.regression,
+    asOf: data.kpi.asOf,
+    sourceComplete: ranked.length,
+    sourcePolicyValid,
+    sourcePolicyInvalid: ranked.length - sourcePolicyValid,
+    currentComplete,
+    sourceMissing: data.kpi.total - ranked.length,
+    expiredRegions: ranked.length - currentComplete,
+    missingRegions,
+  };
+}
+
 export function applyDashboardFreshness(data, nowMillis = Date.now()) {
   const completeRegions = Object.values(data.regionsByKey).filter((region) => !region.missing);
   const expiredRegionKeys = new Set(completeRegions
@@ -238,6 +299,7 @@ export function applyDashboardFreshness(data, nowMillis = Date.now()) {
 
   const refreshedData = {
       ...data,
+      analysisSnapshot: buildAnalysisSnapshot(data, expiredRegionKeys),
       currentRiskAvailable: ranked.length > 0,
       analyticsStale,
       bedRiskExpiredRegions: expiredRegionKeys.size,

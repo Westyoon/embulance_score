@@ -75,7 +75,7 @@ function squarify(items, x, y, w, h) {
 // 트리맵 + 히트맵을 하나의 섹션으로 결합. 트리맵에서 지역을 클릭하면 별도
 // 상세 카드를 띄우는 대신, 오른쪽 히트맵 표에서 해당 행을 강조하고 그
 // 위치로 스크롤한다 — highlightKey 하나를 양쪽이 같이 읽고 쓴다.
-export default function TreemapHeatmapPanel({ data }) {
+export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCount = 0, policyInvalidCount = 0, historical = false }) {
   const [highlightKey, setHighlightKey] = useState(null);
   const [province, setProvince] = useState(DEFAULT_SIDO);
   const rowRefs = useRef({});
@@ -106,7 +106,11 @@ export default function TreemapHeatmapPanel({ data }) {
   return (
     <div style={{ ...cardStyle, padding: 16 }}>
       <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 2 }}>지역별 위험도 — 트리맵 · 히트맵</div>
-      <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 10 }}>박스 크기·색상 모두 = 종합위험도 (위험할수록 크고 진하게) · 어느 쪽에서 클릭해도 서로 강조돼요</div>
+      <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 10 }}>
+        {historical ? `최근 계산 ${data.length}개 지역 · 현재 만료 ${expiredCount}개` : `현재 유효 ${data.length}개 지역만 표시`}
+        {policyInvalidCount > 0 ? ` · 계산 당시 원천시각 기준 미충족 ${policyInvalidCount}개` : ""}
+        {` · 원천 결측 ${excludedCount}개는 0점 처리 없이 제외 · 박스 크기·색상 = 종합위험도`}
+      </div>
 
       <div className="flex flex-wrap" style={{ gap: 6, marginBottom: 14 }}>
         <button onClick={() => selectProvince("전체")}
@@ -138,7 +142,7 @@ export default function TreemapHeatmapPanel({ data }) {
               const isHi = highlightKey === c.key;
               return (
                 <g key={c.key} onClick={() => setHighlightKey(c.key)} style={{ cursor: "pointer" }}>
-                  <title>{`${c.name} · 위험도 ${c.risk.toFixed(1)}점 · 응급실 ${c.hospitalCount}개 · 의료진 ${c.doctorCount}명`}</title>
+                  <title>{`${c.name} · 위험도 ${c.risk.toFixed(1)}점 · 응급실 ${c.hospitalCount}개 · 의료진 ${c.doctorCount}명${c.sourcePolicyValidAtCalculation === false ? " · 계산 당시 원천시각 기준 미충족" : c.scoreExpired ? " · 현재 원천시각 만료" : ""}`}</title>
                   <rect x={c.x} y={c.y} width={c.w} height={c.h} fill={riskColor(c.risk)}
                     stroke={isHi ? "#0f172a" : "#ffffff"} strokeWidth={isHi ? 2.5 : 1} />
                   {big && (
@@ -170,7 +174,7 @@ export default function TreemapHeatmapPanel({ data }) {
             {ranked.map((r) => {
               const isHi = highlightKey === r.key;
               return (
-                <div key={r.key} ref={(el) => (rowRefs.current[r.key] = el)} onClick={() => setHighlightKey(r.key)}
+                <div key={r.key} ref={(el) => (rowRefs.current[r.key] = el)} onClick={() => setHighlightKey(r.key)} title={r.sourcePolicyValidAtCalculation === false ? "최근 계산 점수 · 계산 당시 원천시각 기준 미충족" : r.scoreExpired ? "최근 계산 점수 · 현재 원천시각 만료" : undefined}
                   style={{ display: "grid", gridTemplateColumns: `64px repeat(${COLS.length}, 1fr) 50px`, gap: 3, alignItems: "center",
                     padding: "4px 2px", cursor: "pointer", borderRadius: 6, background: isHi ? riskColor(r.risk) + "1c" : "transparent",
                     outline: isHi ? `1.5px solid ${riskColor(r.risk)}` : "none", outlineOffset: -1 }}>

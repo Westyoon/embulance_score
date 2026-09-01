@@ -7,6 +7,7 @@ export async function GET() {
   try {
     const snapshot = getDashboardSnapshot();
     const dataAsOf = snapshot.data.kpi.asOf;
+    const analysisSnapshot = snapshot.data.analysisSnapshot;
     return Response.json(
       {
         status: snapshot.degraded || snapshot.dataStale ? "degraded" : "ok",
@@ -20,6 +21,10 @@ export async function GET() {
         nextBedRiskExpiryAt: snapshot.nextBedRiskExpiryAt,
         regions: snapshot.data.kpi.total,
         completeRegions: snapshot.data.kpi.complete,
+        scoredRegions: analysisSnapshot?.sourceComplete ?? snapshot.data.kpi.complete,
+        scoreSourcePolicyValidRegions: analysisSnapshot?.sourcePolicyValid ?? null,
+        scoreAsOf: analysisSnapshot?.asOf ?? dataAsOf,
+        expiredScoreRegions: analysisSnapshot?.expiredRegions ?? 0,
         pipeline: readPipelineStatus(),
       },
       { headers: { "Cache-Control": "no-store" } },

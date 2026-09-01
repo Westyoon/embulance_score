@@ -24,7 +24,7 @@ const WEIGHT_ITEMS = [
   { key: "doc", label: "의료진부족", weight: 0.15, color: "#fb7185" },
 ];
 
-export default function ContributionPanel({ avgBed, avgAccess, avgPopBed, avgDoc, avgRisk, regression }) {
+export default function ContributionPanel({ avgBed, avgAccess, avgPopBed, avgDoc, avgRisk, regression, sampleCount, historical }) {
   const [expanded, setExpanded] = useState(false);
   const avgByKey = { bed: avgBed, access: avgAccess, popBed: avgPopBed, doc: avgDoc };
   const contributions = WEIGHT_ITEMS.map((w) => ({ ...w, points: w.weight * avgByKey[w.key] }));
@@ -32,7 +32,7 @@ export default function ContributionPanel({ avgBed, avgAccess, avgPopBed, avgDoc
   return (
     <div style={{ ...cardStyle, padding: 16 }}>
       <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 2 }}>위험도를 구성하는 요인별 영향력</div>
-      <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 14 }}>위험도 산식의 가중치 기준 — 단위가 이미 통일돼 있어 그대로 직접 비교 가능</div>
+      <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 14 }}>{historical ? "최근 계산값" : "현재 유효 점수"} {sampleCount}개 지역 평균 · 원천 결측 지역 제외</div>
 
       <div style={{ fontSize: 10.5, fontWeight: 600, marginBottom: 6 }}>산식 가중치</div>
       <div style={{ display: "flex", height: 20, borderRadius: 6, overflow: "hidden", marginBottom: 6 }}>
@@ -78,6 +78,9 @@ export default function ContributionPanel({ avgBed, avgAccess, avgPopBed, avgDoc
       </button>
       {expanded && (
         <div style={{ marginTop: 12 }}>
+          {historical && regression.coef.length > 0 && (
+            <div style={{ fontSize: 11, color: "#92400e", marginBottom: 8 }}>아래 회귀계수는 최근 계산값 기준이며 현재 실시간 값이 아닙니다.</div>
+          )}
           {regression.coef.length === 0 ? (
             <div style={{ fontSize: 11, ...mutedText }}>회귀계수 산출 데이터가 아직 없습니다.</div>
           ) : (

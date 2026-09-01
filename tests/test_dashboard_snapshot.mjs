@@ -93,7 +93,7 @@ function region(key, { missing, risk, bedRiskValidUntil, hospitals }) {
   };
 }
 
-test("freshness recomputes every region's coverage and hides stale analytics", async () => {
+test("freshness masks current scores but preserves a labeled analysis snapshot", async () => {
   const { applyDashboardFreshness } = await loadSnapshotModule();
   const now = Date.parse("2026-09-01T00:00:00.000Z");
   const expired = "2026-08-31T23:59:59.000Z";
@@ -115,7 +115,14 @@ test("freshness recomputes every region's coverage and hides stale analytics", a
     },
     ranked: [regions.A, regions.C],
     allHospitals: [...hospitalsA, ...hospitalsB, ...hospitalsC],
-    kpi: { total: 3, complete: 2, missing: 1, avg: 50, high: 1 },
+    kpi: {
+      total: 3,
+      complete: 2,
+      missing: 1,
+      avg: 50,
+      high: 1,
+      asOf: "2026-08-31T23:00:00.000Z",
+    },
     clusterProfile: [{ subject: "병상포화도", c1: 50 }],
     clusterIds: [1],
     clusterMetaById: { 1: { label: "기존 군집" } },
@@ -156,6 +163,102 @@ test("freshness recomputes every region's coverage and hides stale analytics", a
   assert.equal(result.regionsByKey.C.cluster, null);
   assert.equal(result.ranked.length, 1);
   assert.equal(result.ranked[0].key, "C");
+  assert.equal(result.analysisSnapshot.sourceComplete, 2);
+  assert.equal(result.analysisSnapshot.currentComplete, 1);
+  assert.equal(result.analysisSnapshot.sourceMissing, 1);
+  assert.equal(result.analysisSnapshot.expiredRegions, 1);
+  assert.equal(result.analysisSnapshot.asOf, "2026-08-31T23:00:00.000Z");
+  assert.equal(result.analysisSnapshot.sourcePolicyValid, 2);
+  assert.equal(result.analysisSnapshot.sourcePolicyInvalid, 0);
+  assert.deepEqual(
+    [...result.analysisSnapshot.ranked].map((row) => [row.key, row.risk, row.scoreExpired]),
+    [["A", 70, true], ["C", 30, false]],
+  );
+  assert.deepEqual(
+    [...result.analysisSnapshot.missingRegions].map((row) => [row.key, [...row.missingComponents]]),
+    [["B", ["의료진부족"]]],
+  );
+  assert.deepEqual([...result.analysisSnapshot.clusterProfile], data.clusterProfile);
+  assert.deepEqual([...result.analysisSnapshot.correlation], data.correlation);
+  assert.equal(result.analysisSnapshot.regression.r2, 0.8);
+});
+
+test("all expired current scores still retain the last calculated risk scores", async () => {
+  const { applyDashboardFreshness } = await loadSnapshotModule();
+  const expired = "2026-08-31T23:59:59.000Z";
+  const now = Date.parse("2026-09-01T00:00:00.000Z");
+  const regions = {
+    A: region("A", {
+      missing: false,
+      risk: 70,
+      bedRiskValidUntil: expired,
+      hospitals: [hospital("A1", 80, expired)],
+    }),
+  };
+  const data = {
+    regionsByKey: regions,
+    regionIndex: { "geo-a": { ...regions.A, code: "geo-a" } },
+    ranked: [regions.A],
+    allHospitals: regions.A.hospitals,
+    kpi: {
+      total: 1,
+      complete: 1,
+      missing: 0,
+      avg: 70,
+      high: 1,
+      asOf: "2026-09-01T00:00:00.000Z",
+    },
+    clusterProfile: [{ subject: "병상포화도", c1: 70 }],
+    clusterIds: [1],
+    clusterMetaById: { 1: { label: "기존 군집" } },
+    correlation: [{ name: "병상포화도", r: 0.5 }],
+    regression: { coef: [{ name: "병상", value: 1 }], r2: 0.8, mae: 2, rows: 1 },
+  };
+
+  const result = applyDashboardFreshness(data, now).data;
+
+  assert.equal(result.currentRiskAvailable, false);
+  assert.equal(result.kpi.complete, 0);
+  assert.equal(result.kpi.avg, null);
+  assert.equal(result.ranked.length, 0);
+  assert.equal(result.analysisSnapshot.sourceComplete, 1);
+  assert.equal(result.analysisSnapshot.currentComplete, 0);
+  assert.equal(result.analysisSnapshot.expiredRegions, 1);
+  assert.equal(result.analysisSnapshot.ranked[0].risk, 70);
+  assert.equal(result.analysisSnapshot.ranked[0].scoreExpired, true);
+  assert.equal(result.analysisSnapshot.sourcePolicyValid, 0);
+  assert.equal(result.analysisSnapshot.sourcePolicyInvalid, 1);
+  assert.equal(result.analysisSnapshot.ranked[0].sourcePolicyValidAtCalculation, false);
+});
+
+test("an unparseable calculation timestamp never exposes fallback analysis scores", async () => {
+  const { applyDashboardFreshness } = await loadSnapshotModule();
+  const expired = "2026-08-31T23:59:59.000Z";
+  const now = Date.parse("2026-09-01T00:00:00.000Z");
+  const regionA = region("A", {
+    missing: false,
+    risk: 70,
+    bedRiskValidUntil: expired,
+    hospitals: [hospital("A1", 80, expired)],
+  });
+  const data = {
+    regionsByKey: { A: regionA },
+    regionIndex: { "geo-a": { ...regionA, code: "geo-a" } },
+    ranked: [regionA],
+    allHospitals: regionA.hospitals,
+    kpi: { total: 1, complete: 1, missing: 0, avg: 70, high: 1, asOf: null },
+    clusterProfile: [{ subject: "병상포화도", c1: 70 }],
+    clusterIds: [1],
+    clusterMetaById: { 1: { label: "기존 군집" } },
+    correlation: [{ name: "병상포화도", r: 0.5 }],
+    regression: { coef: [{ name: "병상", value: 1 }], r2: 0.8, mae: 2, rows: 1 },
+  };
+
+  const result = applyDashboardFreshness(data, now).data;
+
+  assert.equal(result.analysisSnapshot, null);
+  assert.equal(result.ranked.length, 0);
+  assert.equal(result.correlation.length, 0);
 });
 
 test("dashboard version changes with bed freshness policy and build identity", async () => {

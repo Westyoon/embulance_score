@@ -36,7 +36,6 @@ export default function Dashboard({ data, liveStatus = null }) {
     ?? data.bedRiskExpiredRegions
     ?? 0;
   const stale = liveStatus?.health?.dataStale === true;
-  const analyticsStale = data.analyticsStale === true;
   return (
     <div style={pageBg}>
       <div style={{ maxWidth: 1180, margin: "0 auto", padding: "22px 20px 40px" }}>
@@ -70,7 +69,7 @@ export default function Dashboard({ data, liveStatus = null }) {
             }}
           >
             {expiredRegions > 0
-              ? `병원 원천 기준시각이 만료된 ${expiredRegions}개 지역의 위험도와 해당 병상 수치를 숨겼습니다. `
+              ? `병원 원천 기준시각이 만료된 ${expiredRegions}개 지역의 현재 위험도와 병상 수치를 지도·현재 집계에서 숨겼습니다. ${data.analysisSnapshot ? "분석 탭에서는 기준시각과 주의 문구를 붙인 최근 계산 점수를 제공합니다. " : ""}`
               : "병상 자동 갱신이 운영 권장시간보다 지연되고 있습니다. "}
             자동 갱신이 성공하면 정상 상태로 돌아옵니다.
           </div>
@@ -79,10 +78,6 @@ export default function Dashboard({ data, liveStatus = null }) {
         <div>
           {tab === "map" ? (
             <MapTab data={data} />
-          ) : analyticsStale ? (
-            <div style={{ ...pageBg, minHeight: 360, padding: 28, borderRadius: 14 }}>
-              일부 지역의 병상 원천시각이 만료되어 현재 위험도 분석을 일시적으로 제공하지 않습니다.
-            </div>
           ) : (
             <AnalyticsTab data={data} />
           )}
