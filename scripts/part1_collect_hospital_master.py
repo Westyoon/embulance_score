@@ -1,14 +1,20 @@
+import os
+from pathlib import Path
 import re
 
 import pandas as pd
 
-from common import DATA_DIR, read_csv, request_xml, save_csv, xml_items
+from common import DATA_DIR, read_csv, request_xml, save_csv, save_json, xml_items
+from hospital_population import load_population_audit, plan_hospital_population
 
 OUTPUT = DATA_DIR / "hospital_master.csv"
 COORDINATE_OVERRIDES = DATA_DIR / "hospital_coordinate_overrides.csv"
 REGION_OVERRIDES = DATA_DIR / "hospital_region_overrides.csv"
 EXPECTED_HOSPITALS = 534
 EXPECTED_REGIONS = 219
+MAX_CARRY_FORWARD_HOSPITALS = 3
+MAX_CONSECUTIVE_POPULATION_MISSES = 3
+MAX_POPULATION_MISSING_AGE_HOURS = 72.0
 
 GRADE_MAP = {
     "G001": "권역응급의료센터",
@@ -17,6 +23,14 @@ GRADE_MAP = {
     "G008": "기타",
     "G009": "응급실운영신고기관",
 }
+
+
+def population_audit_path() -> Path:
+    # Full-refresh staging is disposable on any downstream failure. Keep the
+    # omission clock in the persistent scheduler state directory so repeated
+    # failed runs cannot reset the safety window.
+    state_dir = Path(os.getenv("PIPELINE_STATE_DIR", DATA_DIR)).resolve()
+    return state_dir / "hospital_population_audit.json"
 
 
 def split_region(address: str) -> tuple[str, str]:
@@ -47,7 +61,10 @@ def apply_coordinate_overrides(frame: pd.DataFrame) -> pd.DataFrame:
     return frame
 
 
-def apply_region_overrides(frame: pd.DataFrame) -> pd.DataFrame:
+def apply_region_overrides(
+    frame: pd.DataFrame,
+    allowed_missing_codes: set[str] | None = None,
+) -> pd.DataFrame:
     if not REGION_OVERRIDES.exists():
         return frame
     overrides = read_csv(REGION_OVERRIDES)
@@ -66,10 +83,13 @@ def apply_region_overrides(frame: pd.DataFrame) -> pd.DataFrame:
     if overrides["기관코드"].duplicated().any():
         raise ValueError("병원 지역 수동 검증 파일의 기관코드가 중복됩니다.")
 
+    allowed_missing = allowed_missing_codes or set()
     pending_updates = []
     for override in overrides.to_dict("records"):
         mask = frame["기관코드"].eq(override["기관코드"])
         if not mask.any():
+            if str(override["기관코드"]).strip() in allowed_missing:
+                continue
             raise ValueError(f"지역 수동 검증 대상이 NEMC 모집단에 없습니다: {override['기관코드']}")
         evidence_values = [override[column] for column in required - {"기관코드"}]
         if any(pd.isna(value) or not str(value).strip() for value in evidence_values):
@@ -144,7 +164,23 @@ def main() -> None:
         )
 
     frame = pd.DataFrame(rows).drop_duplicates("기관코드").sort_values("기관코드")
-    frame = apply_region_overrides(frame)
+    previous = read_csv(OUTPUT) if OUTPUT.exists() else None
+    audit_path = population_audit_path()
+    previous_audit = load_population_audit(audit_path)
+    population_plan = plan_hospital_population(
+        frame,
+        previous,
+        previous_audit,
+        expected_hospitals=EXPECTED_HOSPITALS,
+        expected_regions=EXPECTED_REGIONS,
+        max_carry_forward_hospitals=MAX_CARRY_FORWARD_HOSPITALS,
+        max_consecutive_misses=MAX_CONSECUTIVE_POPULATION_MISSES,
+        max_missing_age_hours=MAX_POPULATION_MISSING_AGE_HOURS,
+    )
+    frame = apply_region_overrides(frame, population_plan.carried_codes)
+    if not population_plan.carried.empty:
+        frame = pd.concat([frame, population_plan.carried], ignore_index=True)
+    frame = frame.sort_values("기관코드").reset_index(drop=True)
     if frame["기관코드"].duplicated().any():
         raise RuntimeError("병원 마스터에 중복 기관코드가 있습니다.")
     region_count = len(frame[["시도", "시군구"]].drop_duplicates())
@@ -177,6 +213,12 @@ def main() -> None:
         )
     frame = apply_coordinate_overrides(frame)
     save_csv(frame, OUTPUT)
+    population_audit = {
+        **population_plan.audit,
+        "reconciledHospitals": len(frame),
+        "reconciledRegions": region_count,
+    }
+    save_json(population_audit, audit_path)
     print(f"Saved {len(frame):,} hospitals: {OUTPUT}")
 
 

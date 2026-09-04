@@ -39,6 +39,9 @@ jobs:
       - name: Test dashboard freshness behavior
         run: npm run test:dashboard
 
+      - name: Test pipeline scheduler policy
+        run: npm run test:scheduler
+
       - name: Lint application
         run: npm run lint
 

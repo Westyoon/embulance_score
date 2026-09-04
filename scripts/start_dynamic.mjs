@@ -2,6 +2,20 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
+import Papa from "papaparse";
+
+import { clearOwnedPipelineLock } from "./pipeline_lock.mjs";
+import {
+  bedDeadlineObservationConsumed,
+  bedScheduleState,
+  boundedBedsFailureRetryMinutes,
+  boundedFullFailureRetryMinutes,
+  decideScheduledMode,
+  inspectBedSourceDeadline,
+  mergePendingJob,
+  nextBedDeadlineStallCount,
+} from "./pipeline_schedule.mjs";
+
 const root = process.cwd();
 const localEnvFile = path.join(root, ".env");
 if (fs.existsSync(localEnvFile)) process.loadEnvFile(localEnvFile);
@@ -20,6 +34,7 @@ const statusFile = path.join(stateDir, "pipeline_status.json");
 const requestFile = path.join(stateDir, "refresh_request.json");
 const lockFile = path.join(stateDir, ".pipeline.lock");
 const fullBedReuseFile = path.join(stateDir, "full_bed_reuse.json");
+const bedRefreshAuditFile = path.join(liveData, "bed_refresh_audit.json");
 const python = process.env.PIPELINE_PYTHON || (
   process.platform === "win32"
     ? path.join(root, ".venv", "Scripts", "python.exe")
@@ -30,17 +45,64 @@ const schedulerEnabled = process.env.ENABLE_PIPELINE_SCHEDULER === "true";
 const fastIntervalMinutes = positiveNumber("FAST_REFRESH_INTERVAL_MINUTES", 480);
 const fullIntervalHours = positiveNumber("FULL_REFRESH_INTERVAL_HOURS", 24);
 const failureRetryMinutes = positiveNumber("PIPELINE_FAILURE_RETRY_MINUTES", 60);
-const bedsFailureRetryMinutes = positiveNumber(
+const configuredBedsFailureRetryMinutes = positiveNumber(
   "BEDS_FAILURE_RETRY_MINUTES",
+  45,
+);
+const configuredFullFailureRetryMinutes = positiveNumber(
+  "FULL_FAILURE_RETRY_MINUTES",
+  1440,
+);
+const fullFailureRetryMinutes = boundedFullFailureRetryMinutes({
+  configuredMinutes: configuredFullFailureRetryMinutes,
+  fullIntervalHours,
+});
+const bedSourceMaxAgeHours = positiveNumber("BED_SOURCE_MAX_AGE_HOURS", 12);
+const dataStaleAfterMinutes = positiveNumber("DASHBOARD_DATA_STALE_AFTER_MINUTES", 600);
+const bedRefreshSafetyLeadMinutes = positiveNumber("BED_REFRESH_SAFETY_LEAD_MINUTES", 75);
+const bedRetryCompletionSafetyMinutes = positiveNumber(
+  "BED_RETRY_COMPLETION_SAFETY_MINUTES",
+  40,
+);
+const bedMinimumFailureRetryMinutes = positiveNumber(
+  "BED_MINIMUM_FAILURE_RETRY_MINUTES",
+  15,
+);
+const bedStalledSourceRetryMinutes = positiveNumber(
+  "BED_STALLED_SOURCE_RETRY_MINUTES",
+  15,
+);
+const bedStalledSourceRetryMaxMinutes = positiveNumber(
+  "BED_STALLED_SOURCE_RETRY_MAX_MINUTES",
   480,
 );
-const fullFailureRetryMinutes = positiveNumber(
-  "FULL_FAILURE_RETRY_MINUTES",
-  failureRetryMinutes,
+const bedDeadlineAdvanceToleranceMinutes = positiveNumber(
+  "BED_DEADLINE_ADVANCE_TOLERANCE_MINUTES",
+  30,
 );
+const fullStartGuardMinutes = positiveNumber("FULL_REFRESH_START_GUARD_MINUTES", 125);
+const bedsRefreshTimeoutMinutes = positiveNumber("BEDS_REFRESH_TIMEOUT_MINUTES", 30);
+const fullRefreshTimeoutMinutes = positiveNumber("FULL_REFRESH_TIMEOUT_MINUTES", 120);
+const scheduleConfig = {
+  fastIntervalMinutes,
+  fullIntervalHours,
+  bedsFailureRetryMinutes: configuredBedsFailureRetryMinutes,
+  fullFailureRetryMinutes,
+  bedSourceMaxAgeHours,
+  dataStaleAfterMinutes,
+  bedRefreshSafetyLeadMinutes,
+  bedRetryCompletionSafetyMinutes,
+  bedMinimumFailureRetryMinutes,
+  bedStalledSourceRetryMinutes,
+  bedStalledSourceRetryMaxMinutes,
+  bedDeadlineAdvanceToleranceMinutes,
+  fullStartGuardMinutes,
+};
+const bedsFailureRetryMinutes = boundedBedsFailureRetryMinutes(scheduleConfig);
 const schedulerTickMilliseconds = 60_000;
 
 let currentJob = null;
+let currentMode = null;
 let pendingJob = null;
 let webProcess = null;
 let previousStatus = readJson(statusFile) || {};
@@ -68,6 +130,41 @@ function validateRuntimeConfiguration() {
       "PIPELINE_RUNTIME_DIR must match RAILWAY_VOLUME_MOUNT_PATH when the scheduler is enabled.",
     );
   }
+  if (configuredBedsFailureRetryMinutes > bedsFailureRetryMinutes) {
+    console.warn(
+      `[pipeline] BEDS_FAILURE_RETRY_MINUTES=${configuredBedsFailureRetryMinutes} is unsafe `
+      + `for the configured freshness window; using ${bedsFailureRetryMinutes} minutes`,
+    );
+  }
+  if (configuredFullFailureRetryMinutes < fullFailureRetryMinutes) {
+    console.warn(
+      `[pipeline] FULL_FAILURE_RETRY_MINUTES=${configuredFullFailureRetryMinutes} is too short `
+      + `for maintenance refreshes; using ${fullFailureRetryMinutes} minutes`,
+    );
+  }
+  const fullShutdownAndDispatchMinutes = 20 / 60 + schedulerTickMilliseconds / 60_000;
+  if (
+    fullRefreshTimeoutMinutes + fullShutdownAndDispatchMinutes
+    > fullStartGuardMinutes
+  ) {
+    throw new Error(
+      "FULL_REFRESH_START_GUARD_MINUTES must cover the full timeout, shutdown, and dispatch",
+    );
+  }
+  if (bedRetryCompletionSafetyMinutes < bedsRefreshTimeoutMinutes + 5) {
+    throw new Error(
+      "BED_RETRY_COMPLETION_SAFETY_MINUTES must cover the beds timeout plus promotion margin",
+    );
+  }
+  if (
+    bedRefreshSafetyLeadMinutes
+    < bedsRefreshTimeoutMinutes + bedRetryCompletionSafetyMinutes
+      + schedulerTickMilliseconds / 60_000
+  ) {
+    throw new Error(
+      "BED_REFRESH_SAFETY_LEAD_MINUTES must cover the first attempt, retry completion, and dispatch",
+    );
+  }
 }
 
 function positiveNumber(name, fallback) {
@@ -76,6 +173,30 @@ function positiveNumber(name, fallback) {
     throw new Error(`${name} must be a positive number`);
   }
   return value;
+}
+
+function readBedRefreshDeadline() {
+  try {
+    const filename = path.join(liveData, "bed_status.csv");
+    const parsed = Papa.parse(fs.readFileSync(filename, "utf8"), {
+      header: true,
+      skipEmptyLines: true,
+    });
+    if (parsed.errors.length > 0) {
+      throw new Error(`bed_status.csv parse failed (${parsed.errors[0].code || "unknown"})`);
+    }
+    const required = ["가용병상", "전체병상", "포화율", "API기준시각"];
+    if (!required.every((field) => parsed.meta.fields?.includes(field))) {
+      throw new Error("bed_status.csv is missing freshness fields");
+    }
+    const inspection = inspectBedSourceDeadline(parsed.data, bedSourceMaxAgeHours);
+    return { ...inspection, known: inspection.deadlineAt != null };
+  } catch (error) {
+    if (error?.code !== "ENOENT") {
+      console.warn(`[pipeline] could not inspect bed source deadline: ${error?.name ?? "Error"}`);
+    }
+    return { deadlineAt: null, fingerprint: null, known: false };
+  }
 }
 
 function readJson(filename) {
@@ -202,10 +323,14 @@ function updateStatus(values) {
 function runJob(mode, trigger) {
   if (shuttingDown) return false;
   if (currentJob) {
-    if (!pendingJob || mode === "full") {
-      pendingJob = { mode, trigger };
-      updateStatus({ queuedMode: mode, queuedTrigger: trigger });
-      console.log(`[pipeline] queued ${mode} refresh (${trigger})`);
+    const merged = mergePendingJob(pendingJob, { mode, trigger });
+    if (
+      merged?.mode !== pendingJob?.mode
+      || merged?.trigger !== pendingJob?.trigger
+    ) {
+      pendingJob = merged;
+      updateStatus({ queuedMode: merged.mode, queuedTrigger: merged.trigger });
+      console.log(`[pipeline] queued ${merged.mode} refresh (${merged.trigger})`);
     }
     return false;
   }
@@ -213,6 +338,9 @@ function runJob(mode, trigger) {
   const command = mode === "full" ? "scripts/run_pipeline.py" : "scripts/run_bed_refresh.py";
   const startedAt = new Date().toISOString();
   const attemptField = mode === "full" ? "lastFullAttemptAt" : "lastBedsAttemptAt";
+  const attemptedBedDeadline = mode === "beds"
+    ? readBedRefreshDeadline()
+    : undefined;
   if (mode === "full") fs.rmSync(fullBedReuseFile, { force: true });
   updateStatus({
     state: "running",
@@ -224,25 +352,87 @@ function runJob(mode, trigger) {
     queuedMode: null,
     queuedTrigger: null,
     [attemptField]: startedAt,
+    ...(mode === "beds" ? {
+      lastBedsAttemptedDeadlineAt: attemptedBedDeadline.deadlineAt,
+      lastBedsAttemptedDeadlineFingerprint: attemptedBedDeadline.fingerprint,
+    } : {}),
   });
   console.log(`[pipeline] starting ${mode} refresh (${trigger})`);
-  currentJob = spawn(python, [command], {
+  currentMode = mode;
+  const jobProcess = spawn(python, [command], {
     cwd: root,
     env: pipelineEnvironment(),
     stdio: "inherit",
     detached: process.platform !== "win32",
   });
+  currentJob = jobProcess;
+  const timeoutMinutes = mode === "full"
+    ? fullRefreshTimeoutMinutes
+    : bedsRefreshTimeoutMinutes;
+  let timedOut = false;
+  let forceKillTimer = null;
+  const jobTimeout = setTimeout(() => {
+    timedOut = true;
+    console.error(`[pipeline] ${mode} exceeded ${timeoutMinutes} minute timeout`);
+    terminateChildProcess(jobProcess, "SIGTERM");
+    forceKillTimer = setTimeout(() => terminateChildProcess(jobProcess, "SIGKILL"), 20_000);
+    forceKillTimer.unref();
+  }, timeoutMinutes * 60_000);
+  jobTimeout.unref();
   let spawnError = null;
-  currentJob.once("error", (error) => {
+  jobProcess.once("error", (error) => {
     spawnError = error;
     console.error(`[pipeline] ${mode} failed to start: ${error.name}`);
   });
-  currentJob.once("close", (code, signal) => {
+  jobProcess.once("close", (code, signal) => {
+    clearTimeout(jobTimeout);
+    if (forceKillTimer) clearTimeout(forceKillTimer);
+    let timeoutRecoveryError = null;
+    if (timedOut) {
+      try {
+        restoreInterruptedPromotion();
+      } catch (error) {
+        timeoutRecoveryError = error;
+        console.error(`[pipeline] timeout recovery failed: ${error?.name ?? "Error"}`);
+      }
+      try {
+        const lockRecovery = clearOwnedPipelineLock(lockFile, jobProcess.pid);
+        if (lockRecovery.reason === "owner-mismatch") {
+          throw new Error("pipeline lock belongs to a different process");
+        }
+      } catch (error) {
+        timeoutRecoveryError ??= error;
+        console.error(`[pipeline] lock recovery failed: ${error?.name ?? "Error"}`);
+      }
+    }
     const finishedAt = new Date().toISOString();
-    const success = !spawnError && code === 0;
+    const success = !spawnError && !timedOut && code === 0;
     const bedReuseAudit = mode === "full" ? readJson(fullBedReuseFile) : null;
     if (mode === "full") fs.rmSync(fullBedReuseFile, { force: true });
     const reusedBedSnapshot = bedReuseAudit?.reused === true;
+    const refreshedBeds = success && (mode === "beds" || !reusedBedSnapshot);
+    const bedRefreshAudit = refreshedBeds ? readJson(bedRefreshAuditFile) : null;
+    const bedRefreshFailureCount = refreshedBeds
+      ? (bedRefreshAudit?.failedRegionCount ?? 1)
+      : 0;
+    const refreshedBedDeadline = refreshedBeds ? readBedRefreshDeadline() : null;
+    const bedDeadlineStalled = mode === "beds" && refreshedBeds
+      ? bedDeadlineObservationConsumed({
+          attemptAt: startedAt,
+          successAt: finishedAt,
+          attemptedDeadlineAt: attemptedBedDeadline.deadlineAt,
+          attemptedFingerprint: attemptedBedDeadline.fingerprint,
+          currentDeadlineAt: refreshedBedDeadline.deadlineAt,
+          currentFingerprint: refreshedBedDeadline.fingerprint,
+          config: scheduleConfig,
+        })
+      : false;
+    const bedDeadlineStallCount = nextBedDeadlineStallCount({
+      stalled: bedDeadlineStalled,
+      previousCount: previousStatus.lastBedsDeadlineStallCount,
+      previousFingerprint: previousStatus.lastBedsDeadlineStallFingerprint,
+      currentFingerprint: refreshedBedDeadline?.fingerprint,
+    });
     const fullBedReuseStatus = mode === "full" && success
       ? {
           lastFullReusedBedSnapshot: reusedBedSnapshot,
@@ -267,10 +457,33 @@ function runJob(mode, trigger) {
         }
       : {
           lastFailureAt: finishedAt,
+          lastFailureMode: mode,
           ...(mode === "full"
             ? { lastFullFailureAt: finishedAt }
             : { lastBedsFailureAt: finishedAt }),
         };
+    const bedRefreshStatus = refreshedBeds
+      ? {
+          lastBedsPartialFailureAt: bedRefreshFailureCount > 0
+            ? finishedAt
+            : null,
+          lastBedsFailedRegionCount: bedRefreshFailureCount,
+          lastBedsFailedRegions: bedRefreshAudit?.failedRegions ?? [
+            { reason: "bed_refresh_audit.json missing or invalid" },
+          ],
+          lastBedsAuditMissing: bedRefreshAudit == null,
+          lastBedsDeadlineStallCount: bedDeadlineStallCount,
+          lastBedsDeadlineStallAt: bedDeadlineStalled ? finishedAt : null,
+          lastBedsDeadlineStallFingerprint: bedDeadlineStalled
+            ? refreshedBedDeadline.fingerprint
+            : null,
+          lastBedsFreshFallbackHospitals: bedRefreshAudit?.freshFallbackHospitals ?? 0,
+          lastBedsMaskedFailedRegionHospitals:
+            bedRefreshAudit?.maskedFailedRegionHospitals ?? 0,
+          lastBedsNewResponseHospitals: bedRefreshAudit?.newResponseHospitals ?? null,
+          lastBedsUsableHospitals: bedRefreshAudit?.usableHospitals ?? null,
+        }
+      : {};
     updateStatus({
       state: success ? "idle" : "failed",
       mode,
@@ -278,16 +491,34 @@ function runJob(mode, trigger) {
       finishedAt,
       error: success
         ? null
-        : (spawnError ? `process failed to start (${spawnError.code || spawnError.name})` : `process exited (${signal || code || "unknown"})`),
+        : (
+            timedOut
+              ? `process timed out after ${timeoutMinutes} minutes`
+              : (spawnError
+                  ? `process failed to start (${spawnError.code || spawnError.name})`
+                  : `process exited (${signal || code || "unknown"})`)
+          ),
+      timeoutRecoveryFailed: timeoutRecoveryError != null,
       ...fullBedReuseStatus,
+      ...bedRefreshStatus,
       ...successfulTimestamps,
     });
     console.log(`[pipeline] ${mode} refresh ${success ? "completed" : "failed"}`);
     currentJob = null;
+    currentMode = null;
+    if (timeoutRecoveryError) {
+      shuttingDown = true;
+      if (webProcess) webProcess.kill("SIGTERM");
+      setTimeout(() => process.exit(1), 1_000).unref();
+      return;
+    }
     const queued = pendingJob;
     pendingJob = null;
-    if (queued && !shuttingDown) {
+    if (queued && queued.trigger !== "schedule" && !shuttingDown) {
       setTimeout(() => runJob(queued.mode, queued.trigger), 250);
+    } else if (!shuttingDown) {
+      if (queued) updateStatus({ queuedMode: null, queuedTrigger: null });
+      setTimeout(runDueScheduledJob, 250);
     }
   });
   return true;
@@ -300,49 +531,41 @@ function consumeManualRequest() {
   runJob(request.mode === "full" ? "full" : "beds", "manual");
 }
 
-function latestStatusTime(fields) {
-  const values = fields
-    .map((field) => Date.parse(previousStatus[field] || ""))
-    .filter(Number.isFinite);
-  return values.length > 0 ? Math.max(...values) : Date.now();
-}
-
-function retryCooldownElapsed(mode, now) {
-  const modeFailureField = mode === "full" ? "lastFullFailureAt" : "lastBedsFailureAt";
-  const modeFailure = Date.parse(previousStatus[modeFailureField] || "");
-  const legacyFailure = previousStatus.mode === mode
-    ? Date.parse(previousStatus.lastFailureAt || "")
-    : Number.NaN;
-  const lastFailure = Math.max(
-    Number.isFinite(modeFailure) ? modeFailure : 0,
-    Number.isFinite(legacyFailure) ? legacyFailure : 0,
-  );
-  const retryMinutes = mode === "full" ? fullFailureRetryMinutes : bedsFailureRetryMinutes;
-  return lastFailure === 0 || now - lastFailure >= retryMinutes * 60_000;
-}
-
 function runDueScheduledJob() {
-  if (currentJob || shuttingDown) return;
+  if (shuttingDown) return;
   const now = Date.now();
-  const fullAnchor = latestStatusTime([
-    "lastFullSuccessAt",
-    "schedulerStartedAt",
-  ]);
-  const bedsAnchor = latestStatusTime([
-    "lastBedsSuccessAt",
-    "schedulerStartedAt",
-  ]);
+  const bedDeadline = readBedRefreshDeadline();
+  const schedulingBedDeadlineAt = bedDeadline.deadlineAt || new Date(0).toISOString();
+  const bedsState = bedScheduleState({
+    status: previousStatus,
+    now,
+    config: scheduleConfig,
+    bedDeadlineAt: schedulingBedDeadlineAt,
+    bedDeadlineFingerprint: bedDeadline.fingerprint,
+  });
+  const scheduleStatus = {
+    bedRefreshDeadlineAt: bedDeadline.deadlineAt,
+    bedRefreshDeadlineFingerprint: bedDeadline.fingerprint,
+    bedRefreshDeadlineKnown: bedDeadline.known,
+    nextBedsAttemptAt: new Date(bedsState.nextAttemptAt).toISOString(),
+  };
   if (
-    now - fullAnchor >= fullIntervalHours * 3_600_000
-    && retryCooldownElapsed("full", now)
-  ) {
-    runJob("full", "schedule");
-  } else if (
-    now - bedsAnchor >= fastIntervalMinutes * 60_000
-    && retryCooldownElapsed("beds", now)
-  ) {
-    runJob("beds", "schedule");
-  }
+    scheduleStatus.bedRefreshDeadlineAt !== previousStatus.bedRefreshDeadlineAt
+    || scheduleStatus.bedRefreshDeadlineFingerprint
+      !== previousStatus.bedRefreshDeadlineFingerprint
+    || scheduleStatus.bedRefreshDeadlineKnown !== previousStatus.bedRefreshDeadlineKnown
+    || scheduleStatus.nextBedsAttemptAt !== previousStatus.nextBedsAttemptAt
+  ) updateStatus(scheduleStatus);
+
+  const mode = decideScheduledMode({
+    status: previousStatus,
+    now,
+    config: scheduleConfig,
+    bedDeadlineAt: schedulingBedDeadlineAt,
+    bedDeadlineFingerprint: bedDeadline.fingerprint,
+  });
+  if (!mode || mode === currentMode) return;
+  runJob(mode, "schedule");
 }
 
 function startScheduler() {
@@ -360,8 +583,21 @@ function startScheduler() {
     fastIntervalMinutes,
     fullIntervalHours,
     failureRetryMinutes,
+    configuredBedsFailureRetryMinutes,
     bedsFailureRetryMinutes,
+    configuredFullFailureRetryMinutes,
     fullFailureRetryMinutes,
+    bedSourceMaxAgeHours,
+    dataStaleAfterMinutes,
+    bedRefreshSafetyLeadMinutes,
+    bedRetryCompletionSafetyMinutes,
+    bedMinimumFailureRetryMinutes,
+    bedStalledSourceRetryMinutes,
+    bedStalledSourceRetryMaxMinutes,
+    bedDeadlineAdvanceToleranceMinutes,
+    fullStartGuardMinutes,
+    bedsRefreshTimeoutMinutes,
+    fullRefreshTimeoutMinutes,
     schedulerStartedAt,
   });
   setInterval(consumeManualRequest, 5_000);
@@ -409,14 +645,18 @@ function startWeb() {
   });
 }
 
-function terminatePipeline(signal) {
-  if (!currentJob?.pid) return;
+function terminateChildProcess(childProcess, signal) {
+  if (!childProcess?.pid) return;
   try {
-    if (process.platform === "win32") currentJob.kill(signal);
-    else process.kill(-currentJob.pid, signal);
+    if (process.platform === "win32") childProcess.kill(signal);
+    else process.kill(-childProcess.pid, signal);
   } catch (error) {
     if (error?.code !== "ESRCH") console.error(`[pipeline] stop failed: ${error?.name ?? "Error"}`);
   }
+}
+
+function terminatePipeline(signal) {
+  terminateChildProcess(currentJob, signal);
 }
 
 function shutdown(signal) {

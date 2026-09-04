@@ -81,7 +81,7 @@ flowchart TB
 | `GET /api/health` | 데이터 신선도, 만료 병상, 파이프라인 상태 제공 |
 | `POST /api/ops/refresh` | Bearer 토큰으로 `beds` 또는 `full` 갱신 요청 접수 |
 
-`scripts/start_dynamic.mjs`는 Next.js 서버와 Python 자식 프로세스를 함께 관리합니다. 스케줄러는 한 번에 하나의 갱신만 실행하고, 중복 요청은 단일 대기 작업으로 합칩니다. Railway에서 스케줄러를 켤 때는 영속 Volume과 단일 replica가 필수입니다.
+`scripts/start_dynamic.mjs`는 Next.js 서버와 Python 자식 프로세스를 함께 관리합니다. 스케줄러는 한 번에 하나의 갱신만 실행하고, 중복 요청은 단일 대기 작업으로 합칩니다. 최근 성공시각뿐 아니라 병원 원천 기준시각의 가장 이른 만료 예정시각을 추적하며, `beds`와 `full`이 함께 밀리면 병상 갱신을 우선합니다. Railway에서 스케줄러를 켤 때는 영속 Volume과 단일 replica가 필수입니다.
 
 ### 데이터 파이프라인
 

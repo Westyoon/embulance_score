@@ -10,6 +10,7 @@
     "start:dynamic": "node scripts/start_dynamic.mjs",
     "lint": "eslint",
     "test:dashboard": "node --experimental-vm-modules --test tests/test_dashboard_snapshot.mjs tests/test_dashboard_layout.mjs tests/test_analytics_availability_ui.mjs tests/test_korea_map_hover.mjs",
+    "test:scheduler": "node --test tests/test_pipeline_scheduler.mjs tests/test_pipeline_lock.mjs",
     "update:boundaries": "node scripts/update_boundaries.mjs",
     "validate:frontend-data": "node scripts/validate_frontend_data.mjs"
   },

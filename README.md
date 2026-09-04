@@ -141,13 +141,14 @@ npm run dev
 ```powershell
 npm run validate:frontend-data
 npm run test:dashboard
+npm run test:scheduler
 npm run lint
 npm run build
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 .\.venv\Scripts\python.exe scripts\validate_data_contract.py
 ```
 
-테스트는 모집단·HIRA 1:1 매칭·결측 리포트·경계 연결·위험등급·신선도 마스킹·최근 계산값 표시·지도 hover를 포함합니다. CI는 같은 검증을 수행한 뒤 Docker 이미지를 만들고 실제 `/api/health`, HTML, 정적 asset과 Volume 동작을 smoke test합니다.
+테스트는 모집단·HIRA 1:1 매칭·결측 리포트·경계 연결·위험등급·신선도 마스킹·최근 계산값 표시·지도 hover와 병상 우선 스케줄 정책을 포함합니다. CI는 같은 검증을 수행한 뒤 Docker 이미지를 만들고 실제 `/api/health`, HTML, 정적 asset과 Volume 동작을 smoke test합니다.
 
 ## Git 운영 기준
 
@@ -163,6 +164,9 @@ npm run build
 
 - `beds`: NEMC 병상과 이에 의존하는 점수·분석을 갱신
 - `full`: 기관·인구·HIRA·경계·카카오와 전체 분석을 갱신
+- NEMC 기관 일시 누락: 신규 코드 없는 최대 3곳만 이전 검증 행을 3회·72시간 한도로 승계하고 감사 기록
+- 소수 지역 5xx: 성공 지역은 반영하고 실패 지역만 유효한 직전 값을 보존한 뒤 45분 이내 재시도
+- 동시 지연: 원천 만료가 걸린 `beds`를 `full`보다 우선 실행
 - 빈 Volume: 이미지의 검증 seed로 한 번만 초기화
 - 기존 Volume: 시작 시 live를 덮어쓰지 않음
 - 저장소 관리 입력 변경: `full` staging에 복사하고 모든 종속 산출물을 다시 만든 뒤 함께 승격

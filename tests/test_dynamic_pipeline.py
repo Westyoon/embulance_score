@@ -118,6 +118,174 @@ class BedApiRetryTests(unittest.TestCase):
         sleep.assert_called_once_with(1)
 
 
+class PartialBedRefreshFallbackTests(unittest.TestCase):
+    def test_failed_region_uses_only_fresh_valid_previous_rows(self) -> None:
+        collected_at = pd.Timestamp("2026-09-04T00:00:00Z")
+        master = pd.DataFrame(
+            [
+                {"기관코드": code, "병원명": code, "등급": "지역", "시도": province, "시군구": district}
+                for code, province, district in [
+                    ("NEW1", "서울특별시", "종로구"),
+                    ("NEW2", "서울특별시", "종로구"),
+                    ("NEW3", "서울특별시", "종로구"),
+                    ("FRESH", "부산광역시", "동래구"),
+                    ("EXPIRED", "부산광역시", "동래구"),
+                    ("INVALID", "부산광역시", "동래구"),
+                ]
+            ]
+        )
+        records = [
+            {
+                "hpid": code,
+                "hvec": available,
+                "hvs01": 10,
+                "hvidate": "20260904085500",
+            }
+            for code, available in [("NEW1", 3), ("NEW2", 4), ("NEW3", 5)]
+        ]
+        previous_collection = "2026-09-03T23:00:00+00:00"
+        previous = pd.DataFrame(
+            [
+                {
+                    "기관코드": "FRESH",
+                    "가용병상": 6,
+                    "전체병상": 10,
+                    "API기준시각": "20260904080000",
+                    "수집시각": previous_collection,
+                },
+                {
+                    "기관코드": "EXPIRED",
+                    "가용병상": 6,
+                    "전체병상": 10,
+                    "API기준시각": "20260903200000",
+                    "수집시각": previous_collection,
+                },
+                {
+                    "기관코드": "INVALID",
+                    "가용병상": -1,
+                    "전체병상": 10,
+                    "API기준시각": "20260904080000",
+                    "수집시각": previous_collection,
+                },
+            ]
+        )
+        failures = [
+            part2_collect_bed_status.RegionFailure(
+                "부산광역시",
+                "동래구",
+                "공공데이터 API HTTP 오류: 504",
+            )
+        ]
+
+        result, audit = part2_collect_bed_status.build_bed_snapshot(
+            master,
+            records,
+            failures,
+            previous,
+            collected_at=collected_at,
+            minimum_live_matches=1,
+        )
+        rows = result.set_index("기관코드")
+
+        self.assertEqual(rows.loc["NEW1", "수집시각"], "2026-09-04T00:00:00+00:00")
+        self.assertEqual(rows.loc["FRESH", "수집시각"], previous_collection)
+        self.assertEqual(rows.loc["FRESH", "가용병상"], 6)
+        self.assertEqual(rows.loc["FRESH", "전체병상"], 10)
+        self.assertEqual(rows.loc["FRESH", "포화율"], 40)
+        for code in ("EXPIRED", "INVALID"):
+            self.assertTrue(pd.isna(rows.loc[code, "가용병상"]))
+            self.assertTrue(pd.isna(rows.loc[code, "전체병상"]))
+            self.assertTrue(pd.isna(rows.loc[code, "포화율"]))
+            self.assertEqual(rows.loc[code, "상태"], "결측")
+            self.assertEqual(rows.loc[code, "수집시각"], previous_collection)
+
+        self.assertEqual(audit["successfulRegions"], 1)
+        self.assertEqual(audit["failedRegionCount"], 1)
+        self.assertEqual(
+            audit["failedRegions"],
+            [
+                {
+                    "province": "부산광역시",
+                    "district": "동래구",
+                    "reason": "공공데이터 API HTTP 오류: 504",
+                }
+            ],
+        )
+        self.assertEqual(audit["newResponseHospitals"], 3)
+        self.assertEqual(audit["failedRegionHospitals"], 3)
+        self.assertEqual(audit["freshFallbackHospitals"], 1)
+        self.assertEqual(audit["maskedFailedRegionHospitals"], 2)
+        self.assertEqual(audit["usableHospitals"], 4)
+
+    def test_large_response_drop_is_rejected_before_fallback(self) -> None:
+        master = pd.DataFrame(
+            [
+                {
+                    "기관코드": f"H{index}",
+                    "병원명": f"H{index}",
+                    "등급": "지역",
+                    "시도": "서울특별시" if index == 0 else "부산광역시",
+                    "시군구": "종로구" if index == 0 else "동래구",
+                }
+                for index in range(10)
+            ]
+        )
+        previous = pd.DataFrame(
+            {
+                "기관코드": [f"H{index}" for index in range(10)],
+                "가용병상": [5] * 10,
+                "전체병상": [10] * 10,
+                "API기준시각": ["20260904080000"] * 10,
+                "수집시각": ["2026-09-03T23:00:00+00:00"] * 10,
+            }
+        )
+
+        with self.assertRaisesRegex(RuntimeError, "응답 기관 수가 정상 스냅샷보다 급감"):
+            part2_collect_bed_status.build_bed_snapshot(
+                master,
+                [
+                    {
+                        "hpid": "H0",
+                        "hvec": 5,
+                        "hvs01": 10,
+                        "hvidate": "20260904080000",
+                    }
+                ],
+                [
+                    part2_collect_bed_status.RegionFailure(
+                        "부산광역시",
+                        "동래구",
+                        "공공데이터 API HTTP 오류: 504",
+                    )
+                ],
+                previous,
+                collected_at=pd.Timestamp("2026-09-04T00:00:00Z"),
+                minimum_live_matches=1,
+            )
+
+    def test_usable_minimum_guard_remains_active(self) -> None:
+        master = pd.DataFrame(
+            [
+                {"기관코드": "VALID", "병원명": "VALID", "등급": "지역", "시도": "서울", "시군구": "종로"},
+                {"기관코드": "INVALID", "병원명": "INVALID", "등급": "지역", "시도": "서울", "시군구": "종로"},
+            ]
+        )
+        records = [
+            {"hpid": "VALID", "hvec": 5, "hvs01": 10, "hvidate": "20260904080000"},
+            {"hpid": "INVALID", "hvec": -1, "hvs01": 10, "hvidate": "20260904080000"},
+        ]
+
+        with self.assertRaisesRegex(RuntimeError, "유효한 병상 기관 수가 검토 기준보다 적어"):
+            part2_collect_bed_status.build_bed_snapshot(
+                master,
+                records,
+                [],
+                None,
+                collected_at=pd.Timestamp("2026-09-04T00:00:00Z"),
+                minimum_live_matches=2,
+            )
+
+
 class BedHistoryRetentionTests(unittest.TestCase):
     def test_trim_history_removes_rows_older_than_retention_window(self) -> None:
         now = pd.Timestamp.now(tz="UTC")

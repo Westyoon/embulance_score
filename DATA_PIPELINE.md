@@ -8,6 +8,7 @@
 
 - 병상, 접근성, 인구 대비 병상과 웹의 병원 목록은 NEMC 기관 집합을 유지합니다.
 - HIRA는 응급의학과 전문의 정보를 붙이는 보강 원천입니다. HIRA 미매칭 기관을 NEMC 모집단에서 제거하지 않습니다.
+- NEMC 기관 목록에서 신규 코드 없이 최대 3개 기관만 일시적으로 빠지면 이전 검증 행을 최대 3회·72시간까지만 승계합니다. 관측 이력은 영속 상태의 `hospital_population_audit.json`에 남기며, 신규·교체·대규모·장기 누락은 모집단 검토 전까지 승격하지 않습니다.
 - 경계에는 NEMC 기관이 없는 지역이나 NEMC가 상위 시 단위로 집계하는 일반구가 있을 수 있습니다. 화면은 이를 저위험으로 오해하지 않도록 `미산출`과 상위 집계 공유를 구분합니다.
 - 현재 기관·지역·산출 건수는 `/api/health`와 `data/hospital_master.csv`, `data/region_risk_final.csv`에서 확인합니다.
 
@@ -43,6 +44,8 @@
 - 허용 범위를 넘는 미래 시각
 
 `수집시각`은 우리 배치가 응답을 받은 시각이고, `API기준시각`은 병원이 보고한 관측 기준시각입니다. 신선도 판정에는 더 의미 있는 `API기준시각`을 사용합니다.
+
+지역 몇 곳의 5xx·timeout 때문에 전국의 성공 응답을 폐기하지 않습니다. 신규 응답 기관 수 안전 기준을 통과하면 성공 지역은 새 값으로 승격하고, 실패 지역만 직전 행 가운데 현재도 유효하고 병상값이 정상인 행을 원래 `수집시각` 그대로 사용합니다. 유효하지 않은 fallback은 해당 지역에서만 결측 처리하며, 실패 지역·원인·fallback 수는 `bed_refresh_audit.json`과 `/api/health`의 `pipeline`에 남깁니다. 응답이 직전의 90% 또는 373곳 아래로 급감한 경우에는 fallback으로 검증을 우회하지 않고 전체 갱신을 중단합니다.
 
 ### HIRA 기관 1:1 매칭
 
@@ -147,7 +150,7 @@ regionRisk =
 | `scoreSourcePolicyValidRegions` | 계산 당시 원천 신선도 정책을 충족한 점수 수 |
 | `expiredScoreRegions` | 계산됐지만 현재 병상 유효기간이 지난 지역 |
 | `bedRiskExpiredHospitals`, `nextBedRiskExpiryAt` | 병원 단위 만료와 다음 만료 예정시각 |
-| `pipeline` | 최근 실행 모드·성공·실패·복구 상태 |
+| `pipeline` | 최근 실행 모드·성공·실패·복구 상태, 다음 병상 시도·원천 deadline, 부분 실패 지역 감사값 |
 
 ```powershell
 $appUrl = "https://emergency-dashboard-production-e303.up.railway.app"
@@ -162,9 +165,10 @@ $health.pipeline | ConvertTo-Json -Depth 8
 
 1. 현재 live generation을 실행별 staging으로 복사합니다.
 2. 외부 API를 호출하기 전에 기존 generation의 전체 데이터 계약을 검사합니다.
-3. NEMC 병상을 수집하고 구성점수·최종 위험도·결측·통계분석을 다시 계산합니다.
-4. Python 데이터 계약과 Node 프론트 계약을 검사합니다.
-5. 모두 통과한 staging만 live와 교체합니다.
+3. NEMC 병상을 수집합니다. 소수 지역만 실패하면 성공 지역과 아직 유효한 실패 지역 fallback을 결합하고 감사 JSON을 남깁니다.
+4. 구성점수·최종 위험도·결측·통계분석을 다시 계산합니다.
+5. Python 데이터 계약과 Node 프론트 계약을 검사합니다.
+6. 모두 통과한 staging만 live와 교체합니다.
 
 사전 계약 검증은 HIRA 관리 입력과 종속 산출물이 서로 다른 세대인 상태에서 비싼 NEMC 호출을 시작하지 않게 합니다.
 

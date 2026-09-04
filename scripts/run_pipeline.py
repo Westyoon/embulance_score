@@ -222,6 +222,22 @@ def run(command: list[str], environment: dict[str, str]) -> None:
     subprocess.run(command, cwd=ROOT, env=environment, check=True)
 
 
+def build_pipeline_environment(
+    staged_data: Path,
+    staged_boundary: Path,
+    period: str | None,
+) -> dict[str, str]:
+    environment = os.environ.copy()
+    environment["PIPELINE_DATA_DIR"] = str(staged_data)
+    environment["PIPELINE_STATE_DIR"] = str(PIPELINE_STATE_DIR)
+    environment["BOUNDARY_OUTPUT"] = str(staged_boundary)
+    environment["BOUNDARY_FILE"] = str(staged_boundary)
+    if period:
+        environment["PIPELINE_POPULATION_PERIOD"] = period
+    environment.setdefault("PYTHONIOENCODING", "utf-8")
+    return environment
+
+
 def copy_managed_inputs(
     staged_data: Path,
     source_data: Path | None = None,
@@ -399,13 +415,7 @@ def main() -> None:
         FULL_BED_REUSE_MARKER.unlink(missing_ok=True)
         shutil.copytree(LIVE_DATA, staged_data)
         copy_managed_inputs(staged_data)
-        environment = os.environ.copy()
-        environment["PIPELINE_DATA_DIR"] = str(staged_data)
-        environment["BOUNDARY_OUTPUT"] = str(staged_boundary)
-        environment["BOUNDARY_FILE"] = str(staged_boundary)
-        if args.period:
-            environment["PIPELINE_POPULATION_PERIOD"] = args.period
-        environment.setdefault("PYTHONIOENCODING", "utf-8")
+        environment = build_pipeline_environment(staged_data, staged_boundary, args.period)
 
         python = sys.executable
         npm = shutil.which("npm.cmd") if os.name == "nt" else shutil.which("npm")

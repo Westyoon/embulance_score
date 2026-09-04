@@ -15,12 +15,14 @@ from common import (
     read_csv,
     request_xml,
     save_csv,
+    save_json,
     xml_items,
 )
 
 MASTER = DATA_DIR / "hospital_master.csv"
 OUTPUT = DATA_DIR / "bed_status.csv"
 HISTORY = DATA_DIR / "bed_status_history.csv"
+AUDIT = DATA_DIR / "bed_refresh_audit.json"
 
 # NEMC 응급의료정보조회서비스 V4: hvec=가용 응급실 병상, hvs01=기준 응급실 병상.
 AVAILABLE_FIELD = "hvec"
@@ -31,6 +33,28 @@ RETRYABLE_RESULT_CODES = {"01", "02", "04", "05", "21", "22", "99"}
 QUOTA_CIRCUIT_RESULT_CODES = {"21", "22"}
 DEFAULT_BED_SOURCE_MAX_AGE_HOURS = 12.0
 MAX_BED_SOURCE_FUTURE_SKEW_MINUTES = 5.0
+
+
+class RegionFailure(str):
+    """A backward-compatible failure message with structured region fields."""
+
+    province: str
+    district: str
+    reason: str
+
+    def __new__(cls, province: str, district: str, reason: str):
+        value = super().__new__(cls, f"{province}|{district}: {reason}")
+        value.province = province
+        value.district = district
+        value.reason = reason
+        return value
+
+    def audit_record(self) -> dict[str, str]:
+        return {
+            "province": self.province,
+            "district": self.district,
+            "reason": self.reason,
+        }
 
 
 class BedApiQuotaCircuitOpen(RuntimeError):
@@ -307,9 +331,9 @@ def collect_regions(
     region_pairs: list[tuple[object, object]],
     *,
     max_workers: int = 8,
-) -> tuple[list[dict], list[str]]:
+) -> tuple[list[dict], list[RegionFailure]]:
     records: list[dict] = []
-    failures: list[str] = []
+    failures: list[RegionFailure] = []
     circuit_breaker = BedApiCircuitBreaker()
     executor = ThreadPoolExecutor(max_workers=max_workers)
     futures = {
@@ -327,52 +351,146 @@ def collect_regions(
             try:
                 records.extend(future.result())
             except CancelledError:
-                failures.append(f"{province}|{district}: 병상 API 쿼터 회로로 요청 취소")
+                failures.append(
+                    RegionFailure(
+                        str(province),
+                        str(district),
+                        "병상 API 쿼터 회로로 요청 취소",
+                    )
+                )
             except Exception as exc:
-                failures.append(f"{province}|{district}: {exc}")
+                failures.append(
+                    RegionFailure(str(province), str(district), str(exc))
+                )
 
             if circuit_breaker.is_tripped():
                 for pending in futures:
                     pending.cancel()
     finally:
         executor.shutdown(wait=True, cancel_futures=True)
+    failures.sort(key=lambda failure: (failure.province, failure.district))
     return records, failures
 
 
-def main() -> None:
-    master = read_csv(MASTER)
-    previous_live_matches = 0
-    if OUTPUT.exists():
-        previous = read_csv(OUTPUT)
-        previous_live_matches = int(
-            previous[["가용병상", "전체병상", "API기준시각"]].notna().any(axis=1).sum()
-        )
-    regions = master[["시도", "시군구"]].dropna().drop_duplicates()
-    region_pairs = list(regions.itertuples(index=False, name=None))
-    records, failures = collect_regions(region_pairs)
+def previous_response_count(previous: pd.DataFrame | None) -> int:
+    if previous is None or previous.empty:
+        return 0
+    value_columns = ["가용병상", "전체병상", "API기준시각"]
+    if not set(value_columns).issubset(previous.columns):
+        return 0
+    return int(previous[value_columns].notna().any(axis=1).sum())
 
-    if failures:
-        preview = "\n".join(f"  {message}" for message in failures[:10])
-        raise RuntimeError(
-            f"실시간 병상 API 지역 요청 {len(failures)}건이 실패해 기존 산출물을 보존합니다.\n{preview}"
-        )
 
+def failed_region_fallback(
+    master: pd.DataFrame,
+    previous: pd.DataFrame | None,
+    failures: list[RegionFailure],
+    *,
+    reference: pd.Timestamp | datetime,
+) -> tuple[pd.DataFrame, dict[str, int]]:
+    columns = ["기관코드", "가용병상", "전체병상", "API기준시각", "수집시각"]
+    failed_keys = {(failure.province, failure.district) for failure in failures}
+    if not failed_keys:
+        return pd.DataFrame(columns=columns), {
+            "failedRegionHospitals": 0,
+            "fallbackCandidateHospitals": 0,
+            "freshFallbackHospitals": 0,
+            "maskedFailedRegionHospitals": 0,
+        }
+
+    master_regions = master[["시도", "시군구"]].astype("string")
+    failed_master = master[
+        master_regions.apply(tuple, axis=1).isin(failed_keys)
+    ]
+    failed_codes = set(failed_master["기관코드"].astype("string"))
+    failed_hospitals = len(failed_codes)
+    if previous is None or previous.empty:
+        return pd.DataFrame(columns=columns), {
+            "failedRegionHospitals": failed_hospitals,
+            "fallbackCandidateHospitals": 0,
+            "freshFallbackHospitals": 0,
+            "maskedFailedRegionHospitals": failed_hospitals,
+        }
+
+    fallback = previous.copy()
+    for column in columns:
+        if column not in fallback.columns:
+            fallback[column] = pd.NA
+    fallback = fallback[
+        fallback["기관코드"].astype("string").isin(failed_codes)
+    ][columns].drop_duplicates("기관코드", keep="last")
+    fallback["기관코드"] = fallback["기관코드"].astype("string").str.strip()
+    fallback["가용병상"] = pd.to_numeric(fallback["가용병상"], errors="coerce")
+    fallback["전체병상"] = pd.to_numeric(fallback["전체병상"], errors="coerce")
+
+    source_fresh = fresh_bed_source_mask(
+        fallback["API기준시각"],
+        reference=reference,
+    )
+    values_valid = fallback["전체병상"].gt(0) & fallback["가용병상"].ge(0)
+    usable_fallback = source_fresh & values_valid
+    fallback.loc[~usable_fallback, ["가용병상", "전체병상"]] = pd.NA
+    fresh_fallback_hospitals = int(usable_fallback.sum())
+    return fallback, {
+        "failedRegionHospitals": failed_hospitals,
+        "fallbackCandidateHospitals": len(fallback),
+        "freshFallbackHospitals": fresh_fallback_hospitals,
+        "maskedFailedRegionHospitals": failed_hospitals - fresh_fallback_hospitals,
+    }
+
+
+def build_bed_snapshot(
+    master: pd.DataFrame,
+    records: list[dict],
+    failures: list[RegionFailure],
+    previous: pd.DataFrame | None,
+    *,
+    collected_at: pd.Timestamp | datetime | None = None,
+    minimum_live_matches: int = MIN_LIVE_MATCHES,
+) -> tuple[pd.DataFrame, dict]:
     raw = pd.DataFrame(records)
     if raw.empty:
         raise RuntimeError("실시간 병상 데이터가 한 건도 수집되지 않았습니다.")
     raw = raw.drop_duplicates("hpid", keep="last")
-    bed = pd.DataFrame(
+    timestamp = pd.Timestamp.now(tz="UTC") if collected_at is None else pd.Timestamp(collected_at)
+    if timestamp.tzinfo is None:
+        timestamp = timestamp.tz_localize("UTC")
+    new_bed = pd.DataFrame(
         {
             "기관코드": raw["hpid"].astype("string").str.strip(),
             "가용병상": pd.to_numeric(raw.get(AVAILABLE_FIELD), errors="coerce"),
             "전체병상": pd.to_numeric(raw.get(TOTAL_FIELD), errors="coerce"),
             "API기준시각": raw.get("hvidate", ""),
+            "수집시각": timestamp.isoformat(timespec="seconds"),
         }
     )
-    collected_at = datetime.now().astimezone()
+
+    previous_live_matches = previous_response_count(previous)
+    live_matches = int(master["기관코드"].isin(set(new_bed["기관코드"])).sum())
+    minimum_matches = max(minimum_live_matches, int(previous_live_matches * 0.9))
+    if live_matches < minimum_matches:
+        raise RuntimeError(
+            "실시간 병상 응답 기관 수가 정상 스냅샷보다 급감해 기존 산출물을 보존합니다: "
+            f"matched={live_matches}, required>={minimum_matches}, previous={previous_live_matches}"
+        )
+
+    fallback, fallback_audit = failed_region_fallback(
+        master,
+        previous,
+        failures,
+        reference=timestamp,
+    )
+    fallback = fallback[~fallback["기관코드"].isin(set(new_bed["기관코드"]))]
+    bed = (
+        new_bed.copy()
+        if fallback.empty
+        else pd.concat([new_bed, fallback], ignore_index=True)
+    )
+    bed["가용병상"] = pd.to_numeric(bed["가용병상"], errors="coerce")
+    bed["전체병상"] = pd.to_numeric(bed["전체병상"], errors="coerce")
     source_fresh = fresh_bed_source_mask(
         bed["API기준시각"],
-        reference=collected_at,
+        reference=timestamp,
     )
     stale_source_records = int((~source_fresh).sum())
     bed.loc[~source_fresh, ["가용병상", "전체병상"]] = pd.NA
@@ -385,38 +503,82 @@ def main() -> None:
         labels=["여유", "주의", "포화"],
         include_lowest=True,
     ).astype("string").fillna("결측")
-    bed["수집시각"] = collected_at.isoformat(timespec="seconds")
-
-    live_matches = int(master["기관코드"].isin(set(bed["기관코드"])).sum())
-    minimum_matches = max(MIN_LIVE_MATCHES, int(previous_live_matches * 0.9))
-    if live_matches < minimum_matches:
-        raise RuntimeError(
-            "실시간 병상 응답 기관 수가 정상 스냅샷보다 급감해 기존 산출물을 보존합니다: "
-            f"matched={live_matches}, required>={minimum_matches}, previous={previous_live_matches}"
-        )
     usable_matches = int(master["기관코드"].isin(set(bed.loc[valid, "기관코드"])).sum())
-    if usable_matches < MIN_LIVE_MATCHES:
+    if usable_matches < minimum_live_matches:
         raise RuntimeError(
             "원천 기준시각까지 유효한 병상 기관 수가 검토 기준보다 적어 기존 산출물을 보존합니다: "
-            f"usable={usable_matches}, required>={MIN_LIVE_MATCHES}, "
+            f"usable={usable_matches}, required>={minimum_live_matches}, "
             f"stale_source={stale_source_records}"
         )
 
     columns = ["기관코드", "병원명", "등급", "시도", "시군구", "가용병상", "전체병상", "포화율", "상태", "API기준시각", "수집시각"]
     result = master.merge(bed, on="기관코드", how="left").reindex(columns=columns)
     result["상태"] = result["상태"].fillna("결측")
+    requested_regions = len(master[["시도", "시군구"]].dropna().drop_duplicates())
+    audit = {
+        "schemaVersion": 1,
+        "collectedAt": timestamp.isoformat(timespec="seconds"),
+        "requestedRegions": requested_regions,
+        "successfulRegions": requested_regions - len(failures),
+        "failedRegionCount": len(failures),
+        "failedRegions": [failure.audit_record() for failure in failures],
+        "newResponseHospitals": live_matches,
+        "previousResponseHospitals": previous_live_matches,
+        "responseGuardRequiredHospitals": minimum_matches,
+        "usableHospitals": usable_matches,
+        "staleSourceHospitals": stale_source_records,
+        **fallback_audit,
+    }
+    return result, audit
+
+
+def main() -> None:
+    master = read_csv(MASTER)
+    previous = read_csv(OUTPUT) if OUTPUT.exists() else None
+    regions = master[["시도", "시군구"]].dropna().drop_duplicates()
+    region_pairs = list(regions.itertuples(index=False, name=None))
+    records, failures = collect_regions(region_pairs)
+    if failures:
+        print(f"Bed API region failures: count={len(failures)}", flush=True)
+        for failure in failures:
+            print(f"  {failure}", flush=True)
+
+    result, audit = build_bed_snapshot(
+        master,
+        records,
+        failures,
+        previous,
+        collected_at=datetime.now().astimezone(),
+    )
+
+    if failures:
+        print(
+            "Partial bed refresh: "
+            f"failed_regions={len(failures)}, "
+            f"fresh_fallback_hospitals={audit['freshFallbackHospitals']}, "
+            f"masked_failed_region_hospitals={audit['maskedFailedRegionHospitals']}",
+            flush=True,
+        )
+
     save_csv(result, OUTPUT)
+    save_json(audit, AUDIT)
 
     history_row = result.copy()
     if HISTORY.exists():
         history = pd.read_csv(HISTORY)
         history_row = pd.concat([history, history_row], ignore_index=True)
+        history_row = history_row.drop_duplicates(
+            ["기관코드", "수집시각"],
+            keep="last",
+        )
     history_row = trim_history(history_row)
     save_csv(history_row, HISTORY)
     print(
         f"Saved {len(result):,} hospitals "
-        f"({live_matches:,} responses, {usable_matches:,} usable, "
-        f"{stale_source_records:,} stale-source excluded): {OUTPUT}"
+        f"({audit['newResponseHospitals']:,} new responses, "
+        f"{audit['freshFallbackHospitals']:,} fresh fallbacks, "
+        f"{audit['usableHospitals']:,} usable, "
+        f"{audit['staleSourceHospitals']:,} stale-source excluded): {OUTPUT}"
     )
 
 
