@@ -35,13 +35,13 @@ HIRA 수동 매칭·원천 제외와 병원 좌표·지역 보정 CSV는 이미�
 
 ## 1. Railway 서비스 만들기
 
-1. `backend` push 시 GitHub Actions가 애플리케이션·파이프라인·컨테이너를 검증합니다.
-2. 검증을 모두 통과한 동일 이미지를 `ghcr.io/westyoon/embulance-score:backend`에 발행합니다.
+1. `main` push 시 GitHub Actions가 애플리케이션·파이프라인·컨테이너를 검증합니다.
+2. `main` CI 검증을 모두 통과한 동일 이미지를 불변 커밋 태그와 `ghcr.io/westyoon/embulance-score:production`, `:latest`에 발행합니다. Railway 기존 설정과의 무중단 호환을 위해 `:backend`도 같은 digest로 함께 발행합니다.
 3. Railway에서 새 프로젝트와 서비스를 만들고 이 공개 GHCR 이미지를 Source로 연결합니다.
 4. 서비스에 Volume을 추가하고 Mount Path를 `/app/runtime`으로 지정합니다.
 5. Settings의 Scale/Regions에서 replica가 1개인지 확인합니다.
 6. Settings의 Serverless를 비활성화합니다.
-7. GHCR의 `backend` 태그에 대한 Image Auto Updates를 `Anytime`으로 설정합니다.
+7. 새 서비스는 GHCR의 `production` 태그, 기존 서비스는 호환용 `backend` 태그에 대해 Image Auto Updates를 `Anytime`으로 설정합니다. 두 태그는 `main` CI에서 같은 digest로 발행됩니다.
 
 이미지에는 다음 시작 명령이 이미 들어 있으므로 Railway Start Command는 비워 두는 것이 기본입니다. 직접 재정의해야 할 때만 다음 명령을 사용합니다.
 
@@ -49,7 +49,7 @@ HIRA 수동 매칭·원천 제외와 병원 좌표·지역 보정 CSV는 이미�
 npm run start:dynamic
 ```
 
-Railway가 주입하는 `PORT`를 애플리케이션이 그대로 사용하므로 포트 번호를 직접 고정하지 않습니다. GitHub Actions가 만든 검증 완료 이미지를 그대로 배포하면 Railway 빌더와 CI가 서로 다른 산출물을 만드는 문제도 피할 수 있습니다. 이미지 자동 갱신은 같은 `backend` 태그의 digest가 바뀌면 새 배포를 만들지만 감지가 수 시간 지연될 수 있습니다. 이번 릴리스처럼 즉시 반영해야 할 때는 CI 발행 성공 뒤 Railway redeploy를 명시적으로 실행합니다. 재배포가 실행 중인 배치를 중단하면 검증 전 운영본은 보존되지만 그 배치가 이미 사용한 API 호출은 되돌릴 수 없습니다. [Railway Start Command](https://docs.railway.com/deployments/start-command), [Image Auto Updates](https://docs.railway.com/deployments/image-auto-updates)
+Railway가 주입하는 `PORT`를 애플리케이션이 그대로 사용하므로 포트 번호를 직접 고정하지 않습니다. GitHub Actions가 만든 검증 완료 이미지를 그대로 배포하면 Railway 빌더와 CI가 서로 다른 산출물을 만드는 문제도 피할 수 있습니다. 이미지 자동 갱신은 연결한 `production` 또는 호환용 `backend` 태그의 digest가 바뀌면 새 배포를 만들지만 감지가 수 시간 지연될 수 있습니다. 이번 릴리스처럼 즉시 반영해야 할 때는 CI 발행 성공 뒤 Railway redeploy를 명시적으로 실행합니다. 재배포가 실행 중인 배치를 중단하면 검증 전 운영본은 보존되지만 그 배치가 이미 사용한 API 호출은 되돌릴 수 없습니다. [Railway Start Command](https://docs.railway.com/deployments/start-command), [Image Auto Updates](https://docs.railway.com/deployments/image-auto-updates)
 
 ## 2. 환경변수 설정
 
@@ -277,7 +277,7 @@ curl.exe -fsS "$env:APP_URL/api/health"
 
 ## 배포 체크리스트
 
-- [ ] `backend` 브랜치 CI가 `ghcr.io/westyoon/embulance-score:backend` 발행
+- [ ] `main` 브랜치 CI가 불변 커밋 태그와 `:production`, `:latest`, Railway 호환용 `:backend`를 동일 digest로 발행
 - [ ] Railway Source가 위 공개 GHCR 이미지에 연결되고 Image Auto Updates 활성화
 - [ ] Volume mount가 정확히 `/app/runtime`
 - [ ] replica 1개, Serverless 비활성화

@@ -1,10 +1,12 @@
 # Emergency Medical Capacity Dashboard
 
-[![CI](https://github.com/Westyoon/embulance_score/actions/workflows/deploy-pages.yml/badge.svg?branch=backend)](https://github.com/Westyoon/embulance_score/actions/workflows/deploy-pages.yml)
+[![CI](https://github.com/Westyoon/embulance_score/actions/workflows/ci-production.yml/badge.svg?branch=main)](https://github.com/Westyoon/embulance_score/actions/workflows/ci-production.yml)
 
 전국 응급의료기관의 병상·접근성·인구·응급의학과 전문의 데이터를 하나의 동적 파이프라인으로 결합해, 시군구별 응급의료 취약도를 지도와 분석 화면으로 제공하는 프로젝트입니다.
 
 [라이브 대시보드](https://emergency-dashboard-production-e303.up.railway.app) · [운영 상태 API](https://emergency-dashboard-production-e303.up.railway.app/api/health) · [데이터 파이프라인](./DATA_PIPELINE.md) · [시스템 아키텍처](./ARCHITECTURE.md) · [배포 가이드](./DEPLOYMENT.md)
+
+담당 범위는 백엔드 API, 데이터 수집·검증 파이프라인, 프론트엔드 데이터 계약 통합, 동적 배포와 운영 자동화입니다.
 
 > 기관 수, 산출 지역 수, 결측 수와 수집시각은 배치마다 달라집니다. README의 숫자를 운영 현황으로 간주하지 않고, 항상 [`GET /api/health`](https://emergency-dashboard-production-e303.up.railway.app/api/health)의 `dataAsOf`, `scoredRegions`, `completeRegions`, `expiredScoreRegions`, `pipeline`을 확인합니다.
 
@@ -27,7 +29,7 @@
 | 데이터 엔지니어링 | NEMC·행정안전부·HIRA·카카오 수집, 기관 1:1 매칭, 경계·지역 보정 | `scripts/part1_*` ~ `scripts/part3_*` |
 | 데이터 분석 | 구성점수, `regionRisk`, 결측 리포트, 상관관계·VIF·회귀·K-Means | `scripts/part3_calculate_region_risk.py`, `scripts/part4_analyze.py` |
 | 운영 백엔드 | 스케줄링, 단일 실행 잠금, staging 검증, 원자적 승격·복구 | `scripts/start_dynamic.mjs`, `scripts/run_pipeline.py`, `scripts/run_bed_refresh.py` |
-| 품질·배포 | Python·Node 회귀 테스트, 데이터 계약, Docker smoke test, GHCR·Railway | `tests/`, `.github/workflows/deploy-pages.yml`, `Dockerfile` |
+| 품질·배포 | Python·Node 회귀 테스트, 데이터 계약, Docker smoke test, GHCR·Railway | `tests/`, `.github/workflows/ci-production.yml`, `Dockerfile` |
 
 ## 전체 구조
 
@@ -112,6 +114,7 @@ regionRisk =
 - `data/hira_match_candidates.csv`: HIRA 후보별 비교 근거
 - `data/hira_match_overrides.csv`: 공식 URL과 확인일을 포함한 수동 확정
 - `data/hira_match_exclusions.csv`: 공식 근거가 있는 제외와 재검토 시점
+- [`MISSING_DATA_HANDOFF.md`](./MISSING_DATA_HANDOFF.md): 원천 결측을 담당자별 티켓으로 넘기기 위한 대상 목록, 증빙과 완료 조건
 
 ## 빠른 재현
 
@@ -145,6 +148,14 @@ npm run build
 ```
 
 테스트는 모집단·HIRA 1:1 매칭·결측 리포트·경계 연결·위험등급·신선도 마스킹·최근 계산값 표시·지도 hover를 포함합니다. CI는 같은 검증을 수행한 뒤 Docker 이미지를 만들고 실제 `/api/health`, HTML, 정적 asset과 Volume 동작을 smoke test합니다.
+
+## Git 운영 기준
+
+- `main`이 코드·문서·배포 이미지의 단일 기준 브랜치입니다.
+- 기능 작업은 별도 브랜치에서 진행하고 `main` 대상 Pull Request로 검증합니다.
+- `main` CI를 통과한 이미지만 GHCR의 불변 커밋 태그와 `production`, `latest` 태그로 발행합니다.
+- Railway 호환을 위해 기존 `backend` 이미지 태그도 같은 검증 이미지로 함께 갱신합니다.
+- GitHub Pages의 `/docs`는 동적 Railway 서비스로 이동시키는 진입점만 제공합니다.
 
 ## 동적 운영
 
@@ -180,8 +191,11 @@ Invoke-RestMethod "$appUrl/api/health" | ConvertTo-Json -Depth 8
 ├─ DATA_PIPELINE.md          # 출처·계보·결측·재수집 절차
 ├─ ARCHITECTURE.md           # 프론트·백엔드·런타임 구조
 ├─ DEPLOYMENT.md             # Railway 운영·복구 절차
+├─ MISSING_DATA_HANDOFF.md   # 담당자별 원천 결측 복구 티켓
 └─ Dockerfile                # Python 3.12 + Node.js 22 이미지
 ```
+
+과거 분석 시점의 해석과 통계는 [분석 보고서](./ANALYSIS_REPORT.md)와 [위험도 해석 보고서](./REGION_RISK_INTERPRETATION_REPORT.md)에 보관합니다. 두 문서는 운영 현재값이 아닌 명시된 시점의 분석 스냅샷이며, 최신 상태는 항상 운영 API를 기준으로 확인합니다.
 
 ## 한계와 다음 단계
 

@@ -179,11 +179,11 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-    PUSH[backend push / PR] --> CI[GitHub Actions]
+    PUSH[main push / PR] --> CI[GitHub Actions]
     CI --> APP[프론트 데이터·테스트·lint·build]
     CI --> PY[Python 테스트·데이터 계약]
     APP & PY --> IMG[Docker build·패키지 검증·smoke test]
-    IMG -->|backend push만| GHCR[GHCR backend + SHA 태그]
+    IMG -->|main push만| GHCR[GHCR production + latest + SHA 태그]
     GHCR --> RAILWAY[Railway 단일 서비스]
     RAILWAY --> VOL[(/app/runtime Volume)]
 ```
@@ -201,7 +201,7 @@ npm run build
 .\.venv\Scripts\python.exe scripts\validate_data_contract.py
 ```
 
-CI는 Docker 이미지를 빌드한 뒤 컨테이너 내부에서 두 데이터 계약을 다시 실행합니다. 실제 서버를 띄워 `/api/health`, 초기 HTML과 정적 asset을 확인합니다. 컨테이너 smoke test는 빈 Volume seed와 기존 live의 재시작 불변성을, Python 회귀 테스트는 관리 입력이 `full` staging에서만 반영되는지를 검사합니다. 이미지 발행은 `backend` 브랜치 push에서만 수행합니다.
+CI는 Docker 이미지를 빌드한 뒤 컨테이너 내부에서 두 데이터 계약을 다시 실행합니다. 실제 서버를 띄워 `/api/health`, 초기 HTML과 정적 asset을 확인합니다. 컨테이너 smoke test는 빈 Volume seed와 기존 live의 재시작 불변성을, Python 회귀 테스트는 관리 입력이 `full` staging에서만 반영되는지를 검사합니다. 이미지 발행은 `main` 브랜치 push에서만 수행하며, Railway 기존 설정을 위한 `backend` 호환 태그도 동일 digest로 갱신합니다.
 
 ## 9. 저장소 구조와 추적 정책
 

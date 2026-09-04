@@ -1,0 +1,78 @@
+name: 원천 결측 복구
+description: NEMC·HIRA 원천 결측을 증빙과 완료 조건이 있는 업무로 등록합니다.
+title: "[Data Quality] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        작업 전 `MISSING_DATA_HANDOFF.md`와 운영 `/api/health`를 확인하세요. API 키와 운영 토큰은 절대 첨부하지 않습니다.
+
+  - type: dropdown
+    id: ticket
+    attributes:
+      label: 업무 유형
+      options:
+        - MISS-NEMC-01 무응답
+        - MISS-NEMC-02 기준시각 만료
+        - MISS-NEMC-03 음수 가용병상
+        - MISS-NEMC-04 총병상 누락
+        - MISS-HIRA-01 HIRA 수동 검증
+        - MISS-POP-01 모집단 변경 판단
+        - MISS-OPS-01 재수집·승격 검증
+        - MISS-OPS-02 실패 증거·재시도 개선
+    validations:
+      required: true
+
+  - type: input
+    id: generation
+    attributes:
+      label: 데이터 기준시각 또는 dataVersion
+      placeholder: 2026-09-04 01:03 KST / dataVersion
+    validations:
+      required: true
+
+  - type: textarea
+    id: targets
+    attributes:
+      label: 대상 기관·지역
+      description: 기관코드, 병원명, 지역을 적습니다.
+      placeholder: |
+        - A0000000 병원명 — 시도 시군구
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 확인 증빙
+      description: 키를 제거한 결과코드·기준시각·공식 URL·문의번호를 적습니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: action
+    attributes:
+      label: 수행 내용과 다음 조치
+      description: 재현 횟수, 원천 문의, 재수집 모드와 다음 확인일을 적습니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 완료 조건
+      description: 복구 또는 에스컬레이션 완료를 판정할 수 있는 조건을 적습니다.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: 안전 확인
+      options:
+        - label: API 키·서비스 키·운영 토큰을 제거했습니다.
+          required: true
+        - label: 결측을 0·평균·과거값으로 임의 대체하지 않았습니다.
+          required: true
+        - label: 생성 CSV를 직접 수정하지 않았습니다.
+          required: true

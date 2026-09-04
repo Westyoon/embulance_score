@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 운영 데이터 상태 확인
+    url: https://emergency-dashboard-production-e303.up.railway.app/api/health
+    about: 결측 이슈를 만들기 전에 현재 dataVersion과 파이프라인 상태를 확인합니다.
