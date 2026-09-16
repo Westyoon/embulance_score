@@ -36,12 +36,14 @@ test("last-known analysis snapshot keeps risk scores visible safely", () => {
 });
 
 test("dashboard and details clearly label retained values instead of hiding them", () => {
-  assert.match(dashboard, /마지막 업데이트 시간 :/);
+  assert.match(dashboard, /최종 업데이트:/);
   assert.match(dashboard, /color: "#2563eb"/);
   assert.match(dashboard, /pipeline\?\.finishedAt/);
   assert.match(dashboard, /pipeline\?\.nextBedsAttemptAt/);
   assert.match(dashboard, /timeZone: "Asia\/Seoul"/);
-  assert.match(dashboard, /마지막 업데이트:/);
+  assert.doesNotMatch(dashboard, /마지막 업데이트/);
+  assert.match(analytics, /label="최종 업데이트"/);
+  assert.doesNotMatch(analytics, /점수 기준 시각/);
   assert.match(dashboard, /다음 업데이트 시각은/);
   assert.match(dashboard, /마지막 성공 수집값을 유지하고 있습니다/);
   assert.doesNotMatch(dashboard, /최근 갱신 실패/);

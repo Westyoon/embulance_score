@@ -164,7 +164,7 @@ export default function AnalyticsTab({ data }) {
         <KpiCard label="평균 위험도" value={averageRisk == null ? "-" : averageRisk.toFixed(1)} sub={isHistoricalSnapshot ? `마지막 계산 ${sourceComplete}개 지역` : `산출 ${sourceComplete}개 지역`} accent="#38bdf8" icon={Activity} />
         <KpiCard label="고위험 지역" value={highRiskCount} sub={isHistoricalSnapshot ? "마지막 계산값 · 50점 초과" : "산출 점수 중 50점 초과"} accent="#ef4444" icon={AlertTriangle} />
         <KpiCard label="기준시각 내 지역" value={`${currentComplete} / ${totalRegions}`} sub={`${expiredCount}개 이전값 · ${sourceMissingCount}개 원천 결측`} accent="#22c55e" icon={Users} />
-        <KpiCard label="점수 기준 시각" value={formatAsOf(analysisAsOf)} sub={isHistoricalSnapshot ? "KST · 마지막 계산값" : "KST · 병상 API 최신 수집"} accent="#a78bfa" icon={LayoutDashboard} />
+        <KpiCard label="최종 업데이트" value={formatAsOf(analysisAsOf)} sub={isHistoricalSnapshot ? "KST · 마지막 계산값" : "KST · 병상 API 최신 수집"} accent="#a78bfa" icon={LayoutDashboard} />
       </div>
 
       <TreemapHeatmapPanel data={bubbleData} excludedCount={sourceMissingCount} expiredCount={expiredCount} policyInvalidCount={sourcePolicyInvalidCount} historical={isHistoricalSnapshot} />

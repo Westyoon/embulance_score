@@ -65,13 +65,13 @@ function liveIndicator(liveStatus, lastUpdateLabel) {
   }
   if (pipeline?.state === "failed") {
     return {
-      label: `마지막 업데이트 시간 : ${lastUpdateLabel ?? "확인 중"}`,
+      label: `최종 업데이트: ${lastUpdateLabel ?? "확인 중"}`,
       color: "#2563eb",
     };
   }
   if (stale) {
     return {
-      label: `마지막 업데이트 시간 : ${lastUpdateLabel ?? "확인 중"}`,
+      label: `최종 업데이트: ${lastUpdateLabel ?? "확인 중"}`,
       color: "#2563eb",
     };
   }
@@ -80,7 +80,7 @@ function liveIndicator(liveStatus, lastUpdateLabel) {
   }
   if (health?.status === "degraded") {
     return {
-      label: `마지막 업데이트 시간 : ${lastUpdateLabel ?? "확인 중"}`,
+      label: `최종 업데이트: ${lastUpdateLabel ?? "확인 중"}`,
       color: "#2563eb",
     };
   }
@@ -174,7 +174,7 @@ export default function Dashboard({ data, liveStatus = null }) {
               }}
             >
               <span style={{ fontWeight: 700 }}>
-                마지막 업데이트:{" "}
+                최종 업데이트:{" "}
                 {lastUpdateAt
                   ? <time dateTime={lastUpdateAt}>{lastUpdateLabel}</time>
                   : "확인 중"}
