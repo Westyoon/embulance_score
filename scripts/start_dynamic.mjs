@@ -47,11 +47,11 @@ const coreRefreshStartHour = scheduleHour("CORE_REFRESH_START_HOUR", 21);
 const coreRefreshEndHour = scheduleHour("CORE_REFRESH_END_HOUR", 9);
 const coreRefreshIntervalMinutes = positiveNumber(
   "CORE_REFRESH_INTERVAL_MINUTES",
-  2,
+  480,
 );
 const offHoursRefreshIntervalMinutes = positiveNumber(
   "OFF_HOURS_REFRESH_INTERVAL_MINUTES",
-  10,
+  480,
 );
 const fullIntervalHours = positiveNumber("FULL_REFRESH_INTERVAL_HOURS", 24);
 const failureRetryMinutes = positiveNumber("PIPELINE_FAILURE_RETRY_MINUTES", 60);

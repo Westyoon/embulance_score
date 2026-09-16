@@ -248,7 +248,7 @@ npm run check:local-pipeline
 npm run start:local-pipeline
 ```
 
-`start:local-pipeline`은 세 API 키가 모두 설정됐는지 값을 노출하지 않고 검사한 뒤 기존 `start:dynamic` 런타임을 스케줄러 활성 상태로 시작합니다. 기본 쓰기 위치는 `runtime/data/`이며 저장소의 검증 seed인 `data/`를 직접 변경하지 않습니다. 한국시간 21:00~09:00에는 병상을 2분마다, 나머지 시간에는 10분마다 갱신하고 전체 파이프라인은 24시간 간격으로 실행합니다. 이 주기는 성공 완료 후 다음 실행까지의 목표 간격이므로 작업 자체가 오래 걸리거나 일일 `full`이 실행 중이면 실효 간격은 길어집니다. `full` 중 도래한 병상 작업은 하나로 합쳐 종료 직후 실행합니다. 실패하거나 새 세대가 검증을 통과하지 못하면 기존 `runtime/data/` 세대를 계속 제공합니다.
+`start:local-pipeline`은 세 API 키가 모두 설정됐는지 값을 노출하지 않고 검사한 뒤 기존 `start:dynamic` 런타임을 스케줄러 활성 상태로 시작합니다. 기본 쓰기 위치는 `runtime/data/`이며 저장소의 검증 seed인 `data/`를 직접 변경하지 않습니다. 병상은 한국시간 21:00 핵심 시간대 경계에 맞춘 8시간 간격으로, 정상 성공 기준 21:00·05:00·13:00 하루 3회 갱신하고 전체 파이프라인은 24시간 간격으로 실행합니다. 이 주기는 성공 완료 후 다음 실행까지의 목표 간격이므로 작업 자체가 오래 걸리거나 일일 `full`이 실행 중이면 실효 간격은 길어집니다. `full` 중 도래한 병상 작업은 하나로 합쳐 종료 직후 실행합니다. 실패하거나 새 세대가 검증을 통과하지 못하면 기존 `runtime/data/` 세대를 계속 제공합니다.
 
 주기는 `.env`의 `REFRESH_TIME_ZONE`, `CORE_REFRESH_START_HOUR`, `CORE_REFRESH_END_HOUR`, `CORE_REFRESH_INTERVAL_MINUTES`, `OFF_HOURS_REFRESH_INTERVAL_MINUTES`로 조정합니다. 이전 `FAST_REFRESH_INTERVAL_MINUTES`는 더 이상 스케줄을 제어하지 않으며, 상태 응답의 호환 필드 `fastIntervalMinutes`만 핵심 시간 간격을 반영합니다. 프로세스가 종료되면 예약 수집도 멈춥니다.
 
