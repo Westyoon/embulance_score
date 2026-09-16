@@ -36,20 +36,42 @@ test("last-known analysis snapshot keeps risk scores visible safely", () => {
   assert.match(treemap, /이전값 \$\{expiredCount\}개 · 원천 결측 \$\{excludedCount\}개는 0점 처리 없이 제외/);
   assert.match(treemap, /박스 크기·색상 = 종합위험도/);
   assert.match(treemap, /해당 노드를 클릭하면 어떤 지역인지 살펴볼 수 있어요!/);
-  assert.match(treemap, /c\.sourcePolicyValidAtCalculation === false/);
+  assert.match(treemap, /region\.sourcePolicyValidAtCalculation === false/);
 });
 
 test("treemap and heatmap nodes share a visible hover outline", () => {
   assert.match(treemap, /const \[hoverKey, setHoverKey\] = useState\(null\)/);
   assert.match(treemap, /data-treemap-node=\{c\.key\}/);
-  assert.match(treemap, /onMouseEnter=\{\(\) => setHoverKey\(c\.key\)\}/);
+  assert.match(treemap, /onMouseEnter=\{\(event\) => showNodeTooltip\(event, c\.key\)\}/);
   assert.match(treemap, /data-treemap-hover-outline=\{hoveredCell\.key\}/);
   assert.match(treemap, /stroke="#0f172a"/);
   assert.match(treemap, /pointerEvents="none"/);
   assert.match(treemap, /data-heatmap-row=\{r\.key\}/);
-  assert.match(treemap, /onMouseEnter=\{\(\) => setHoverKey\(r\.key\)\}/);
+  assert.match(treemap, /onMouseEnter=\{\(event\) => showNodeTooltip\(event, r\.key\)\}/);
   assert.match(treemap, /const isHovered = hoverKey === r\.key/);
   assert.match(treemap, /isHovered \? "1\.5px solid #0f172a"/);
+});
+
+test("treemap and heatmap nodes show the same risk details as the bubble chart", () => {
+  assert.match(treemap, /data-risk-node-tooltip=\{region\.key\}/);
+  assert.match(treemap, /role="tooltip"/);
+  assert.match(treemap, /응급실 \{region\.hospitalCount\}개 · 의료진 \{region\.doctorCount\}명/);
+  assert.match(treemap, /인구대비병상 부담 \{region\.popBed\.toFixed\(0\)\}점/);
+  assert.match(treemap, /위험도 \{region\.risk\.toFixed\(1\)\}점/);
+  assert.match(treemap, /position: "fixed"/);
+  assert.match(treemap, /createPortal\(/);
+  assert.match(treemap, /document\.body/);
+  assert.match(treemap, /maxWidth: `calc\(100vw - \$\{TOOLTIP_EDGE \* 2\}px\)`/);
+  assert.match(treemap, /maxHeight: `calc\(100vh - \$\{TOOLTIP_EDGE \* 2\}px\)`/);
+  assert.match(treemap, /pointerEvents: "none"/);
+  assert.match(treemap, /tooltip\.getBoundingClientRect\(\)/);
+  assert.match(treemap, /window\.innerWidth/);
+  assert.match(treemap, /window\.innerHeight/);
+  assert.match(treemap, /window\.addEventListener\("scroll", dismissTooltip, true\)/);
+  assert.match(treemap, /window\.removeEventListener\("scroll", dismissTooltip, true\)/);
+  assert.match(treemap, /window\.addEventListener\("resize", dismissTooltip\)/);
+  assert.match(treemap, /window\.removeEventListener\("resize", dismissTooltip\)/);
+  assert.equal(treemap.match(/onMouseEnter=\{\(event\) => showNodeTooltip\(event, [cr]\.key\)\}/g)?.length, 2);
 });
 
 test("dashboard and details clearly label retained values instead of hiding them", () => {

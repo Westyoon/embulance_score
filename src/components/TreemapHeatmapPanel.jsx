@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { riskColor, riskTextColor } from "@/lib/riskScale";
 import { SIDO_SHORT_LABELS } from "@/lib/sido";
 import { cardStyle, mutedText, RiskLegendStrip } from "./shared";
@@ -14,6 +15,81 @@ const COLS = [
 ];
 
 const W = 380, H = 320;
+const TOOLTIP_WIDTH = 260;
+const TOOLTIP_GAP = 12;
+const TOOLTIP_EDGE = 8;
+
+function getTooltipPosition({ clientX, clientY }, tooltipSize) {
+  const width = Math.min(tooltipSize.width, Math.max(0, window.innerWidth - TOOLTIP_EDGE * 2));
+  const height = Math.min(tooltipSize.height, Math.max(0, window.innerHeight - TOOLTIP_EDGE * 2));
+  const preferredLeft = clientX + TOOLTIP_GAP + width <= window.innerWidth - TOOLTIP_EDGE
+    ? clientX + TOOLTIP_GAP
+    : clientX - TOOLTIP_GAP - width;
+  const preferredTop = clientY + TOOLTIP_GAP + height <= window.innerHeight - TOOLTIP_EDGE
+    ? clientY + TOOLTIP_GAP
+    : clientY - TOOLTIP_GAP - height;
+
+  return {
+    left: Math.max(TOOLTIP_EDGE, Math.min(preferredLeft, window.innerWidth - width - TOOLTIP_EDGE)),
+    top: Math.max(TOOLTIP_EDGE, Math.min(preferredTop, window.innerHeight - height - TOOLTIP_EDGE)),
+  };
+}
+
+function RiskNodeTooltip({ region, anchor }) {
+  const tooltipRef = useRef(null);
+
+  useLayoutEffect(() => {
+    if (!region || !anchor || !tooltipRef.current) return;
+
+    const tooltip = tooltipRef.current;
+    const bounds = tooltip.getBoundingClientRect();
+    const position = getTooltipPosition(anchor, bounds);
+    tooltip.style.left = `${position.left}px`;
+    tooltip.style.top = `${position.top}px`;
+    tooltip.style.visibility = "visible";
+  }, [anchor, region]);
+
+  if (!region || !anchor || typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      ref={tooltipRef}
+      role="tooltip"
+      data-risk-node-tooltip={region.key}
+      style={{
+        position: "fixed",
+        left: 0,
+        top: 0,
+        zIndex: 1000,
+        width: TOOLTIP_WIDTH,
+        maxWidth: `calc(100vw - ${TOOLTIP_EDGE * 2}px)`,
+        maxHeight: `calc(100vh - ${TOOLTIP_EDGE * 2}px)`,
+        overflowY: "auto",
+        visibility: "hidden",
+        pointerEvents: "none",
+        boxSizing: "border-box",
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
+        borderRadius: 8,
+        fontSize: 11.5,
+        lineHeight: 1.55,
+        padding: "8px 10px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+        color: "#0f172a",
+      }}
+    >
+      <b>{region.name}</b><br />
+      응급실 {region.hospitalCount}개 · 의료진 {region.doctorCount}명<br />
+      인구대비병상 부담 {region.popBed.toFixed(0)}점 · <span style={{ color: riskColor(region.risk) }}>위험도 {region.risk.toFixed(1)}점</span>
+      {region.sourcePolicyValidAtCalculation === false ? (
+        <><br /><span style={{ color: "#b91c1c" }}>마지막 계산 점수 · 계산 당시 원천시각 기준 미충족</span></>
+      ) : region.scoreExpired ? (
+        <><br /><span style={{ color: "#b45309" }}>마지막 계산 점수 · 병상 원천 기준시각 경과</span></>
+      ) : null}
+    </div>,
+    document.body,
+  );
+}
 
 // 외부 라이브러리(d3-hierarchy 등) 없이 직접 구현한 squarified treemap —
 // 배포 환경에 특정 서브모듈이 없어서 깨지는 걸 피하려고 순수 JS로 짰다.
@@ -78,6 +154,7 @@ function squarify(items, x, y, w, h) {
 export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCount = 0 }) {
   const [highlightKey, setHighlightKey] = useState(null);
   const [hoverKey, setHoverKey] = useState(null);
+  const [tooltipAnchor, setTooltipAnchor] = useState(null);
   const [province, setProvince] = useState(DEFAULT_SIDO);
   const rowRefs = useRef({});
 
@@ -97,11 +174,23 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
   }, [ranked]);
 
   const hoveredCell = hoverKey ? cells.find((cell) => cell.key === hoverKey) : null;
+  const hoveredRegion = hoverKey ? ranked.find((region) => region.key === hoverKey) : null;
+
+  const showNodeTooltip = (event, key) => {
+    setHoverKey(key);
+    setTooltipAnchor({ clientX: event.clientX, clientY: event.clientY });
+  };
+
+  const hideNodeTooltip = () => {
+    setHoverKey(null);
+    setTooltipAnchor(null);
+  };
 
   const selectProvince = (p) => {
     setProvince(p);
     setHighlightKey(null);
     setHoverKey(null);
+    setTooltipAnchor(null);
   };
 
   useEffect(() => {
@@ -109,6 +198,21 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
       rowRefs.current[highlightKey].scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }, [highlightKey]);
+
+  useEffect(() => {
+    if (!tooltipAnchor) return undefined;
+
+    const dismissTooltip = () => {
+      setHoverKey(null);
+      setTooltipAnchor(null);
+    };
+    window.addEventListener("scroll", dismissTooltip, true);
+    window.addEventListener("resize", dismissTooltip);
+    return () => {
+      window.removeEventListener("scroll", dismissTooltip, true);
+      window.removeEventListener("resize", dismissTooltip);
+    };
+  }, [tooltipAnchor]);
 
   return (
     <div style={{ ...cardStyle, padding: 16 }}>
@@ -153,11 +257,11 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
                   key={c.key}
                   data-treemap-node={c.key}
                   onClick={() => setHighlightKey(c.key)}
-                  onMouseEnter={() => setHoverKey(c.key)}
-                  onMouseLeave={() => setHoverKey(null)}
+                  onMouseEnter={(event) => showNodeTooltip(event, c.key)}
+                  onMouseLeave={hideNodeTooltip}
+                  aria-label={`${c.name}, 응급실 ${c.hospitalCount}개, 의료진 ${c.doctorCount}명, 인구대비병상 부담 ${c.popBed.toFixed(0)}점, 위험도 ${c.risk.toFixed(1)}점`}
                   style={{ cursor: "pointer" }}
                 >
-                  <title>{`${c.name} · 위험도 ${c.risk.toFixed(1)}점 · 응급실 ${c.hospitalCount}개 · 의료진 ${c.doctorCount}명${c.sourcePolicyValidAtCalculation === false ? " · 계산 당시 원천시각 기준 미충족" : c.scoreExpired ? " · 병상 원천 기준시각 경과" : ""}`}</title>
                   <rect x={c.x} y={c.y} width={c.w} height={c.h} fill={riskColor(c.risk)}
                     stroke={isHi ? "#0f172a" : "#ffffff"} strokeWidth={isHi ? 2.5 : 1} />
                   {big && (
@@ -208,8 +312,10 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
               const isHovered = hoverKey === r.key;
               return (
                 <div key={r.key} data-heatmap-row={r.key} ref={(el) => (rowRefs.current[r.key] = el)}
-                  onClick={() => setHighlightKey(r.key)} onMouseEnter={() => setHoverKey(r.key)} onMouseLeave={() => setHoverKey(null)}
-                  title={r.sourcePolicyValidAtCalculation === false ? "마지막 계산 점수 · 계산 당시 원천시각 기준 미충족" : r.scoreExpired ? "마지막 계산 점수 · 병상 원천 기준시각 경과" : undefined}
+                  onClick={() => setHighlightKey(r.key)}
+                  onMouseEnter={(event) => showNodeTooltip(event, r.key)}
+                  onMouseLeave={hideNodeTooltip}
+                  aria-label={`${r.name}, 응급실 ${r.hospitalCount}개, 의료진 ${r.doctorCount}명, 인구대비병상 부담 ${r.popBed.toFixed(0)}점, 위험도 ${r.risk.toFixed(1)}점`}
                   style={{ display: "grid", gridTemplateColumns: `64px repeat(${COLS.length}, 1fr) 50px`, gap: 3, alignItems: "center",
                     padding: "4px 2px", cursor: "pointer", borderRadius: 6,
                     background: isHi ? riskColor(r.risk) + "1c" : isHovered ? "#f8fafc" : "transparent",
@@ -230,6 +336,8 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
         </div>
       </div>
       )}
+
+      <RiskNodeTooltip region={hoveredRegion} anchor={tooltipAnchor} />
 
       <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid #e2e8f0" }}><RiskLegendStrip compact /></div>
     </div>
