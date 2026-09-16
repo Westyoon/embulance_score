@@ -46,6 +46,10 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
     const missingComponents = region.missingComponents?.length
       ? region.missingComponents.join("·")
       : "필수 구성점수";
+    const availableComponents = COMPONENTS
+      .filter(({ key }) => isFiniteNumber(region[key]))
+      .map(({ name }) => name)
+      .join("·");
     return (
       <div style={{ ...cardStyle, padding: 20 }}>
         <div className="flex items-start justify-between">
@@ -57,7 +61,7 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
         </div>
         <div style={{ fontSize: 12, ...mutedText, marginTop: 14, lineHeight: 1.6, background: "#f8fafc", border: "1px solid #e2e8f0", padding: "12px 14px", borderRadius: 10 }}>
           {region.key
-            ? <><b style={{ color: "#0f172a" }}>{missingComponents}</b> 원천값이 검증 기준을 충족하지 못해 최종 위험도가 <b style={{ color: "#0f172a" }}>산출되지 않은 지역</b>입니다. 0점이 아니라 <b style={{ color: "#0f172a" }}>&quot;데이터 부족으로 미산출&quot;</b>입니다.</>
+            ? <><b style={{ color: "#0f172a" }}>{missingComponents} 데이터 결측</b>으로 인한 <b style={{ color: "#0f172a" }}>미산출 지역</b>입니다. {availableComponents ? <>원하신다면 <b style={{ color: "#0f172a" }}>{availableComponents} 데이터</b>를 살펴봐 주세요.</> : <>현재 확인 가능한 다른 구성 데이터가 없습니다.</>}</>
             : <>행정안전부 2026-07-01 행정구역 체계를 반영한 최신 경계 데이터셋에 대응하는 <b style={{ color: "#0f172a" }}>원천 데이터가 없는 지역</b>입니다. 행정구역 개편이나 데이터 매칭 누락으로 아직 위험도가 연결되지 않았습니다.</>}
         </div>
         <BedCoverageDisclosure region={region} />

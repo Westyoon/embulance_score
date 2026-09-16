@@ -47,6 +47,17 @@ test("dashboard and details clearly label retained values instead of hiding them
   assert.match(hospitalPopup, /마지막 수집 응급실 병상/);
 });
 
+test("missing region guidance names both missing and available component data", () => {
+  assert.match(regionPopup, /const availableComponents = COMPONENTS/);
+  assert.match(regionPopup, /\.filter\(\(\{ key \}\) => isFiniteNumber\(region\[key\]\)\)/);
+  assert.match(regionPopup, /\{missingComponents\} 데이터 결측/);
+  assert.match(regionPopup, /미산출 지역/);
+  assert.match(regionPopup, /\{availableComponents\} 데이터/);
+  assert.match(regionPopup, /원하신다면/);
+  assert.match(regionPopup, /데이터<\/b>를 살펴봐 주세요/);
+  assert.doesNotMatch(regionPopup, /0점이 아니라/);
+});
+
 test("snapshot metadata distinguishes expired scores from source missing regions", () => {
   assert.match(analytics, /analysisSnapshot\?\.missingRegions \?\? \[\]/);
   assert.match(analytics, /ranked\.filter\(\(region\) => region\.scoreExpired\)/);
