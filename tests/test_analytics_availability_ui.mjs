@@ -36,9 +36,15 @@ test("last-known analysis snapshot keeps risk scores visible safely", () => {
 });
 
 test("dashboard and details clearly label retained values instead of hiding them", () => {
-  assert.match(dashboard, /마지막 수집값을 표시 중입니다/);
-  assert.match(dashboard, /마지막 성공 수집값과 계산 점수를 유지합니다/);
-  assert.match(dashboard, /자동 갱신이 성공하면 최신값으로 교체됩니다/);
+  assert.match(dashboard, /마지막 업데이트 시간 :/);
+  assert.match(dashboard, /color: "#2563eb"/);
+  assert.match(dashboard, /pipeline\?\.finishedAt/);
+  assert.match(dashboard, /pipeline\?\.nextBedsAttemptAt/);
+  assert.match(dashboard, /timeZone: "Asia\/Seoul"/);
+  assert.match(dashboard, /마지막 업데이트:/);
+  assert.match(dashboard, /다음 업데이트 시각은/);
+  assert.match(dashboard, /마지막 성공 수집값을 유지하고 있습니다/);
+  assert.doesNotMatch(dashboard, /최근 갱신 실패/);
   assert.doesNotMatch(dashboard, /숨겼습니다/);
   assert.match(mapTab, /h\.bedDataStale \? " · 이전값"/);
   assert.match(regionPopup, /region\.bedRiskStale/);

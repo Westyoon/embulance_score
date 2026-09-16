@@ -10,7 +10,53 @@ const TABS = [
   { key: "analytics", label: "분석 대시보드", icon: LayoutDashboard },
 ];
 
-function liveIndicator(liveStatus) {
+const KST_TIMESTAMP_FORMATTER = new Intl.DateTimeFormat("en-GB-u-nu-latn", {
+  timeZone: "Asia/Seoul",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+function timestampParts(iso) {
+  if (!iso) return null;
+  const value = new Date(iso);
+  if (Number.isNaN(value.getTime())) return null;
+  return Object.fromEntries(
+    KST_TIMESTAMP_FORMATTER.formatToParts(value)
+      .filter(({ type }) => type !== "literal")
+      .map(({ type, value: partValue }) => [type, partValue]),
+  );
+}
+
+function latestTimestamp(...timestamps) {
+  const latest = timestamps.reduce((current, timestamp) => {
+    const milliseconds = new Date(timestamp).getTime();
+    if (Number.isNaN(milliseconds)) return current;
+    if (!current || milliseconds > current.milliseconds) {
+      return { timestamp, milliseconds };
+    }
+    return current;
+  }, null);
+  return latest?.timestamp ?? null;
+}
+
+function formatUpdateTimestamp(iso) {
+  const parts = timestampParts(iso);
+  if (!parts) return null;
+  return `${parts.month}.${parts.day}. ${parts.hour}:${parts.minute}`;
+}
+
+function formatNextUpdateTime(iso) {
+  const parts = timestampParts(iso);
+  if (!parts) return null;
+  return parts.minute === "00"
+    ? `${parts.hour}시`
+    : `${parts.hour}시 ${parts.minute}분`;
+}
+
+function liveIndicator(liveStatus, lastUpdateLabel) {
   const health = liveStatus?.health;
   const pipeline = health?.pipeline;
   const stale = health?.dataStale === true;
@@ -18,16 +64,25 @@ function liveIndicator(liveStatus) {
     return { label: "데이터 확인 필요", color: "#f59e0b" };
   }
   if (pipeline?.state === "failed") {
-    return { label: "최근 갱신 실패", color: "#ef4444" };
+    return {
+      label: `마지막 업데이트 시간 : ${lastUpdateLabel ?? "확인 중"}`,
+      color: "#2563eb",
+    };
   }
   if (stale) {
-    return { label: "마지막 수집값", color: "#f59e0b" };
+    return {
+      label: `마지막 업데이트 시간 : ${lastUpdateLabel ?? "확인 중"}`,
+      color: "#2563eb",
+    };
   }
   if (pipeline?.schedulerEnabled === false) {
     return { label: "검증 스냅샷", color: "#94a3b8" };
   }
   if (health?.status === "degraded") {
-    return { label: "최근 갱신 실패", color: "#ef4444" };
+    return {
+      label: `마지막 업데이트 시간 : ${lastUpdateLabel ?? "확인 중"}`,
+      color: "#2563eb",
+    };
   }
   if (pipeline?.state === "running") {
     return { label: pipeline.mode === "full" ? "전체 데이터 갱신 중" : "병상 데이터 갱신 중", color: "#38bdf8" };
@@ -35,38 +90,35 @@ function liveIndicator(liveStatus) {
   return { label: "자동 갱신", color: "#22c55e" };
 }
 
-function formatAsOf(iso) {
-  if (!iso) return null;
-  const value = new Date(iso);
-  if (Number.isNaN(value.getTime())) return null;
-  return new Intl.DateTimeFormat("ko-KR", {
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(value);
-}
-
 export default function Dashboard({ data, liveStatus = null }) {
   const [tab, setTab] = useState("map");
-  const indicator = liveIndicator(liveStatus);
+  const pipeline = liveStatus?.health?.pipeline;
   const expiredRegions = liveStatus?.health?.bedRiskStaleRegions
     ?? data.bedRiskStaleRegions
     ?? liveStatus?.health?.bedRiskExpiredRegions
     ?? data.bedRiskExpiredRegions
     ?? 0;
-  const expiredHospitals = liveStatus?.health?.bedRiskStaleHospitals
-    ?? data.bedRiskStaleHospitals
-    ?? liveStatus?.health?.bedRiskExpiredHospitals
-    ?? data.bedRiskExpiredHospitals
-    ?? 0;
   const stale = liveStatus?.health?.dataStale
     ?? data.lastKnownDataDisplayed
     ?? data.analyticsStale
     ?? false;
-  const dataAsOf = liveStatus?.health?.scoreAsOf ?? data.kpi?.asOf;
-  const asOfLabel = formatAsOf(dataAsOf);
+  const dataAsOf = liveStatus?.health?.scoreAsOf
+    ?? liveStatus?.health?.dataAsOf
+    ?? data.kpi?.asOf;
+  // A failed run still advances `finishedAt`, so this represents pipeline activity,
+  // while `dataAsOf` below remains the timestamp of the values currently displayed.
+  const lastUpdateAt = latestTimestamp(
+    pipeline?.finishedAt,
+    pipeline?.lastBedsAttemptAt,
+    pipeline?.lastFullAttemptAt,
+    pipeline?.lastSuccessAt,
+    dataAsOf,
+  );
+  const nextUpdateAt = pipeline?.nextBedsAttemptAt ?? null;
+  const lastUpdateLabel = formatUpdateTimestamp(lastUpdateAt);
+  const nextUpdateLabel = formatNextUpdateTime(nextUpdateAt);
+  const asOfLabel = formatUpdateTimestamp(dataAsOf);
+  const indicator = liveIndicator(liveStatus, lastUpdateLabel);
   return (
     <div style={pageBg}>
       <div style={{ maxWidth: 1180, margin: "0 auto", padding: "22px 20px 40px" }}>
@@ -99,12 +151,26 @@ export default function Dashboard({ data, liveStatus = null }) {
               lineHeight: 1.5,
             }}
           >
-            <div style={{ fontWeight: 700 }}>마지막 수집값을 표시 중입니다.</div>
-            {expiredRegions > 0
-              ? <>병상 원천 기준시각이 지난 <b>{expiredRegions}개 지역</b>{expiredHospitals > 0 ? <>·<b>{expiredHospitals}개 병원</b></> : null}도 값이 사라지지 않도록 마지막 성공 수집값과 계산 점수를 유지합니다. </>
-              : <>자동 갱신이 운영 권장시간보다 지연되어 마지막 성공 수집값을 유지합니다. </>}
-            실시간 현황과 다를 수 있으니{asOfLabel ? <> <b>{asOfLabel}</b> 기준임을 확인해 주세요.</> : " 기준시각을 확인해 주세요."}
-            {" "}자동 갱신이 성공하면 최신값으로 교체됩니다.
+            <div style={{ fontWeight: 700 }}>
+              마지막 업데이트:{" "}
+              {lastUpdateAt
+                ? <time dateTime={lastUpdateAt}>{lastUpdateLabel}</time>
+                : "확인 중"}
+            </div>
+            <div>
+              {pipeline?.state === "running"
+                ? "현재 데이터를 업데이트 중입니다."
+                : pipeline?.schedulerEnabled === false
+                  ? "자동 업데이트가 꺼져 있습니다."
+                  : nextUpdateLabel
+                    ? <>다음 업데이트 시각은 <b><time dateTime={nextUpdateAt}>{nextUpdateLabel}</time></b> 입니다.</>
+                    : "다음 업데이트 시각을 확인 중입니다."}
+            </div>
+            {asOfLabel && (
+              <div style={{ marginTop: 2 }}>
+                현재 화면은 <b><time dateTime={dataAsOf}>{asOfLabel}</time></b> 기준의 마지막 성공 수집값을 유지하고 있습니다.
+              </div>
+            )}
           </div>
         )}
 
