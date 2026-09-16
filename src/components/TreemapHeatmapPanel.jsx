@@ -142,8 +142,8 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
       {filtered.length === 0 ? (
         <div style={{ fontSize: 11.5, ...mutedText, padding: "24px 4px", textAlign: "center" }}>해당 시도에 산출된 지역이 없습니다</div>
       ) : (
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 16 }}>
-        <div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 16, alignItems: "stretch" }}>
+        <div data-treemap-viewport style={{ minWidth: 0 }}>
           <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block", borderRadius: 8, overflow: "hidden" }}>
             {cells.map((c) => {
               const big = c.w > 34 && c.h > 20;
@@ -192,14 +192,17 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
           </svg>
         </div>
 
-        <div>
+        <div
+          data-heatmap-viewport
+          style={{ display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0, overflow: "hidden" }}
+        >
           <div style={{ display: "grid", gridTemplateColumns: `64px repeat(${COLS.length}, 1fr) 50px`, gap: 3, fontSize: 9, ...mutedText,
             padding: "0 2px 6px", borderBottom: "1px solid #e2e8f0", position: "sticky", top: 0, background: "#ffffff", zIndex: 1 }}>
             <span>지역</span>
             {COLS.map((c) => <span key={c.key} style={{ textAlign: "center" }}>{c.label}</span>)}
             <span style={{ textAlign: "right" }}>위험도</span>
           </div>
-          <div style={{ maxHeight: 320, overflowY: "auto" }}>
+          <div data-heatmap-scroll style={{ height: 0, flex: "1 1 0", minHeight: 0, overflowY: "auto" }}>
             {ranked.map((r) => {
               const isHi = highlightKey === r.key;
               const isHovered = hoverKey === r.key;

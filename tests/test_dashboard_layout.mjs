@@ -12,6 +12,7 @@ const readComponent = (name) => fs.readFileSync(
 const dashboard = readComponent("Dashboard.jsx");
 const mapTab = readComponent("MapTab.jsx");
 const koreaMap = readComponent("KoreaMap.jsx");
+const treemap = readComponent("TreemapHeatmapPanel.jsx");
 const regionPopup = readComponent("RegionPopup.jsx");
 const hospitalPopup = readComponent("HospitalPopup.jsx");
 
@@ -33,6 +34,16 @@ test("lists and detail panels leave vertical scrolling to the page", () => {
     assert.doesNotMatch(source, /overflowY:\s*"auto"/, `${name} has a nested vertical scroller`);
     assert.doesNotMatch(source, /maxHeight:\s*\d+/, `${name} still caps content height`);
   }
+});
+
+test("treemap and heatmap use the same responsive row height", () => {
+  assert.match(treemap, /alignItems: "stretch"/);
+  assert.match(treemap, /data-treemap-viewport/);
+  assert.match(treemap, /data-heatmap-viewport/);
+  assert.match(treemap, /display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0, overflow: "hidden"/);
+  assert.match(treemap, /data-heatmap-scroll/);
+  assert.match(treemap, /height: 0, flex: "1 1 0", minHeight: 0, overflowY: "auto"/);
+  assert.doesNotMatch(treemap, /maxHeight: 320/);
 });
 
 test("map keeps a responsive viewport and its pan and zoom clipping", () => {
