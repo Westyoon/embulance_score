@@ -164,7 +164,7 @@ export default function AnalyticsTab({ data }) {
         <KpiCard label="최종 업데이트" value={formatAsOf(analysisAsOf)} sub={isHistoricalSnapshot ? "KST · 마지막 계산값" : "KST · 병상 API 최신 수집"} accent="#a78bfa" icon={LayoutDashboard} />
       </div>
 
-      <TreemapHeatmapPanel data={bubbleData} excludedCount={sourceMissingCount} expiredCount={expiredCount} policyInvalidCount={sourcePolicyInvalidCount} historical={isHistoricalSnapshot} />
+      <TreemapHeatmapPanel data={bubbleData} excludedCount={sourceMissingCount} expiredCount={expiredCount} />
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
         {correlation.length === 0 ? (

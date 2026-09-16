@@ -33,7 +33,23 @@ test("last-known analysis snapshot keeps risk scores visible safely", () => {
   assert.match(analytics, /기준시각 경과·결측·원천기준 주의 지역 보기/);
   assert.match(analytics, /averageRisk == null \? "-" : averageRisk\.toFixed\(1\)/);
   assert.match(treemap, /마지막 계산 \$\{data\.length\}개 지역/);
+  assert.match(treemap, /이전값 \$\{expiredCount\}개 · 원천 결측 \$\{excludedCount\}개는 0점 처리 없이 제외/);
+  assert.match(treemap, /박스 크기·색상 = 종합위험도/);
+  assert.match(treemap, /해당 노드를 클릭하면 어떤 지역인지 살펴볼 수 있어요!/);
   assert.match(treemap, /c\.sourcePolicyValidAtCalculation === false/);
+});
+
+test("treemap and heatmap nodes share a visible hover outline", () => {
+  assert.match(treemap, /const \[hoverKey, setHoverKey\] = useState\(null\)/);
+  assert.match(treemap, /data-treemap-node=\{c\.key\}/);
+  assert.match(treemap, /onMouseEnter=\{\(\) => setHoverKey\(c\.key\)\}/);
+  assert.match(treemap, /data-treemap-hover-outline=\{hoveredCell\.key\}/);
+  assert.match(treemap, /stroke="#0f172a"/);
+  assert.match(treemap, /pointerEvents="none"/);
+  assert.match(treemap, /data-heatmap-row=\{r\.key\}/);
+  assert.match(treemap, /onMouseEnter=\{\(\) => setHoverKey\(r\.key\)\}/);
+  assert.match(treemap, /const isHovered = hoverKey === r\.key/);
+  assert.match(treemap, /isHovered \? "1\.5px solid #0f172a"/);
 });
 
 test("dashboard and details clearly label retained values instead of hiding them", () => {

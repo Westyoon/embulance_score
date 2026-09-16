@@ -75,8 +75,9 @@ function squarify(items, x, y, w, h) {
 // 트리맵 + 히트맵을 하나의 섹션으로 결합. 트리맵에서 지역을 클릭하면 별도
 // 상세 카드를 띄우는 대신, 오른쪽 히트맵 표에서 해당 행을 강조하고 그
 // 위치로 스크롤한다 — highlightKey 하나를 양쪽이 같이 읽고 쓴다.
-export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCount = 0, policyInvalidCount = 0, historical = false }) {
+export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCount = 0 }) {
   const [highlightKey, setHighlightKey] = useState(null);
+  const [hoverKey, setHoverKey] = useState(null);
   const [province, setProvince] = useState(DEFAULT_SIDO);
   const rowRefs = useRef({});
 
@@ -95,7 +96,13 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
     return squarify(items, 0, 0, W, H);
   }, [ranked]);
 
-  const selectProvince = (p) => { setProvince(p); setHighlightKey(null); };
+  const hoveredCell = hoverKey ? cells.find((cell) => cell.key === hoverKey) : null;
+
+  const selectProvince = (p) => {
+    setProvince(p);
+    setHighlightKey(null);
+    setHoverKey(null);
+  };
 
   useEffect(() => {
     if (highlightKey && rowRefs.current[highlightKey]) {
@@ -106,10 +113,11 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
   return (
     <div style={{ ...cardStyle, padding: 16 }}>
       <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 2 }}>지역별 위험도 — 트리맵 · 히트맵</div>
+      <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 2 }}>
+        {`마지막 계산 ${data.length}개 지역 · 이전값 ${expiredCount}개 · 원천 결측 ${excludedCount}개는 0점 처리 없이 제외 · 박스 크기·색상 = 종합위험도`}
+      </div>
       <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 10 }}>
-        {historical ? `마지막 계산 ${data.length}개 지역 · 이전값 ${expiredCount}개` : `산출 ${data.length}개 지역 표시`}
-        {policyInvalidCount > 0 ? ` · 계산 당시 원천시각 기준 미충족 ${policyInvalidCount}개` : ""}
-        {` · 원천 결측 ${excludedCount}개는 0점 처리 없이 제외 · 박스 크기·색상 = 종합위험도`}
+        해당 노드를 클릭하면 어떤 지역인지 살펴볼 수 있어요!
       </div>
 
       <div className="flex flex-wrap" style={{ gap: 6, marginBottom: 14 }}>
@@ -141,7 +149,14 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
               const big = c.w > 34 && c.h > 20;
               const isHi = highlightKey === c.key;
               return (
-                <g key={c.key} onClick={() => setHighlightKey(c.key)} style={{ cursor: "pointer" }}>
+                <g
+                  key={c.key}
+                  data-treemap-node={c.key}
+                  onClick={() => setHighlightKey(c.key)}
+                  onMouseEnter={() => setHoverKey(c.key)}
+                  onMouseLeave={() => setHoverKey(null)}
+                  style={{ cursor: "pointer" }}
+                >
                   <title>{`${c.name} · 위험도 ${c.risk.toFixed(1)}점 · 응급실 ${c.hospitalCount}개 · 의료진 ${c.doctorCount}명${c.sourcePolicyValidAtCalculation === false ? " · 계산 당시 원천시각 기준 미충족" : c.scoreExpired ? " · 병상 원천 기준시각 경과" : ""}`}</title>
                   <rect x={c.x} y={c.y} width={c.w} height={c.h} fill={riskColor(c.risk)}
                     stroke={isHi ? "#0f172a" : "#ffffff"} strokeWidth={isHi ? 2.5 : 1} />
@@ -160,6 +175,20 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
                 </g>
               );
             })}
+            {hoveredCell && (
+              <rect
+                data-treemap-hover-outline={hoveredCell.key}
+                x={hoveredCell.x}
+                y={hoveredCell.y}
+                width={hoveredCell.w}
+                height={hoveredCell.h}
+                fill="none"
+                stroke="#0f172a"
+                strokeWidth={2.5}
+                vectorEffect="non-scaling-stroke"
+                pointerEvents="none"
+              />
+            )}
           </svg>
         </div>
 
@@ -173,11 +202,16 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
           <div style={{ maxHeight: 320, overflowY: "auto" }}>
             {ranked.map((r) => {
               const isHi = highlightKey === r.key;
+              const isHovered = hoverKey === r.key;
               return (
-                <div key={r.key} ref={(el) => (rowRefs.current[r.key] = el)} onClick={() => setHighlightKey(r.key)} title={r.sourcePolicyValidAtCalculation === false ? "마지막 계산 점수 · 계산 당시 원천시각 기준 미충족" : r.scoreExpired ? "마지막 계산 점수 · 병상 원천 기준시각 경과" : undefined}
+                <div key={r.key} data-heatmap-row={r.key} ref={(el) => (rowRefs.current[r.key] = el)}
+                  onClick={() => setHighlightKey(r.key)} onMouseEnter={() => setHoverKey(r.key)} onMouseLeave={() => setHoverKey(null)}
+                  title={r.sourcePolicyValidAtCalculation === false ? "마지막 계산 점수 · 계산 당시 원천시각 기준 미충족" : r.scoreExpired ? "마지막 계산 점수 · 병상 원천 기준시각 경과" : undefined}
                   style={{ display: "grid", gridTemplateColumns: `64px repeat(${COLS.length}, 1fr) 50px`, gap: 3, alignItems: "center",
-                    padding: "4px 2px", cursor: "pointer", borderRadius: 6, background: isHi ? riskColor(r.risk) + "1c" : "transparent",
-                    outline: isHi ? `1.5px solid ${riskColor(r.risk)}` : "none", outlineOffset: -1 }}>
+                    padding: "4px 2px", cursor: "pointer", borderRadius: 6,
+                    background: isHi ? riskColor(r.risk) + "1c" : isHovered ? "#f8fafc" : "transparent",
+                    outline: isHi ? `1.5px solid ${riskColor(r.risk)}` : isHovered ? "1.5px solid #0f172a" : "none",
+                    outlineOffset: -1 }}>
                   <span style={{ fontSize: 11, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r.name}</span>
                   {COLS.map((c) => (
                     <span key={c.key} style={{ fontSize: 10, fontWeight: 700, textAlign: "center", borderRadius: 5, padding: "3px 0",
