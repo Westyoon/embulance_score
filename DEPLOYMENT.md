@@ -12,7 +12,7 @@ Railway public domain
       │   ├─ GET  /api/health
       │   └─ POST /api/ops/refresh
       └─ Python pipeline scheduler
-          ├─ beds: 8시간 간격 (API 증설 전 안전값)
+          ├─ beds: 한국시간 21:00~09:00 2분, 그 밖에는 10분
           └─ full: 24시간 간격
 
 Railway Volume: /app/runtime
@@ -25,7 +25,7 @@ Railway Volume: /app/runtime
 
 - Railway Volume을 서비스에 연결하고 마운트 경로를 정확히 `/app/runtime`으로 지정합니다.
 - replica는 반드시 **1개**만 사용합니다. Railway Volume은 replicas와 함께 사용할 수 없고, 이 애플리케이션의 스케줄러와 파일 잠금도 단일 writer를 전제로 합니다.
-- Railway의 Serverless 기능은 끕니다. 프로세스 내부 타이머가 8시간·24시간 주기를 관리하므로 서비스가 sleep 상태가 되면 정기 실행을 보장할 수 없습니다.
+- Railway의 Serverless 기능은 끕니다. 프로세스 내부 타이머가 시간대별 병상 주기와 24시간 전체 갱신을 관리하므로 서비스가 sleep 상태가 되면 정기 실행을 보장할 수 없습니다.
 - 실제 API 키와 관리자 토큰은 Git이나 Docker 이미지에 넣지 않고 Railway Variables에 저장합니다.
 - 전체 갱신에는 Python 3.12 환경과 Node.js/npm이 모두 필요합니다. 배포 이미지는 프론트 전용 Node 이미지가 아니라 `requirements.txt`까지 설치된 동적 런타임 이미지여야 합니다.
 
@@ -62,7 +62,11 @@ KAKAO_REST_API_KEY=<Railway에서 설정>
 PIPELINE_ADMIN_TOKEN=<Railway에서 생성한 임의의 긴 값>
 
 ENABLE_PIPELINE_SCHEDULER=true
-FAST_REFRESH_INTERVAL_MINUTES=480
+REFRESH_TIME_ZONE=Asia/Seoul
+CORE_REFRESH_START_HOUR=21
+CORE_REFRESH_END_HOUR=9
+CORE_REFRESH_INTERVAL_MINUTES=2
+OFF_HOURS_REFRESH_INTERVAL_MINUTES=10
 FULL_REFRESH_INTERVAL_HOURS=24
 PIPELINE_FAILURE_RETRY_MINUTES=60
 BEDS_FAILURE_RETRY_MINUTES=45
@@ -130,7 +134,7 @@ $env:APP_URL = "https://your-service.up.railway.app"
 curl.exe -fsS "$env:APP_URL/api/health"
 ```
 
-정상 응답에는 현재 데이터 버전, 데이터 기준시각, 현재·최근 계산·만료 지역 수와 파이프라인 상태가 포함됩니다. 아래 값은 형식 예시이며 실제 운영 수치가 아닙니다.
+정상 응답에는 현재 데이터 버전, 데이터 기준시각, 계산 지역·기준시각 경과 지역 수와 파이프라인 상태가 포함됩니다. `expired*`는 호환 필드명이며 해당 수치를 숨긴다는 뜻이 아니라 마지막 정상값 표시 경고입니다. 아래 값은 형식 예시이며 실제 운영 수치가 아닙니다.
 
 ```json
 {
@@ -140,6 +144,8 @@ curl.exe -fsS "$env:APP_URL/api/health"
   "regions": "<integer>",
   "completeRegions": "<integer>",
   "scoredRegions": "<integer>",
+  "bedRiskStaleRegions": "<integer>",
+  "bedRiskStaleHospitals": "<integer>",
   "expiredScoreRegions": "<integer>",
   "pipeline": {
     "state": "idle"
@@ -147,7 +153,7 @@ curl.exe -fsS "$env:APP_URL/api/health"
 }
 ```
 
-`/api/health`는 현재 운영 데이터가 읽히지 않을 때만 503을 반환합니다. 최근 배치가 실패했더라도 마지막 검증 데이터가 정상이라면 화면을 계속 제공하고, `pipeline.state`를 `failed`로 표시합니다. 가장 오래된 병상 수집시각이 `DASHBOARD_DATA_STALE_AFTER_MINUTES`(운영 600분)를 넘으면 HTTP 200은 유지하되 `status=degraded`, `dataStale=true`로 갱신 지연을 경고합니다. 실제 수치 차단은 더 정확한 병원별 `API기준시각 + BED_SOURCE_MAX_AGE_HOURS`를 사용하며, 만료 병원이 점수에 포함된 지역만 위험도와 병상 의존 점수를 숨깁니다.
+`/api/health`는 현재 운영 데이터가 읽히지 않을 때만 503을 반환합니다. 최근 배치가 실패했더라도 마지막 검증 데이터가 정상이라면 화면을 계속 제공하고, `pipeline.state`를 `failed`로 표시합니다. 가장 오래된 병상 수집시각이 `DASHBOARD_DATA_STALE_AFTER_MINUTES`(운영 600분)를 넘으면 HTTP 200은 유지하되 `status=degraded`, `dataStale=true`로 갱신 지연을 경고합니다. 병원별 `API기준시각 + BED_SOURCE_MAX_AGE_HOURS`도 신선도 경고를 세밀하게 계산하는 데 사용합니다. 두 기준 모두 수치를 지우는 차단 조건이 아니며, 수치가 정상인 마지막 병상값·위험도는 원래 기준시각과 함께 계속 표시합니다.
 
 Railway health check는 새 deployment가 트래픽을 받을 준비가 됐는지 확인하는 용도이며 배포 후 지속 모니터링은 아닙니다. 지속 감시가 필요하면 외부 uptime monitor에서 같은 경로를 호출합니다. 볼륨이 연결된 서비스는 이전 deployment와 새 deployment가 동시에 같은 볼륨을 마운트할 수 없어 재배포 때 짧은 중단이 생길 수 있습니다. [Railway Healthchecks](https://docs.railway.com/deployments/healthchecks)
 
@@ -157,20 +163,21 @@ Railway health check는 새 deployment가 트래픽을 받을 준비가 됐는�
 
 | 모드 | 간격 | 실행 내용 |
 |---|---:|---|
-| `beds` | 8시간 | NEMC 병상, 구성점수, 위험도, 분석, 데이터 계약 검증 |
+| `beds` 핵심 시간 | 한국시간 21:00~09:00, 2분 | NEMC 병상, 구성점수, 위험도, 분석, 데이터 계약 검증 |
+| `beds` 비핵심 시간 | 한국시간 09:00~21:00, 10분 | 같은 갱신을 낮은 빈도로 실행 |
 | `full` | 24시간 | NEMC 기관·인구·HIRA·경계·카카오 경로, 전체 분석·검증. 병상은 최근 검증 스냅샷 재사용 |
 
-NEMC 실시간 병상 API는 공식 계약상 `STAGE1`(시도)과 `STAGE2`(시군구)가 모두 필수라 한 번의 갱신에 현재 분석 지역 수만큼 요청이 필요합니다. 현재 지역 수를 `R`이라 하면 8시간 주기는 하루 약 `3R`, 시간당 갱신은 하루 약 `24R`의 성공 호출을 사용합니다. `/api/health`의 `regions`로 `R`을 확인하고 재시도 여유까지 더해 공공데이터포털 일일 할당량을 증설한 뒤에만 `FAST_REFRESH_INTERVAL_MINUTES=60`으로 바꿉니다. 429·한도초과(`22`)·키 일시중지(`21`) 응답은 `Retry-After`를 최대 60초까지만 반영해 전체 실행에서 단 한 번 복구 재시도합니다. 소수 지역의 5xx·timeout이 끝까지 남으면 성공 지역은 새 응답으로 승격하고 실패 지역만 직전 원천시각이 아직 유효한 행을 그대로 유지합니다. 이전 행의 `수집시각`은 갱신하지 않으며 이미 만료됐거나 이상값이면 그 지역 병상만 결측 처리합니다. 신규 응답 기관이 직전의 90% 또는 373곳보다 적거나 공유 쿼터 회로가 대규모 요청을 취소하면 기존처럼 전체 승격을 중단합니다.
+NEMC 실시간 병상 API는 공식 계약상 `STAGE1`(시도)과 `STAGE2`(시군구)가 모두 필수라 한 번의 갱신에 현재 분석 지역 수만큼 요청이 필요합니다. 현재 지역 수를 `R`이라 하면 기본 시간대별 주기의 이론상 상한은 하루 약 `432R`의 성공 호출입니다(핵심 시간 약 360회 + 비핵심 시간 약 72회). 현재 219개 지역이면 약 94,608회/일입니다. 실제 호출량은 각 작업의 실행시간과 일일 `full` 때문에 낮아질 수 있고, deadline·수동 실행·실패 재시도로 다시 늘어날 수 있으므로 `/api/health`의 `regions`로 `R`을 확인하고 충분한 공공데이터포털 일일 할당량을 확보합니다. 429·한도초과(`22`)·키 일시중지(`21`) 응답은 `Retry-After`를 최대 60초까지만 반영해 전체 실행에서 단 한 번 복구 재시도합니다. 소수 지역의 5xx·timeout이 끝까지 남으면 성공 지역은 새 응답으로 승격하고 실패 지역은 수치가 정상인 직전 행을 원천 신선도와 관계없이 그대로 유지합니다. 이전 행의 `API기준시각`과 `수집시각`은 갱신하지 않으며, 기준시각이 지난 fallback은 `마지막 수집값`으로 표시합니다. 전체병상 누락·0, 음수 가용병상 등 수치 자체가 이상한 행만 결측 처리합니다. 신규 응답 기관이 직전의 90% 또는 373곳보다 적거나 공유 쿼터 회로가 대규모 요청을 취소하면 기존처럼 전체 승격을 중단합니다.
 
-전체 갱신은 `FULL_REFRESH_REUSE_BEDS=true`일 때 병상 API를 중복 호출하지 않습니다. 기존 병상 스냅샷이 새 NEMC 기관코드 집합과 정확히 일치하고, 유효 기관이 373개 이상이며, 가장 오래된 수집시각이 `FULL_REFRESH_BED_MAX_AGE_HOURS` 이내일 때만 병원 메타데이터를 새 마스터 기준으로 다시 결합합니다. 병원이 보고한 `API기준시각`도 한국 시간으로 해석해 `BED_SOURCE_MAX_AGE_HOURS`(운영값 12시간)를 넘긴 행은 병상값을 결측 처리한 뒤 유효 기관 기준을 다시 검사합니다. HIRA·경계·카카오 수집이 끝난 뒤 점수 계산 직전에도 다시 검사하고, 그 사이 새로 만료된 행을 제외한 데이터로 점수와 분석을 재계산합니다. 검증 실패 시 API fallback 없이 전체 갱신을 중단하고 기존 운영본을 보존합니다. 병상 이력에는 재사용본을 새 관측처럼 추가하지 않으며, `/api/health`의 `lastFullReusedBedSnapshot`, `lastFullBedSnapshotAt`, `lastFullBedStaleSourceHospitals`, `lastFullBedSanitizedSourceHospitals`로 재사용·원천 제외 여부를 확인할 수 있습니다.
+전체 갱신은 `FULL_REFRESH_REUSE_BEDS=true`일 때 병상 API를 중복 호출하지 않습니다. 기존 병상 스냅샷이 새 NEMC 기관코드 집합과 정확히 일치하고 수치가 정상인 기관이 373개 이상이면 병원 메타데이터를 새 마스터 기준으로 다시 결합합니다. `FULL_REFRESH_BED_MAX_AGE_HOURS`와 `BED_SOURCE_MAX_AGE_HOURS`를 넘긴 스냅샷·행도 원래 시각과 마지막 정상값을 보존해 재사용하며 경과 여부를 감사값으로 남깁니다. HIRA·경계·카카오 수집이 끝난 뒤와 승격 직전에도 모집단·시각 형식·수치 일관성을 다시 검사합니다. 구조나 수치 검증 실패 시 API fallback 없이 전체 갱신을 중단하고 기존 운영본을 보존합니다. 병상 이력에는 재사용본을 새 관측처럼 추가하지 않으며, `/api/health`의 `lastFullReusedBedSnapshot`, `lastFullBedSnapshotAt`, `lastFullBedSnapshotStale`, `lastFullBedStaleSourceHospitals`, `lastFullBedRetainedStaleSourceHospitals`로 재사용·기준시각 경과 여부를 확인할 수 있습니다.
 
 NEMC 기관 목록의 단발성 누락 하나 때문에 `full` 전체가 반복 실패하지 않도록, 신규 코드가 없고 누락이 최대 3개인 경우에만 이전 검증 마스터 행을 최대 3회·72시간 임시 승계합니다. 최초·최근 누락시각과 연속 횟수는 staging 밖의 영속 상태 파일 `hospital_population_audit.json`에 기록되어 후속 단계 실패나 재시작으로 초기화되지 않습니다. 원천이 복구되면 승계를 자동 해제하며, 신규·교체·대규모·장기 누락과 실제 폐업 확정은 자동 처리하지 않고 모집단·HIRA·카카오 계약을 함께 검토합니다.
 
-지역 병상 구성점수는 해당 시점에 유효하게 보고한 NEMC 기관을 분석 모집단으로 사용합니다. 일부 미보고 기관을 0병상으로 간주하지 않으며, 화면의 지역 상세에 `병상 API 반영 기관 / 전체 NEMC 기관`을 함께 표시해 부분 응답 범위를 숨기지 않습니다.
+지역 병상 구성점수는 수치가 정상인 현재 또는 마지막 NEMC 병상값을 사용합니다. 일부 미보고·수치 이상 기관을 0병상으로 간주하지 않으며, 화면의 지역 상세에 `병상 API 반영 기관 / 전체 NEMC 기관`과 마지막 수집값 기관 수를 함께 표시해 부분 응답과 신선도 범위를 숨기지 않습니다.
 
-고정 시각 cron이 아니라 상태 파일의 `schedulerStartedAt`, 모드별 최근 성공 시각과 현재 `bed_status.csv`의 가장 이른 `API기준시각 + BED_SOURCE_MAX_AGE_HOURS`를 기준으로 다음 실행을 계산합니다. 이 값은 영속 Volume에 남으므로 재배포나 재시작이 주기를 0부터 되돌리지 않습니다. `BEDS_FAILURE_RETRY_MINUTES`와 `FULL_FAILURE_RETRY_MINUTES`가 모드별 실패 재시도를 제어하며 안전 기본값은 각각 45분과 1,440분입니다. 오래 걸리는 비실시간 `full`이 매시간 같은 검증 오류를 반복하지 않도록 실제 full 실패 대기는 정상 full 주기와 1,440분 중 작은 값보다 짧아지지 않습니다. 더 빠른 확인이 필요하면 인증된 수동 실행을 사용합니다. 병상 재시도는 `BED_SOURCE_MAX_AGE_HOURS`, `DASHBOARD_DATA_STALE_AFTER_MINUTES`, 정상 갱신 간격과 `BED_REFRESH_SAFETY_LEAD_MINUTES`로 계산한 최대값보다 길게 설정해도 런타임이 안전 범위로 낮춥니다. 실제 원천 만료가 더 가까우면 병상 작업 timeout과 승격 여유를 포함한 `BED_RETRY_COMPLETION_SAFETY_MINUTES`를 남기도록 재시각을 앞당기되, 이미 만료된 상태에서 연속 호출하지 않도록 `BED_MINIMUM_FAILURE_RETRY_MINUTES`는 유지합니다. deadline window 안에서 성공했지만 동일한 최저 기관 집합의 deadline 변화가 `BED_DEADLINE_ADVANCE_TOLERANCE_MINUTES` 이내면 원천 지연으로 기록하고 15→30→60분 식으로 `BED_STALLED_SOURCE_RETRY_MAX_MINUTES`까지 재확인 간격을 늘려, 만료를 방치하지 않으면서 전국 API 호출 loop도 막습니다. 기존 호환용 `PIPELINE_FAILURE_RETRY_MINUTES`는 상태 표시에만 남겨 둡니다.
+고정 시각 cron이 아니라 상태 파일의 `schedulerStartedAt`, 모드별 최근 성공 시각, 현재 한국시간 구간과 `bed_status.csv`의 가장 이른 `API기준시각 + BED_SOURCE_MAX_AGE_HOURS`를 기준으로 다음 실행을 계산합니다. 비핵심 시간에 계산한 10분 기한보다 21:00 핵심 구간 시작이 빠르면 21:00에 실행해 2분 주기로 전환합니다. 이 값은 영속 Volume에 남으므로 재배포나 재시작이 주기를 0부터 되돌리지 않습니다. 현재 구간과 다음 시각은 `/api/health`의 pipeline 상태에 `activeRefreshWindow`, `activeRefreshIntervalMinutes`, `nextCoreRefreshWindowAt`, `nextBedsIntervalAt`으로 기록됩니다. `BEDS_FAILURE_RETRY_MINUTES`와 `FULL_FAILURE_RETRY_MINUTES`가 모드별 실패 재시도를 제어하며 안전 기본값은 각각 45분과 1,440분입니다. 오래 걸리는 비실시간 `full`이 같은 검증 오류를 반복하지 않도록 실제 full 실패 대기는 정상 full 주기와 1,440분 중 작은 값보다 짧아지지 않습니다. 더 빠른 확인이 필요하면 인증된 수동 실행을 사용합니다. 병상 재시도는 `BED_SOURCE_MAX_AGE_HOURS`, `DASHBOARD_DATA_STALE_AFTER_MINUTES`, 두 시간대 중 긴 정상 갱신 간격과 `BED_REFRESH_SAFETY_LEAD_MINUTES`로 계산한 최대값보다 길게 설정해도 런타임이 안전 범위로 낮춥니다. 실제 원천 신선도 경계가 더 가까우면 병상 작업 timeout과 승격 여유를 포함한 `BED_RETRY_COMPLETION_SAFETY_MINUTES`를 남기도록 재시각을 앞당기되, 이미 기준시각이 지난 실패 상태에서는 `BED_MINIMUM_FAILURE_RETRY_MINUTES`를 유지합니다. deadline window 안에서 성공했지만 동일한 최저 기관 집합의 deadline 변화가 `BED_DEADLINE_ADVANCE_TOLERANCE_MINUTES` 이내면 deadline 기반 추가 확인은 15→30→60분 식으로 `BED_STALLED_SOURCE_RETRY_MAX_MINUTES`까지 늦춥니다. 다만 정상 2분·10분 주기는 이 deadline backoff보다 우선합니다. 이전 `FAST_REFRESH_INTERVAL_MINUTES`는 더 이상 스케줄을 제어하지 않으며, 상태 호환 필드 `fastIntervalMinutes`만 핵심 시간 간격을 반영합니다. 기존 `PIPELINE_FAILURE_RETRY_MINUTES`도 상태 표시 호환용으로만 남겨 둡니다.
 
-동시에 실행되는 파이프라인은 최대 하나입니다. 병상 갱신과 전체 갱신이 함께 밀리면 신선도 만료를 막기 위해 `beds`를 먼저 실행합니다. `full` 실행 중 병상 갱신 시각이 오면 단일 대기 작업을 `beds`로 보존하고, 병상 실패 cooldown 중에는 새 `full`이 worker를 차지하지 않습니다. 다음 병상 실행까지 `FULL_REFRESH_START_GUARD_MINUTES`보다 적게 남으면 `full`을 시작하지 않으며, 실행 자체도 모드별 timeout으로 종료합니다. 소수 지역 부분 실패도 45분 이내에 다시 시도합니다. 운영 데이터는 기존 검증 버전을 계속 제공하며, 각 작업은 별도 staging에서 실행되고 모든 검증을 통과한 뒤에만 `/app/runtime/data`를 승격합니다.
+동시에 실행되는 파이프라인은 최대 하나입니다. 병상 갱신과 전체 갱신이 함께 밀리면 신선도 경과를 줄이기 위해 `beds`를 먼저 실행합니다. 통상 다음 병상 실행까지 `FULL_REFRESH_START_GUARD_MINUTES`보다 적게 남으면 `full`을 시작하지 않습니다. 다만 2분·10분처럼 guard보다 항상 짧은 주기에서는 일일 `full`이 영구 대기하지 않도록, `full`이 이미 기한을 넘겼고 더 이른 병상 deadline·retry가 없을 때 성공한 `beds` 직후 1분 이내에 `full`을 시작합니다. `full` 실행 중 도래한 병상 갱신은 `queuedMode=beds` 하나로 합쳐 종료 직후 실행하고, 병상 실패 cooldown 중에는 새 `full`이 worker를 차지하지 않습니다. 실행 자체는 모드별 timeout으로 종료합니다. 소수 지역 부분 실패도 45분 이내에 다시 시도합니다. 운영 데이터는 기존 검증 버전을 계속 제공하며, 각 작업은 별도 staging에서 실행되고 모든 검증을 통과한 뒤에만 `/app/runtime/data`를 승격합니다.
 
 `beds`는 staging을 만든 직후 현재 live generation에 `validate_data_contract.py`를 먼저 실행합니다. HIRA 관리 입력과 매칭 결과 등 기존 세대 자체가 불일치하면 NEMC 병상 API 호출 전에 종료합니다. `full`은 live를 staging에 복사한 다음 이미지가 관리하는 네 입력을 staging에만 반영하고, 모든 종속 산출물과 경계를 다시 만든 뒤 함께 검증·승격합니다. 배포 재시작 자체는 기존 live generation을 바꾸지 않습니다.
 
@@ -279,12 +286,12 @@ curl.exe -fsS "$env:APP_URL/api/health"
 1. `/api/health`의 `dataVersion`, `pipeline.lastFailureAt`, `pipeline.error`와 Railway 로그를 기록하고 Volume backup을 확인합니다.
 2. Railway Variables에서 `FULL_REFRESH_REUSE_BEDS=false`로 바꾸고 새 deployment가 시작될 때까지 기다립니다. `RUN_FAST_REFRESH_ON_START=false`는 유지합니다.
 3. [수동 갱신 API](#5-수동-갱신-api)에 `{"mode":"full"}`을 한 번만 전송합니다. 이 실행은 새 NEMC 기관·병상, 인구, HIRA, 경계, 카카오와 전체 점수·결측·분석을 staging에서 다시 만듭니다.
-4. `/api/health`의 `pipeline.state`가 `running`에서 `idle`로 돌아오고, `lastSuccessfulMode`가 `full`, `lastSuccessAt`과 `dataVersion`이 갱신됐는지 확인합니다. `regions`, `completeRegions`, `scoredRegions`, `expiredScoreRegions`도 함께 검토합니다.
+4. `/api/health`의 `pipeline.state`가 `running`에서 `idle`로 돌아오고, `lastSuccessfulMode`가 `full`, `lastSuccessAt`과 `dataVersion`이 갱신됐는지 확인합니다. `regions`, `completeRegions`, `scoredRegions`, `bedRiskStaleRegions`도 함께 검토합니다.
 5. 성공을 확인한 직후 Railway Variables의 `FULL_REFRESH_REUSE_BEDS=true`를 복구하고 재배포 후 health를 다시 확인합니다.
 
 전체 갱신이 실패하면 staging만 폐기되고 이전 live generation은 유지됩니다. 이때 `FULL_REFRESH_REUSE_BEDS=false` 상태에서 요청을 반복하지 말고, 실패한 수집 단계·API 할당량·데이터 계약을 먼저 수정합니다. 성공 전에는 `beds`로 우회하거나 live CSV를 수동으로 섞지 않습니다.
 
-병상 이력은 기본 30일만 유지합니다. 시간대별 히트맵에는 충분한 기간을 남기면서 staging 복사와 pandas 재계산 비용을 제한하기 위한 초기 운영값입니다. 진단용 `interrupted-*`, `recovered-*`, `superseded-*` 사본은 자동 삭제하지 않으므로 주 1회 용량을 확인하고, 원인 확인과 별도 백업 뒤에만 명시적으로 정리합니다. 현재 8시간 주기와 향후 증설 후 60분 주기 모두를 고려해 볼륨 사용량을 감시하고 정기 백업을 설정합니다. 장기 원시 이력이 필요해지면 CSV 한 파일을 계속 키우지 말고 날짜별 파티션이나 별도 저장소로 분리합니다. Railway CLI의 `railway volume browse /` 또는 Railway의 Volume backup 기능으로 내용을 점검할 수 있습니다.
+병상 이력은 기본 30일만 유지합니다. 시간대별 히트맵에는 충분한 기간을 남기면서 staging 복사와 pandas 재계산 비용을 제한하기 위한 초기 운영값입니다. 진단용 `interrupted-*`, `recovered-*`, `superseded-*` 사본은 자동 삭제하지 않으므로 주 1회 용량을 확인하고, 원인 확인과 별도 백업 뒤에만 명시적으로 정리합니다. 핵심 시간대 2분·비핵심 시간대 10분 주기를 기준으로 볼륨 사용량을 감시하고 정기 백업을 설정합니다. 장기 원시 이력이 필요해지면 CSV 한 파일을 계속 키우지 말고 날짜별 파티션이나 별도 저장소로 분리합니다. Railway CLI의 `railway volume browse /` 또는 Railway의 Volume backup 기능으로 내용을 점검할 수 있습니다.
 
 ## 배포 체크리스트
 
@@ -298,7 +305,10 @@ curl.exe -fsS "$env:APP_URL/api/health"
 - [ ] `ENABLE_PIPELINE_SCHEDULER=true`
 - [ ] 단일 Volume 서비스에서만 `CLEAR_STALE_PIPELINE_LOCK_ON_START=true`
 - [ ] `RAILWAY_DEPLOYMENT_DRAINING_SECONDS=30`
-- [ ] `FAST_REFRESH_INTERVAL_MINUTES=480` (현재 `regions` 기준 `24R`+재시도 할당량 승인 후 `60`)
+- [ ] `REFRESH_TIME_ZONE=Asia/Seoul`
+- [ ] `CORE_REFRESH_START_HOUR=21`, `CORE_REFRESH_END_HOUR=9`
+- [ ] `CORE_REFRESH_INTERVAL_MINUTES=2`, `OFF_HOURS_REFRESH_INTERVAL_MINUTES=10`
+- [ ] 현재 `regions` 기준 약 `432R`+deadline·실패 재시도 호출량을 감당하는 API 할당량 확인
 - [ ] `FULL_REFRESH_INTERVAL_HOURS=24`
 - [ ] `BEDS_FAILURE_RETRY_MINUTES=45`
 - [ ] `FULL_FAILURE_RETRY_MINUTES=1440`
@@ -318,7 +328,7 @@ curl.exe -fsS "$env:APP_URL/api/health"
 - [ ] Healthcheck Path `/api/health`
 - [ ] Railway 공개 도메인 생성
 - [ ] `/api/health` HTTP 200 확인
-- [ ] `/api/health`의 `dataVersion`, `dataAsOf`, `completeRegions`, `scoredRegions`, `expiredScoreRegions`, `pipeline` 확인
+- [ ] `/api/health`의 `dataVersion`, `dataAsOf`, `completeRegions`, `scoredRegions`, `bedRiskStaleRegions`, `pipeline` 확인
 - [ ] 기존 Volume 재배포가 live 관리 입력을 직접 덮어쓰지 않는지 확인
 - [ ] 빈 Volume 최초 배포는 자동 `beds` 갱신 완료와 `lastSuccessAt` 갱신을 먼저 확인(실패했거나 기존 Volume일 때만 수동 갱신)
 - [ ] 첫 `full` 실행 전 공공데이터·HIRA·카카오 API 할당량 확인

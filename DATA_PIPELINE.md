@@ -17,7 +17,7 @@
 | 원천 | 수집 내용 | 인증·주기 | 정규화·결합 | 주요 결과 |
 |---|---|---|---|---|
 | NEMC 기관정보 | 응급의료기관 코드, 이름, 등급, 주소, 좌표 | `DATA_GO_KR_API_KEY`, `full` | `hpid`를 기관 기준키로 사용하고 최신 경계·검증 보정표로 지역 확정 | `hospital_master.csv` |
-| NEMC 병상정보 | 가용 응급실 병상, 기준 병상, API 기준시각 | `DATA_GO_KR_API_KEY`, `beds` | NEMC 지역별 호출 후 `hpid` 1:1 결합, 이상값·만료 원천 제거 | `bed_status.csv`, `bed_status_history.csv` |
+| NEMC 병상정보 | 가용 응급실 병상, 기준 병상, API 기준시각 | `DATA_GO_KR_API_KEY`, `beds` | NEMC 지역별 호출 후 `hpid` 1:1 결합, 이상값은 제외하고 오래된 정상값은 원래 시각과 함께 보존 | `bed_status.csv`, `bed_status_history.csv` |
 | 행정안전부 인구 | 최신 공표 월 주민등록 인구 | 별도 키 없음, `full` | 공표 월 자동 탐색, 행정코드와 정규화 지역명으로 NEMC 지역 결합 | `mois_population_YYYYMM.csv`, `population_source.csv` |
 | HIRA 병원정보 | 요양기관 이름, 주소, 전화, 좌표, 시설종별, 암호화 요양기호 | `HIRA_API_KEY`, `full` | 지역별 전체 후보 풀을 만든 뒤 NEMC↔HIRA 전역 1:1 배정 | `hira_doctor_matches.csv`, 후보·감사 CSV |
 | HIRA 상세정보 | 전문과목 코드 24 응급의학과 전문의 수 | `HIRA_API_KEY`, `full` | 확정된 암호화 요양기호에만 조회 결과 결합 | `doctor_source.csv`, `doctor_score.csv` |
@@ -40,12 +40,11 @@
 - 기준 병상 누락·0
 - 가용 병상 음수
 - 원천값과 계산 포화율 불일치
-- 병원이 제공한 `API기준시각`이 `BED_SOURCE_MAX_AGE_HOURS`를 초과
 - 허용 범위를 넘는 미래 시각
 
-`수집시각`은 우리 배치가 응답을 받은 시각이고, `API기준시각`은 병원이 보고한 관측 기준시각입니다. 신선도 판정에는 더 의미 있는 `API기준시각`을 사용합니다.
+`수집시각`은 우리 배치가 응답을 받은 시각이고, `API기준시각`은 병원이 보고한 관측 기준시각입니다. 신선도 판정에는 더 의미 있는 `API기준시각`을 사용합니다. `BED_SOURCE_MAX_AGE_HOURS`를 넘은 수치 정상 행은 지우지 않고 마지막 정상값으로 유지하며, 원래 두 시각을 바꾸지 않은 채 화면과 health에서 기준시각 경과로 표시합니다.
 
-지역 몇 곳의 5xx·timeout 때문에 전국의 성공 응답을 폐기하지 않습니다. 신규 응답 기관 수 안전 기준을 통과하면 성공 지역은 새 값으로 승격하고, 실패 지역만 직전 행 가운데 현재도 유효하고 병상값이 정상인 행을 원래 `수집시각` 그대로 사용합니다. 유효하지 않은 fallback은 해당 지역에서만 결측 처리하며, 실패 지역·원인·fallback 수는 `bed_refresh_audit.json`과 `/api/health`의 `pipeline`에 남깁니다. 응답이 직전의 90% 또는 373곳 아래로 급감한 경우에는 fallback으로 검증을 우회하지 않고 전체 갱신을 중단합니다.
+지역 몇 곳의 5xx·timeout 때문에 전국의 성공 응답을 폐기하지 않습니다. 신규 응답 기관 수 안전 기준을 통과하면 성공 지역은 새 값으로 승격하고, 실패 지역은 직전 행 가운데 수치가 정상인 마지막 값을 신선도와 관계없이 원래 `API기준시각`·`수집시각` 그대로 사용합니다. 실제 수치가 유효하지 않은 fallback만 해당 지역에서 결측 처리하며, 실패 지역·원인·신선/오래된 fallback 수는 `bed_refresh_audit.json`과 `/api/health`의 `pipeline`에 남깁니다. 응답이 직전의 90% 또는 373곳 아래로 급감한 경우에는 fallback으로 검증을 우회하지 않고 전체 갱신을 중단합니다.
 
 ### HIRA 기관 1:1 매칭
 
@@ -123,7 +122,7 @@ regionRisk =
 | 결측 유형 | 먼저 확인할 것 | 복구 방법 | 재실행 모드 |
 |---|---|---|---|
 | API 무응답·429 | 공공데이터포털 키 상태, 일일 할당량, `Retry-After`, Railway 로그 | 할당량 회복 후 한 번만 재시도; 반복 호출 금지 | `beds` 또는 `full` |
-| 병상 원천시각 만료 | 기관별 `API기준시각`, `수집시각` | 새 병상 응답 수집. 과거 값을 새 시각으로 바꾸지 않음 | `beds` |
+| 병상 원천시각 경과 | 기관별 `API기준시각`, `수집시각`, `bedDataFreshness` | 마지막 정상값은 계속 표시하되 새 병상 응답 수집. 과거 값을 새 시각으로 바꾸지 않음 | `beds` |
 | 기준 병상 누락·음수 가용 병상 | NEMC 원응답과 기관코드 | 다음 정상 원응답 대기, 원천 오류는 결측 유지 | `beds` |
 | HIRA 미매칭·후보 충돌 | 후보 CSV, 공식 기관 페이지, 이름·주소·전화·좌표 | 근거 있는 override 또는 exclusion 추가 | `full` |
 | 인구 지역 불일치 | 최신 공표 월, 행정코드, 개편 지역명 | 행정코드·별칭 보정 후 재수집 | `full` |
@@ -134,28 +133,30 @@ regionRisk =
 
 ## 5. 신선도와 화면 표시
 
-`GET /api/dashboard`는 두 관점을 함께 제공합니다.
+`GET /api/dashboard`는 마지막으로 검증된 수치를 계속 제공하면서 신선도를 별도 상태로 제공합니다.
 
-- **현재 운영값**: 병상 원천 유효기간과 결측 정책을 현재 시각에 다시 적용합니다. 만료된 지역의 위험도와 병상 의존 값은 지도·상세에서 숨깁니다.
-- **최근 계산값 (`analysisSnapshot`)**: 마지막 점수 계산시각의 위험도·통계 결과입니다. 분석 탭에서 계산시각, 현재 만료 지역 수와 계산 당시 원천정책 충족 여부를 함께 표시하는 참고값입니다.
+- **현재 수집값**: 병원·지역의 기준시각이 아직 `BED_SOURCE_MAX_AGE_HOURS` 안이면 `current`입니다.
+- **마지막 정상값**: 기준시각이 지났어도 수치가 정상인 병상·위험도·분석값은 지우지 않습니다. 병원에는 `bedDataStale=true`/`bedDataFreshness=last-known`, 지역에는 `bedRiskStale=true`/`bedRiskFreshness=last-known`을 붙이고 원래 `API기준시각`·`수집시각`을 유지합니다.
+- **계산 스냅샷 (`analysisSnapshot`)**: 마지막 점수 계산시각, 기준시각 경과 지역 수와 계산 당시 원천정책 충족 여부를 함께 제공하는 감사 관점입니다.
 
-따라서 “점수가 계산됐음”과 “지금도 최신 운영값임”은 같은 뜻이 아닙니다. 운영 확인에는 다음 health 필드를 함께 봅니다.
+따라서 “값이 화면에 있음”과 “지금도 최신값임”은 같은 뜻이 아닙니다. 오래된 수치는 차단 조건이 아니라 경고 메타데이터이며, 운영 확인에는 다음 health 필드를 함께 봅니다.
 
 | 필드 | 의미 |
 |---|---|
 | `status` | `ok`, `degraded`, `unavailable` |
 | `dataAsOf`, `dataAgeMinutes` | 대시보드 원천 기준시각과 경과시간 |
-| `regions`, `completeRegions` | 현재 모집단과 현재 표시 가능한 지역 |
+| `regions`, `completeRegions` | 현재 모집단과 마지막 정상값을 포함해 점수가 표시 가능한 지역 |
 | `scoredRegions`, `scoreAsOf` | 마지막 계산에서 점수가 존재한 지역과 계산 기준시각 |
 | `scoreSourcePolicyValidRegions` | 계산 당시 원천 신선도 정책을 충족한 점수 수 |
-| `expiredScoreRegions` | 계산됐지만 현재 병상 유효기간이 지난 지역 |
-| `bedRiskExpiredHospitals`, `nextBedRiskExpiryAt` | 병원 단위 만료와 다음 만료 예정시각 |
+| `bedRiskStaleRegions`, `bedRiskStaleHospitals` | 마지막 정상값이 표시 중인 기준시각 경과 지역·병원 수 |
+| `expiredScoreRegions`, `bedRiskExpiredHospitals` | 이전 소비자를 위한 호환 필드명. 기준시각이 지나도 값은 유지됨 |
+| `nextBedRiskExpiryAt` | 다음 병상 원천 신선도 경계 예정시각 |
 | `pipeline` | 최근 실행 모드·성공·실패·복구 상태, 다음 병상 시도·원천 deadline, 부분 실패 지역 감사값 |
 
 ```powershell
 $appUrl = "https://emergency-dashboard-production-e303.up.railway.app"
 $health = Invoke-RestMethod "$appUrl/api/health"
-$health | Select-Object status, dataAsOf, regions, completeRegions, scoredRegions, expiredScoreRegions
+$health | Select-Object status, dataAsOf, regions, completeRegions, scoredRegions, bedRiskStaleRegions
 $health.pipeline | ConvertTo-Json -Depth 8
 ```
 
@@ -165,7 +166,7 @@ $health.pipeline | ConvertTo-Json -Depth 8
 
 1. 현재 live generation을 실행별 staging으로 복사합니다.
 2. 외부 API를 호출하기 전에 기존 generation의 전체 데이터 계약을 검사합니다.
-3. NEMC 병상을 수집합니다. 소수 지역만 실패하면 성공 지역과 아직 유효한 실패 지역 fallback을 결합하고 감사 JSON을 남깁니다.
+3. NEMC 병상을 수집합니다. 소수 지역만 실패하면 성공 지역과 수치가 정상인 마지막 실패 지역 fallback을 원래 시각 그대로 결합하고 감사 JSON을 남깁니다.
 4. 구성점수·최종 위험도·결측·통계분석을 다시 계산합니다.
 5. Python 데이터 계약과 Node 프론트 계약을 검사합니다.
 6. 모두 통과한 staging만 live와 교체합니다.
@@ -181,7 +182,7 @@ $health.pipeline | ConvertTo-Json -Depth 8
    - `hospital_coordinate_overrides.csv`
    - `hospital_region_overrides.csv`
 3. NEMC 기관, 인구, HIRA, 경계, 카카오와 모든 파생 산출물을 다시 만듭니다.
-4. 최근 병상 스냅샷을 재사용하도록 설정했다면 모집단 일치·수집시각·원천시각·유효기관 하한을 시작, 점수 계산 전, 승격 직전에 검사합니다. 실패 시 병상 API로 몰래 대체하지 않고 전체 실행을 중단합니다.
+4. 최근 병상 스냅샷을 재사용하도록 설정했다면 모집단 일치·시각 형식·수치 일관성·사용 가능 기관 하한을 시작, 점수 계산 전, 승격 직전에 검사합니다. 스냅샷 또는 원천 기준시각 경과는 감사값으로 기록하고 마지막 정상값을 재사용합니다. 구조·수치 검증 실패 시에는 병상 API로 몰래 대체하지 않고 전체 실행을 중단합니다.
 5. 결측 리포트, 분석 결과, Python·프론트 계약을 검사합니다.
 6. 관리 입력과 모든 종속 출력, 경계를 한 generation으로 승격합니다.
 
@@ -238,6 +239,18 @@ python -m venv .venv
 npm ci
 .\run_pipeline.bat
 ```
+
+한 번의 전체 재수집이 아니라 로컬에서 대시보드와 예약 수집기를 계속 실행하려면 먼저 운영 빌드를 만들고 다음 명령을 사용합니다.
+
+```powershell
+npm run build
+npm run check:local-pipeline
+npm run start:local-pipeline
+```
+
+`start:local-pipeline`은 세 API 키가 모두 설정됐는지 값을 노출하지 않고 검사한 뒤 기존 `start:dynamic` 런타임을 스케줄러 활성 상태로 시작합니다. 기본 쓰기 위치는 `runtime/data/`이며 저장소의 검증 seed인 `data/`를 직접 변경하지 않습니다. 한국시간 21:00~09:00에는 병상을 2분마다, 나머지 시간에는 10분마다 갱신하고 전체 파이프라인은 24시간 간격으로 실행합니다. 이 주기는 성공 완료 후 다음 실행까지의 목표 간격이므로 작업 자체가 오래 걸리거나 일일 `full`이 실행 중이면 실효 간격은 길어집니다. `full` 중 도래한 병상 작업은 하나로 합쳐 종료 직후 실행합니다. 실패하거나 새 세대가 검증을 통과하지 못하면 기존 `runtime/data/` 세대를 계속 제공합니다.
+
+주기는 `.env`의 `REFRESH_TIME_ZONE`, `CORE_REFRESH_START_HOUR`, `CORE_REFRESH_END_HOUR`, `CORE_REFRESH_INTERVAL_MINUTES`, `OFF_HOURS_REFRESH_INTERVAL_MINUTES`로 조정합니다. 이전 `FAST_REFRESH_INTERVAL_MINUTES`는 더 이상 스케줄을 제어하지 않으며, 상태 응답의 호환 필드 `fastIntervalMinutes`만 핵심 시간 간격을 반영합니다. 프로세스가 종료되면 예약 수집도 멈춥니다.
 
 수집 후 검증만 다시 실행할 수 있습니다.
 

@@ -42,7 +42,17 @@ const python = process.env.PIPELINE_PYTHON || (
 );
 const port = process.env.PORT || "3000";
 const schedulerEnabled = process.env.ENABLE_PIPELINE_SCHEDULER === "true";
-const fastIntervalMinutes = positiveNumber("FAST_REFRESH_INTERVAL_MINUTES", 480);
+const refreshTimeZone = process.env.REFRESH_TIME_ZONE?.trim() || "Asia/Seoul";
+const coreRefreshStartHour = scheduleHour("CORE_REFRESH_START_HOUR", 21);
+const coreRefreshEndHour = scheduleHour("CORE_REFRESH_END_HOUR", 9);
+const coreRefreshIntervalMinutes = positiveNumber(
+  "CORE_REFRESH_INTERVAL_MINUTES",
+  2,
+);
+const offHoursRefreshIntervalMinutes = positiveNumber(
+  "OFF_HOURS_REFRESH_INTERVAL_MINUTES",
+  10,
+);
 const fullIntervalHours = positiveNumber("FULL_REFRESH_INTERVAL_HOURS", 24);
 const failureRetryMinutes = positiveNumber("PIPELINE_FAILURE_RETRY_MINUTES", 60);
 const configuredBedsFailureRetryMinutes = positiveNumber(
@@ -84,7 +94,11 @@ const fullStartGuardMinutes = positiveNumber("FULL_REFRESH_START_GUARD_MINUTES",
 const bedsRefreshTimeoutMinutes = positiveNumber("BEDS_REFRESH_TIMEOUT_MINUTES", 30);
 const fullRefreshTimeoutMinutes = positiveNumber("FULL_REFRESH_TIMEOUT_MINUTES", 120);
 const scheduleConfig = {
-  fastIntervalMinutes,
+  refreshTimeZone,
+  coreRefreshStartHour,
+  coreRefreshEndHour,
+  coreRefreshIntervalMinutes,
+  offHoursRefreshIntervalMinutes,
   fullIntervalHours,
   bedsFailureRetryMinutes: configuredBedsFailureRetryMinutes,
   fullFailureRetryMinutes,
@@ -171,6 +185,14 @@ function positiveNumber(name, fallback) {
   const value = Number(process.env[name] || fallback);
   if (!Number.isFinite(value) || value <= 0) {
     throw new Error(`${name} must be a positive number`);
+  }
+  return value;
+}
+
+function scheduleHour(name, fallback) {
+  const value = Number(process.env[name] || fallback);
+  if (!Number.isInteger(value) || value < 0 || value > 23) {
+    throw new Error(`${name} must be an integer from 0 through 23`);
   }
   return value;
 }
@@ -438,8 +460,11 @@ function runJob(mode, trigger) {
           lastFullReusedBedSnapshot: reusedBedSnapshot,
           lastFullBedSnapshotAt: bedReuseAudit?.snapshotCollectedAt || null,
           lastFullBedSnapshotAgeMinutes: bedReuseAudit?.snapshotAgeMinutes ?? null,
+          lastFullBedSnapshotStale: bedReuseAudit?.snapshotStale ?? null,
           lastFullBedUsableHospitals: bedReuseAudit?.usableHospitals ?? null,
           lastFullBedStaleSourceHospitals: bedReuseAudit?.staleSourceHospitals ?? null,
+          lastFullBedRetainedStaleSourceHospitals:
+            bedReuseAudit?.retainedStaleSourceHospitals ?? null,
           lastFullBedSanitizedSourceHospitals: bedReuseAudit?.sanitizedSourceHospitals ?? null,
           lastFullBedSourceMaxAgeHours: bedReuseAudit?.sourceMaxAgeHours ?? null,
         }
@@ -478,6 +503,8 @@ function runJob(mode, trigger) {
             ? refreshedBedDeadline.fingerprint
             : null,
           lastBedsFreshFallbackHospitals: bedRefreshAudit?.freshFallbackHospitals ?? 0,
+          lastBedsStaleFallbackHospitals: bedRefreshAudit?.staleFallbackHospitals ?? 0,
+          lastBedsRetainedFallbackHospitals: bedRefreshAudit?.retainedFallbackHospitals ?? 0,
           lastBedsMaskedFailedRegionHospitals:
             bedRefreshAudit?.maskedFailedRegionHospitals ?? 0,
           lastBedsNewResponseHospitals: bedRefreshAudit?.newResponseHospitals ?? null,
@@ -547,6 +574,12 @@ function runDueScheduledJob() {
     bedRefreshDeadlineAt: bedDeadline.deadlineAt,
     bedRefreshDeadlineFingerprint: bedDeadline.fingerprint,
     bedRefreshDeadlineKnown: bedDeadline.known,
+    activeRefreshWindow: bedsState.activeRefreshWindow,
+    activeRefreshIntervalMinutes: bedsState.activeRefreshIntervalMinutes,
+    nextCoreRefreshWindowAt: bedsState.nextCoreWindowAt == null
+      ? null
+      : new Date(bedsState.nextCoreWindowAt).toISOString(),
+    nextBedsIntervalAt: new Date(bedsState.intervalDueAt).toISOString(),
     nextBedsAttemptAt: new Date(bedsState.nextAttemptAt).toISOString(),
   };
   if (
@@ -554,6 +587,11 @@ function runDueScheduledJob() {
     || scheduleStatus.bedRefreshDeadlineFingerprint
       !== previousStatus.bedRefreshDeadlineFingerprint
     || scheduleStatus.bedRefreshDeadlineKnown !== previousStatus.bedRefreshDeadlineKnown
+    || scheduleStatus.activeRefreshWindow !== previousStatus.activeRefreshWindow
+    || scheduleStatus.activeRefreshIntervalMinutes
+      !== previousStatus.activeRefreshIntervalMinutes
+    || scheduleStatus.nextCoreRefreshWindowAt !== previousStatus.nextCoreRefreshWindowAt
+    || scheduleStatus.nextBedsIntervalAt !== previousStatus.nextBedsIntervalAt
     || scheduleStatus.nextBedsAttemptAt !== previousStatus.nextBedsAttemptAt
   ) updateStatus(scheduleStatus);
 
@@ -580,7 +618,13 @@ function startScheduler() {
   updateStatus({
     state: previousStatus.state === "running" ? "idle" : (previousStatus.state || "idle"),
     schedulerEnabled: true,
-    fastIntervalMinutes,
+    refreshTimeZone,
+    coreRefreshStartHour,
+    coreRefreshEndHour,
+    coreRefreshIntervalMinutes,
+    offHoursRefreshIntervalMinutes,
+    // Keep the old status field for consumers migrating from the fixed cadence.
+    fastIntervalMinutes: coreRefreshIntervalMinutes,
     fullIntervalHours,
     failureRetryMinutes,
     configuredBedsFailureRetryMinutes,

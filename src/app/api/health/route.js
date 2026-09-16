@@ -18,6 +18,8 @@ export async function GET() {
         dataStale: snapshot.dataStale,
         bedRiskExpiredRegions: snapshot.bedRiskExpiredRegions,
         bedRiskExpiredHospitals: snapshot.bedRiskExpiredHospitals,
+        bedRiskStaleRegions: snapshot.bedRiskStaleRegions,
+        bedRiskStaleHospitals: snapshot.bedRiskStaleHospitals,
         nextBedRiskExpiryAt: snapshot.nextBedRiskExpiryAt,
         regions: snapshot.data.kpi.total,
         completeRegions: snapshot.data.kpi.complete,

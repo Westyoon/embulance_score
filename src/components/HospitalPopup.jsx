@@ -53,6 +53,11 @@ export default function HospitalPopup({ hospital, region, onClose, onBack }) {
                 <span style={{ width: 7, height: 7, borderRadius: 99, background: bedStatusColor[hospital.status] }} />
                 <span style={{ color: bedStatusColor[hospital.status] }}>{hospital.status}</span>
               </span>
+              {hospital.bedDataStale && (
+                <span role="status" style={{ fontSize: 10.5, fontWeight: 700, color: "#92400e", background: "#fffbeb", border: "1px solid #fde68a", padding: "2px 7px", borderRadius: 999 }}>
+                  마지막 수집값
+                </span>
+              )}
             </div>
           </div>
           <button onClick={onClose} className="flex items-center gap-1" style={{ color: "#64748b", background: "none", border: "none", cursor: "pointer", fontSize: 10.5 }}>목록으로 <X size={15} /></button>
@@ -93,11 +98,12 @@ export default function HospitalPopup({ hospital, region, onClose, onBack }) {
         {hospital.status !== "결측" && (
           <div style={{ marginTop: 16, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 12px" }}>
             <div className="flex items-center justify-between">
-              <span style={{ fontSize: 11.5, fontWeight: 600 }}>실시간 응급실 병상</span>
+              <span style={{ fontSize: 11.5, fontWeight: 600 }}>{hospital.bedDataStale ? "마지막 수집 응급실 병상" : "실시간 응급실 병상"}</span>
               <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a" }}>{hospital.availableBeds} / {hospital.totalBeds}석</span>
             </div>
             <div style={{ fontSize: 10, ...mutedText, marginTop: 2 }}>
               포화율 {hospital.saturation?.toFixed(0)}% {updatedLabel && `· ${updatedLabel} 기준`}
+              {hospital.bedDataStale && " · 원천 기준시각 경과"}
             </div>
           </div>
         )}

@@ -8,7 +8,7 @@ import { BOUNDARY_FILE, DATA_DIR } from "./csvServer";
 import { DASHBOARD_SOURCE_FILES, loadDashboardData } from "./loadDashboardData";
 
 const CACHE_KEY = Symbol.for("embulance-score.dashboard-snapshot");
-const DASHBOARD_SCHEMA_VERSION = "dashboard-api-v3";
+const DASHBOARD_SCHEMA_VERSION = "dashboard-api-v4";
 const PIPELINE_STATE_DIR = process.env.PIPELINE_STATE_DIR
   ? path.resolve(process.env.PIPELINE_STATE_DIR)
   : path.join(process.cwd(), "runtime", "state");
@@ -124,79 +124,45 @@ function hospitalBedExpired(hospital, nowMillis) {
   return !Number.isFinite(validUntil) || validUntil <= nowMillis;
 }
 
-function maskHospital(hospital) {
+function withHospitalFreshness(hospital, bedDataStale) {
+  const hasData = hasBedValue(hospital);
   return {
     ...hospital,
-    status: "결측",
-    availableBeds: null,
-    totalBeds: null,
-    saturation: null,
+    bedDataStale: hasData && bedDataStale,
+    bedDataFreshness: !hasData
+      ? "missing"
+      : (bedDataStale ? "last-known" : "current"),
   };
 }
 
-function withBedCoverage(region, hospitals) {
+function withBedFreshness(region, hospitals, bedRiskStale) {
   const totalHospitals = hospitals.length;
   const bedDataHospitals = hospitals.filter(hasUsableBedSaturation).length;
+  const bedDataStaleHospitals = hospitals.filter((hospital) => (
+    hospital.bedDataStale && hasUsableBedSaturation(hospital)
+  )).length;
+  const bedDataCurrentHospitals = bedDataHospitals - bedDataStaleHospitals;
   return {
     ...region,
+    bedRiskStale,
+    scoreExpired: bedRiskStale,
+    bedRiskFreshness: region.missing
+      ? "missing"
+      : (bedRiskStale ? "last-known" : "current"),
     bedDataHospitals,
+    bedDataCurrentHospitals,
+    bedDataStaleHospitals,
     totalHospitals,
     bedDataCoverage: totalHospitals > 0
       ? bedDataHospitals / totalHospitals
+      : null,
+    bedDataCurrentCoverage: totalHospitals > 0
+      ? bedDataCurrentHospitals / totalHospitals
       : null,
     bedDataQuality: bedDataHospitals === 0
       ? "결측"
       : (bedDataHospitals === totalHospitals ? "전체응답" : "부분응답"),
     hospitals,
-  };
-}
-
-function maskRegion(region, hospitals) {
-  return withBedCoverage({
-    ...region,
-    missing: true,
-    bed: null,
-    popBed: null,
-    doc: null,
-    missingComponents: [
-      ...new Set([...(region.missingComponents || []), "병상데이터만료"]),
-    ],
-    missingReason: "병상데이터만료",
-    risk: null,
-    cluster: null,
-    clusterLabel: null,
-    clusterColor: null,
-  }, hospitals);
-}
-
-function maskRegionAnalytics(region) {
-  return {
-    ...region,
-    cluster: null,
-    clusterLabel: null,
-    clusterColor: null,
-  };
-}
-
-function maskAnalyticsPayload(data) {
-  return {
-    ...data,
-    regionIndex: Object.fromEntries(
-      Object.entries(data.regionIndex).map(([key, region]) => (
-        [key, maskRegionAnalytics(region)]
-      )),
-    ),
-    regionsByKey: Object.fromEntries(
-      Object.entries(data.regionsByKey).map(([key, region]) => (
-        [key, maskRegionAnalytics(region)]
-      )),
-    ),
-    ranked: data.ranked.map(maskRegionAnalytics),
-    clusterProfile: [],
-    clusterIds: [],
-    clusterMetaById: {},
-    correlation: [],
-    regression: { coef: [], r2: null, mae: null, rows: 0 },
   };
 }
 
@@ -274,21 +240,24 @@ export function applyDashboardFreshness(data, nowMillis = Date.now()) {
     .map((hospital) => hospital.orgCode));
   const analyticsStale = expiredRegionKeys.size > 0;
 
-  const refreshHospital = (hospital) => (
-    expiredHospitalCodes.has(hospital.orgCode) ? maskHospital(hospital) : hospital
+  const refreshHospital = (hospital) => withHospitalFreshness(
+    hospital,
+    expiredHospitalCodes.has(hospital.orgCode),
   );
   const refreshRegion = (region) => {
     const hospitals = (region.hospitals || []).map(refreshHospital);
-    return expiredRegionKeys.has(region.key)
-      ? maskRegion(region, hospitals)
-      : withBedCoverage(region, hospitals);
+    return withBedFreshness(
+      region,
+      hospitals,
+      expiredRegionKeys.has(region.key),
+    );
   };
   const regionsByKey = Object.fromEntries(
     Object.entries(data.regionsByKey).map(([key, region]) => [key, refreshRegion(region)]),
   );
   const ranked = data.ranked
     .map((region) => regionsByKey[region.key])
-    .filter((region) => region && !region.missing)
+    .filter((region) => region && !region.missing && Number.isFinite(region.risk))
     .sort((left, right) => right.risk - left.risk);
   const averageRisk = ranked.length > 0
     ? ranked.reduce((sum, region) => sum + region.risk, 0) / ranked.length
@@ -296,14 +265,20 @@ export function applyDashboardFreshness(data, nowMillis = Date.now()) {
   const futureExpiryTimes = completeRegions
     .map((region) => Date.parse(region.bedRiskValidUntil || ""))
     .filter((timestamp) => Number.isFinite(timestamp) && timestamp > nowMillis);
+  const currentComplete = ranked.filter((region) => !region.bedRiskStale).length;
 
   const refreshedData = {
       ...data,
       analysisSnapshot: buildAnalysisSnapshot(data, expiredRegionKeys),
       currentRiskAvailable: ranked.length > 0,
+      currentFreshRiskAvailable: currentComplete > 0,
       analyticsStale,
       bedRiskExpiredRegions: expiredRegionKeys.size,
       bedRiskExpiredHospitals: expiredHospitalCodes.size,
+      bedRiskStaleRegions: expiredRegionKeys.size,
+      bedRiskStaleHospitals: expiredHospitalCodes.size,
+      bedRiskCurrentRegions: currentComplete,
+      bedRiskLastKnownRegions: ranked.length - currentComplete,
       nextBedRiskExpiryAt: futureExpiryTimes.length > 0
         ? new Date(Math.min(...futureExpiryTimes)).toISOString()
         : null,
@@ -323,7 +298,7 @@ export function applyDashboardFreshness(data, nowMillis = Date.now()) {
   };
 
   return {
-    data: analyticsStale ? maskAnalyticsPayload(refreshedData) : refreshedData,
+    data: refreshedData,
     expiredRegionKeys,
     expiredHospitalCodes,
   };
@@ -339,15 +314,14 @@ function freshnessVersion(expiredRegionKeys, expiredHospitalCodes, collectionSta
 }
 
 export function maskStaleDashboardData(data) {
-  const masked = applyDashboardFreshness(data, Number.POSITIVE_INFINITY);
-  return maskAnalyticsPayload({
-    ...masked.data,
-    currentRiskAvailable: false,
-    analyticsStale: true,
-    bedRiskExpiredRegions: data.kpi.complete,
-    bedRiskExpiredHospitals: data.allHospitals.filter(hasBedValue).length,
-    nextBedRiskExpiryAt: null,
-  });
+  // Retain the legacy export name for callers on dashboard-api-v3. In v4 this
+  // marks stale values instead of removing them.
+  const marked = applyDashboardFreshness(data);
+  return {
+    ...marked.data,
+    collectionStale: true,
+    lastKnownDataDisplayed: true,
+  };
 }
 
 export function getDashboardSnapshot() {
@@ -365,6 +339,9 @@ export function getDashboardSnapshot() {
   );
   const expiredRegions = freshness.expiredRegionKeys.size;
   const stale = collectionStale || expiredRegions > 0;
+  const displayData = ageMinutes == null
+    ? maskStaleDashboardData(raw.data)
+    : freshness.data;
   return {
     ...raw,
     version: `${raw.version}-${freshnessHash}`,
@@ -373,8 +350,16 @@ export function getDashboardSnapshot() {
     dataStale: stale,
     bedRiskExpiredRegions: expiredRegions,
     bedRiskExpiredHospitals: freshness.expiredHospitalCodes.size,
+    bedRiskStaleRegions: expiredRegions,
+    bedRiskStaleHospitals: freshness.expiredHospitalCodes.size,
     nextBedRiskExpiryAt: freshness.data.nextBedRiskExpiryAt,
-    data: ageMinutes == null ? maskStaleDashboardData(raw.data) : freshness.data,
+    data: {
+      ...displayData,
+      collectionStale,
+      dataAgeMinutes: ageMinutes,
+      dataStaleAfterMinutes: DASHBOARD_DATA_STALE_AFTER_MINUTES,
+      lastKnownDataDisplayed: stale,
+    },
   };
 }
 

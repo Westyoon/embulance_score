@@ -119,7 +119,7 @@ class BedApiRetryTests(unittest.TestCase):
 
 
 class PartialBedRefreshFallbackTests(unittest.TestCase):
-    def test_failed_region_uses_only_fresh_valid_previous_rows(self) -> None:
+    def test_failed_region_retains_fresh_and_stale_valid_previous_rows(self) -> None:
         collected_at = pd.Timestamp("2026-09-04T00:00:00Z")
         master = pd.DataFrame(
             [
@@ -192,12 +192,16 @@ class PartialBedRefreshFallbackTests(unittest.TestCase):
         self.assertEqual(rows.loc["FRESH", "가용병상"], 6)
         self.assertEqual(rows.loc["FRESH", "전체병상"], 10)
         self.assertEqual(rows.loc["FRESH", "포화율"], 40)
-        for code in ("EXPIRED", "INVALID"):
-            self.assertTrue(pd.isna(rows.loc[code, "가용병상"]))
-            self.assertTrue(pd.isna(rows.loc[code, "전체병상"]))
-            self.assertTrue(pd.isna(rows.loc[code, "포화율"]))
-            self.assertEqual(rows.loc[code, "상태"], "결측")
-            self.assertEqual(rows.loc[code, "수집시각"], previous_collection)
+        self.assertEqual(rows.loc["EXPIRED", "가용병상"], 6)
+        self.assertEqual(rows.loc["EXPIRED", "전체병상"], 10)
+        self.assertEqual(rows.loc["EXPIRED", "포화율"], 40)
+        self.assertEqual(rows.loc["EXPIRED", "상태"], "여유")
+        self.assertEqual(rows.loc["EXPIRED", "수집시각"], previous_collection)
+        self.assertTrue(pd.isna(rows.loc["INVALID", "가용병상"]))
+        self.assertTrue(pd.isna(rows.loc["INVALID", "전체병상"]))
+        self.assertTrue(pd.isna(rows.loc["INVALID", "포화율"]))
+        self.assertEqual(rows.loc["INVALID", "상태"], "결측")
+        self.assertEqual(rows.loc["INVALID", "수집시각"], previous_collection)
 
         self.assertEqual(audit["successfulRegions"], 1)
         self.assertEqual(audit["failedRegionCount"], 1)
@@ -212,10 +216,100 @@ class PartialBedRefreshFallbackTests(unittest.TestCase):
             ],
         )
         self.assertEqual(audit["newResponseHospitals"], 3)
+        self.assertEqual(audit["schemaVersion"], 3)
         self.assertEqual(audit["failedRegionHospitals"], 3)
+        self.assertEqual(audit["missingResponseHospitals"], 0)
         self.assertEqual(audit["freshFallbackHospitals"], 1)
-        self.assertEqual(audit["maskedFailedRegionHospitals"], 2)
-        self.assertEqual(audit["usableHospitals"], 4)
+        self.assertEqual(audit["staleFallbackHospitals"], 1)
+        self.assertEqual(audit["retainedFallbackHospitals"], 2)
+        self.assertEqual(audit["maskedFailedRegionHospitals"], 1)
+        self.assertEqual(audit["maskedMissingResponseHospitals"], 0)
+        self.assertEqual(audit["maskedFallbackHospitals"], 1)
+        self.assertEqual(audit["usableHospitals"], 5)
+
+    def test_successful_region_retains_valid_previous_row_for_omitted_hospital(self) -> None:
+        collected_at = pd.Timestamp("2026-09-04T00:00:00Z")
+        master = pd.DataFrame(
+            [
+                {
+                    "기관코드": code,
+                    "병원명": code,
+                    "등급": "지역",
+                    "시도": "서울특별시",
+                    "시군구": "종로구",
+                }
+                for code in ("NEW1", "NEW2", "LAST_KNOWN", "FUTURE")
+            ]
+        )
+        records = [
+            {
+                "hpid": code,
+                "hvec": available,
+                "hvs01": 10,
+                "hvidate": "20260904085500",
+            }
+            for code, available in (("NEW1", 3), ("NEW2", 4))
+        ]
+        last_known_collection = "2026-09-01T23:00:00+00:00"
+        future_collection = "2026-09-04T00:00:00+00:00"
+        previous = pd.DataFrame(
+            [
+                {
+                    "기관코드": "LAST_KNOWN",
+                    "가용병상": 7,
+                    "전체병상": 10,
+                    "API기준시각": "20260902080000",
+                    "수집시각": last_known_collection,
+                },
+                {
+                    "기관코드": "FUTURE",
+                    "가용병상": 8,
+                    "전체병상": 10,
+                    "API기준시각": "20260905090000",
+                    "수집시각": future_collection,
+                },
+            ]
+        )
+
+        result, audit = part2_collect_bed_status.build_bed_snapshot(
+            master,
+            records,
+            [],
+            previous,
+            collected_at=collected_at,
+            minimum_live_matches=1,
+        )
+        rows = result.set_index("기관코드")
+
+        self.assertEqual(rows.loc["LAST_KNOWN", "가용병상"], 7)
+        self.assertEqual(rows.loc["LAST_KNOWN", "전체병상"], 10)
+        self.assertEqual(rows.loc["LAST_KNOWN", "포화율"], 30)
+        self.assertEqual(rows.loc["LAST_KNOWN", "상태"], "여유")
+        self.assertEqual(rows.loc["LAST_KNOWN", "API기준시각"], "20260902080000")
+        self.assertEqual(rows.loc["LAST_KNOWN", "수집시각"], last_known_collection)
+        self.assertTrue(pd.isna(rows.loc["FUTURE", "가용병상"]))
+        self.assertTrue(pd.isna(rows.loc["FUTURE", "전체병상"]))
+        self.assertTrue(pd.isna(rows.loc["FUTURE", "포화율"]))
+        self.assertEqual(rows.loc["FUTURE", "상태"], "결측")
+        self.assertEqual(rows.loc["FUTURE", "수집시각"], future_collection)
+        self.assertEqual(rows.loc["NEW1", "수집시각"], "2026-09-04T00:00:00+00:00")
+
+        self.assertEqual(audit["schemaVersion"], 3)
+        self.assertEqual(audit["successfulRegions"], 1)
+        self.assertEqual(audit["failedRegionCount"], 0)
+        self.assertEqual(audit["failedRegionHospitals"], 0)
+        self.assertEqual(audit["missingResponseHospitals"], 2)
+        self.assertEqual(audit["missingResponseFallbackCandidateHospitals"], 2)
+        self.assertEqual(audit["freshMissingResponseFallbackHospitals"], 0)
+        self.assertEqual(audit["staleMissingResponseFallbackHospitals"], 1)
+        self.assertEqual(audit["retainedMissingResponseFallbackHospitals"], 1)
+        self.assertEqual(audit["maskedMissingResponseHospitals"], 1)
+        self.assertEqual(audit["fallbackCandidateHospitals"], 2)
+        self.assertEqual(audit["freshFallbackHospitals"], 0)
+        self.assertEqual(audit["staleFallbackHospitals"], 1)
+        self.assertEqual(audit["retainedFallbackHospitals"], 1)
+        self.assertEqual(audit["maskedFallbackHospitals"], 1)
+        self.assertEqual(audit["usableHospitals"], 3)
 
     def test_large_response_drop_is_rejected_before_fallback(self) -> None:
         master = pd.DataFrame(
@@ -275,7 +369,7 @@ class PartialBedRefreshFallbackTests(unittest.TestCase):
             {"hpid": "INVALID", "hvec": -1, "hvs01": 10, "hvidate": "20260904080000"},
         ]
 
-        with self.assertRaisesRegex(RuntimeError, "유효한 병상 기관 수가 검토 기준보다 적어"):
+        with self.assertRaisesRegex(RuntimeError, "사용 가능한 병상 기관 수가 검토 기준보다 적어"):
             part2_collect_bed_status.build_bed_snapshot(
                 master,
                 records,

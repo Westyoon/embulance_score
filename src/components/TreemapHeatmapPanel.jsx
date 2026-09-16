@@ -107,7 +107,7 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
     <div style={{ ...cardStyle, padding: 16 }}>
       <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 2 }}>지역별 위험도 — 트리맵 · 히트맵</div>
       <div style={{ fontSize: 10.5, ...mutedText, marginBottom: 10 }}>
-        {historical ? `최근 계산 ${data.length}개 지역 · 현재 만료 ${expiredCount}개` : `현재 유효 ${data.length}개 지역만 표시`}
+        {historical ? `마지막 계산 ${data.length}개 지역 · 이전값 ${expiredCount}개` : `산출 ${data.length}개 지역 표시`}
         {policyInvalidCount > 0 ? ` · 계산 당시 원천시각 기준 미충족 ${policyInvalidCount}개` : ""}
         {` · 원천 결측 ${excludedCount}개는 0점 처리 없이 제외 · 박스 크기·색상 = 종합위험도`}
       </div>
@@ -142,7 +142,7 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
               const isHi = highlightKey === c.key;
               return (
                 <g key={c.key} onClick={() => setHighlightKey(c.key)} style={{ cursor: "pointer" }}>
-                  <title>{`${c.name} · 위험도 ${c.risk.toFixed(1)}점 · 응급실 ${c.hospitalCount}개 · 의료진 ${c.doctorCount}명${c.sourcePolicyValidAtCalculation === false ? " · 계산 당시 원천시각 기준 미충족" : c.scoreExpired ? " · 현재 원천시각 만료" : ""}`}</title>
+                  <title>{`${c.name} · 위험도 ${c.risk.toFixed(1)}점 · 응급실 ${c.hospitalCount}개 · 의료진 ${c.doctorCount}명${c.sourcePolicyValidAtCalculation === false ? " · 계산 당시 원천시각 기준 미충족" : c.scoreExpired ? " · 병상 원천 기준시각 경과" : ""}`}</title>
                   <rect x={c.x} y={c.y} width={c.w} height={c.h} fill={riskColor(c.risk)}
                     stroke={isHi ? "#0f172a" : "#ffffff"} strokeWidth={isHi ? 2.5 : 1} />
                   {big && (
@@ -174,7 +174,7 @@ export default function TreemapHeatmapPanel({ data, excludedCount = 0, expiredCo
             {ranked.map((r) => {
               const isHi = highlightKey === r.key;
               return (
-                <div key={r.key} ref={(el) => (rowRefs.current[r.key] = el)} onClick={() => setHighlightKey(r.key)} title={r.sourcePolicyValidAtCalculation === false ? "최근 계산 점수 · 계산 당시 원천시각 기준 미충족" : r.scoreExpired ? "최근 계산 점수 · 현재 원천시각 만료" : undefined}
+                <div key={r.key} ref={(el) => (rowRefs.current[r.key] = el)} onClick={() => setHighlightKey(r.key)} title={r.sourcePolicyValidAtCalculation === false ? "마지막 계산 점수 · 계산 당시 원천시각 기준 미충족" : r.scoreExpired ? "마지막 계산 점수 · 병상 원천 기준시각 경과" : undefined}
                   style={{ display: "grid", gridTemplateColumns: `64px repeat(${COLS.length}, 1fr) 50px`, gap: 3, alignItems: "center",
                     padding: "4px 2px", cursor: "pointer", borderRadius: 6, background: isHi ? riskColor(r.risk) + "1c" : "transparent",
                     outline: isHi ? `1.5px solid ${riskColor(r.risk)}` : "none", outlineOffset: -1 }}>

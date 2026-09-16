@@ -21,6 +21,9 @@ function BedCoverageDisclosure({ region }) {
   const totalHospitals = isFiniteNumber(region.totalHospitals)
     ? region.totalHospitals
     : (region.hospitals?.length ?? 0);
+  const staleHospitals = isFiniteNumber(region.bedDataStaleHospitals)
+    ? region.bedDataStaleHospitals
+    : 0;
   return (
     <div style={{ fontSize: 10.5, ...mutedText, marginTop: 8 }}>
       병상 API 반영 기관 {bedDataHospitals} / {totalHospitals}
@@ -28,7 +31,10 @@ function BedCoverageDisclosure({ region }) {
         ? ` (${Math.round(region.bedDataCoverage * 100)}%)`
         : ""}
       {region.bedDataQuality ? ` · ${region.bedDataQuality}` : ""}
-      <br />병상 구성점수는 해당 시점에 유효하게 보고한 기관 기준
+      {staleHospitals > 0 ? ` · 마지막 수집값 ${staleHospitals}곳` : ""}
+      <br />{region.bedRiskStale
+        ? "병상 구성점수와 종합 위험도는 마지막 성공 수집·계산값"
+        : "병상 구성점수는 해당 시점에 유효하게 보고한 기관 기준"}
     </div>
   );
 }
@@ -87,6 +93,11 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
                 <span style={{ fontSize: 11, fontWeight: 600, color: region.clusterColor, background: region.clusterColor + "1f", padding: "3px 8px", borderRadius: 999 }}>
                   {region.clusterLabel}
                 </span>
+              </div>
+            )}
+            {region.bedRiskStale && (
+              <div role="status" style={{ marginTop: 6, fontSize: 10.5, fontWeight: 700, color: "#92400e" }}>
+                마지막 계산값 · 병상 원천 기준시각 경과
               </div>
             )}
           </div>
@@ -167,7 +178,7 @@ export default function RegionPopup({ region, onClose, onSelectHospital }) {
               </div>
               <span className="flex items-center gap-1.5" style={{ fontSize: 10.5, flexShrink: 0, whiteSpace: "nowrap" }}>
                 <span style={{ width: 7, height: 7, borderRadius: 99, background: bedStatusColor[h.status] }} />
-                <span style={{ color: bedStatusColor[h.status] }}>{h.status}</span>
+                <span style={{ color: bedStatusColor[h.status] }}>{h.status}{h.bedDataStale ? " · 이전값" : ""}</span>
                 {onSelectHospital && <ChevronRight size={12} color="#94a3b8" />}
               </span>
             </div>

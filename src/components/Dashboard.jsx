@@ -14,14 +14,20 @@ function liveIndicator(liveStatus) {
   const health = liveStatus?.health;
   const pipeline = health?.pipeline;
   const stale = health?.dataStale === true;
-  if (liveStatus?.error || liveStatus?.degraded || health?.status === "degraded") {
+  if (liveStatus?.error || liveStatus?.degraded) {
     return { label: "데이터 확인 필요", color: "#f59e0b" };
+  }
+  if (pipeline?.state === "failed") {
+    return { label: "최근 갱신 실패", color: "#ef4444" };
+  }
+  if (stale) {
+    return { label: "마지막 수집값", color: "#f59e0b" };
   }
   if (pipeline?.schedulerEnabled === false) {
     return { label: "검증 스냅샷", color: "#94a3b8" };
   }
-  if (pipeline?.state === "failed" || stale) {
-    return { label: stale ? "데이터 갱신 지연" : "최근 갱신 실패", color: "#ef4444" };
+  if (health?.status === "degraded") {
+    return { label: "최근 갱신 실패", color: "#ef4444" };
   }
   if (pipeline?.state === "running") {
     return { label: pipeline.mode === "full" ? "전체 데이터 갱신 중" : "병상 데이터 갱신 중", color: "#38bdf8" };
@@ -29,13 +35,38 @@ function liveIndicator(liveStatus) {
   return { label: "자동 갱신", color: "#22c55e" };
 }
 
+function formatAsOf(iso) {
+  if (!iso) return null;
+  const value = new Date(iso);
+  if (Number.isNaN(value.getTime())) return null;
+  return new Intl.DateTimeFormat("ko-KR", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(value);
+}
+
 export default function Dashboard({ data, liveStatus = null }) {
   const [tab, setTab] = useState("map");
   const indicator = liveIndicator(liveStatus);
-  const expiredRegions = liveStatus?.health?.bedRiskExpiredRegions
+  const expiredRegions = liveStatus?.health?.bedRiskStaleRegions
+    ?? data.bedRiskStaleRegions
+    ?? liveStatus?.health?.bedRiskExpiredRegions
     ?? data.bedRiskExpiredRegions
     ?? 0;
-  const stale = liveStatus?.health?.dataStale === true;
+  const expiredHospitals = liveStatus?.health?.bedRiskStaleHospitals
+    ?? data.bedRiskStaleHospitals
+    ?? liveStatus?.health?.bedRiskExpiredHospitals
+    ?? data.bedRiskExpiredHospitals
+    ?? 0;
+  const stale = liveStatus?.health?.dataStale
+    ?? data.lastKnownDataDisplayed
+    ?? data.analyticsStale
+    ?? false;
+  const dataAsOf = liveStatus?.health?.scoreAsOf ?? data.kpi?.asOf;
+  const asOfLabel = formatAsOf(dataAsOf);
   return (
     <div style={pageBg}>
       <div style={{ maxWidth: 1180, margin: "0 auto", padding: "22px 20px 40px" }}>
@@ -60,18 +91,20 @@ export default function Dashboard({ data, liveStatus = null }) {
             style={{
               marginBottom: 14,
               padding: "10px 14px",
-              border: "1px solid #fecaca",
+              border: "1px solid #fde68a",
               borderRadius: 10,
-              background: "#fef2f2",
-              color: "#991b1b",
+              background: "#fffbeb",
+              color: "#92400e",
               fontSize: 12.5,
               lineHeight: 1.5,
             }}
           >
+            <div style={{ fontWeight: 700 }}>마지막 수집값을 표시 중입니다.</div>
             {expiredRegions > 0
-              ? `병원 원천 기준시각이 만료된 ${expiredRegions}개 지역의 현재 위험도와 병상 수치를 지도·현재 집계에서 숨겼습니다. ${data.analysisSnapshot ? "분석 탭에서는 기준시각과 주의 문구를 붙인 최근 계산 점수를 제공합니다. " : ""}`
-              : "병상 자동 갱신이 운영 권장시간보다 지연되고 있습니다. "}
-            자동 갱신이 성공하면 정상 상태로 돌아옵니다.
+              ? <>병상 원천 기준시각이 지난 <b>{expiredRegions}개 지역</b>{expiredHospitals > 0 ? <>·<b>{expiredHospitals}개 병원</b></> : null}도 값이 사라지지 않도록 마지막 성공 수집값과 계산 점수를 유지합니다. </>
+              : <>자동 갱신이 운영 권장시간보다 지연되어 마지막 성공 수집값을 유지합니다. </>}
+            실시간 현황과 다를 수 있으니{asOfLabel ? <> <b>{asOfLabel}</b> 기준임을 확인해 주세요.</> : " 기준시각을 확인해 주세요."}
+            {" "}자동 갱신이 성공하면 최신값으로 교체됩니다.
           </div>
         )}
 

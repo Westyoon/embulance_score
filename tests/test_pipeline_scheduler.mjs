@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  bedRefreshCadenceAt,
   bedScheduleState,
   bedsRetryCeilingMinutes,
   boundedBedsFailureRetryMinutes,
@@ -18,6 +19,10 @@ import {
 const NOW = Date.parse("2026-09-04T00:00:00.000Z");
 const minutesAgo = (minutes) => new Date(NOW - minutes * 60_000).toISOString();
 const minutesFromNow = (minutes) => new Date(NOW + minutes * 60_000).toISOString();
+const LONG_CADENCE = Object.freeze({
+  coreRefreshIntervalMinutes: 60,
+  offHoursRefreshIntervalMinutes: 240,
+});
 
 test("Korea-local hospital timestamps produce the earliest usable source deadline", () => {
   const rows = [
@@ -56,16 +61,136 @@ test("beds wins when both scheduled modes are due", () => {
 });
 
 test("beds retry is capped by source TTL, dashboard staleness, interval, and safety lead", () => {
-  assert.equal(bedsRetryCeilingMinutes(), 45);
+  assert.equal(bedsRetryCeilingMinutes(), 515);
   assert.equal(boundedBedsFailureRetryMinutes(), 45);
   assert.equal(
-    boundedBedsFailureRetryMinutes({ bedsFailureRetryMinutes: 480 }),
-    45,
+    boundedBedsFailureRetryMinutes({ bedsFailureRetryMinutes: 600 }),
+    515,
   );
   assert.equal(
     boundedBedsFailureRetryMinutes({ bedsFailureRetryMinutes: 30 }),
     30,
   );
+});
+
+test("the default Korea schedule uses the overnight core window", () => {
+  const beforeCore = bedRefreshCadenceAt("2026-09-03T11:59:00.000Z");
+  assert.deepEqual(beforeCore, {
+    window: "off-hours",
+    intervalMinutes: 10,
+    timeZone: "Asia/Seoul",
+    nextCoreWindowAt: Date.parse("2026-09-03T12:00:00.000Z"),
+  });
+
+  assert.equal(
+    bedRefreshCadenceAt("2026-09-03T12:00:00.000Z").window,
+    "core",
+  );
+  assert.equal(
+    bedRefreshCadenceAt("2026-09-03T23:59:00.000Z").intervalMinutes,
+    2,
+  );
+  assert.equal(
+    bedRefreshCadenceAt("2026-09-04T00:00:00.000Z").window,
+    "off-hours",
+  );
+});
+
+test("schedule time zone, daytime window, and intervals are configurable", () => {
+  const config = {
+    refreshTimeZone: "UTC",
+    coreRefreshStartHour: 8,
+    coreRefreshEndHour: 18,
+    coreRefreshIntervalMinutes: 15,
+    offHoursRefreshIntervalMinutes: 90,
+  };
+
+  assert.equal(
+    bedRefreshCadenceAt("2026-09-04T08:00:00.000Z", config).intervalMinutes,
+    15,
+  );
+  assert.equal(
+    bedRefreshCadenceAt("2026-09-04T18:00:00.000Z", config).intervalMinutes,
+    90,
+  );
+  assert.equal(
+    bedRefreshCadenceAt("2026-09-04T07:00:00.000Z", config).nextCoreWindowAt,
+    Date.parse("2026-09-04T08:00:00.000Z"),
+  );
+});
+
+test("legacy fixed interval configuration cannot override the time-window defaults", () => {
+  assert.equal(
+    bedRefreshCadenceAt("2026-09-03T12:00:00.000Z", {
+      fastIntervalMinutes: 90,
+    }).intervalMinutes,
+    2,
+  );
+  assert.equal(
+    bedRefreshCadenceAt("2026-09-04T00:00:00.000Z", {
+      fastIntervalMinutes: 90,
+    }).intervalMinutes,
+    10,
+  );
+});
+
+test("invalid schedule zones and hours fail during configuration", () => {
+  assert.throws(
+    () => bedRefreshCadenceAt(NOW, { refreshTimeZone: "Mars/Olympus" }),
+    /valid IANA time zone/,
+  );
+  assert.throws(
+    () => bedRefreshCadenceAt(NOW, { coreRefreshStartHour: 24 }),
+    /integer from 0 through 23/,
+  );
+});
+
+test("off-hours scheduling wakes at the core-window boundary when it comes first", () => {
+  const now = Date.parse("2026-09-03T11:59:00.000Z"); // 20:59 KST
+  const state = bedScheduleState({
+    status: {
+      schedulerStartedAt: "2026-09-03T11:55:00.000Z",
+      lastBedsSuccessAt: "2026-09-03T11:55:00.000Z",
+    },
+    now,
+  });
+
+  assert.equal(state.activeRefreshWindow, "off-hours");
+  assert.equal(state.activeRefreshIntervalMinutes, 10);
+  assert.equal(state.nextCoreWindowAt, Date.parse("2026-09-03T12:00:00.000Z"));
+  assert.equal(state.intervalDueAt, Date.parse("2026-09-03T12:00:00.000Z"));
+});
+
+test("core-window boundary remains due at and after the boundary tick", () => {
+  const status = {
+    schedulerStartedAt: "2026-09-03T11:59:00.000Z",
+    lastBedsSuccessAt: "2026-09-03T11:59:00.000Z", // 20:59 KST
+  };
+  const boundary = Date.parse("2026-09-03T12:00:00.000Z"); // 21:00 KST
+
+  const exact = bedScheduleState({ status, now: boundary });
+  assert.equal(exact.activeRefreshWindow, "core");
+  assert.equal(exact.intervalDueAt, boundary);
+  assert.equal(exact.due, true);
+
+  const after = bedScheduleState({ status, now: boundary + 60_000 });
+  assert.equal(after.activeRefreshWindow, "core");
+  assert.equal(after.intervalDueAt, boundary);
+  assert.equal(after.due, true);
+});
+
+test("a refresh at the core boundary fulfills that boundary", () => {
+  const boundary = Date.parse("2026-09-03T12:00:00.000Z");
+  const state = bedScheduleState({
+    status: {
+      schedulerStartedAt: "2026-09-03T11:30:00.000Z",
+      lastBedsSuccessAt: new Date(boundary).toISOString(),
+    },
+    now: boundary + 60_000,
+  });
+
+  assert.equal(state.due, false);
+  assert.equal(state.intervalDueAt, boundary + 2 * 60_000);
 });
 
 test("full failures cannot repeat faster than their maintenance cadence", () => {
@@ -83,7 +208,7 @@ test("invalid freshness budget is rejected instead of silently allowing late ret
   assert.throws(
     () => bedsRetryCeilingMinutes({
       bedSourceMaxAgeHours: 10,
-      fastIntervalMinutes: 540,
+      offHoursRefreshIntervalMinutes: 540,
       bedRefreshSafetyLeadMinutes: 60,
     }),
     /leave at least one minute/,
@@ -99,16 +224,18 @@ test("actual bed deadline makes beds due before the regular interval", () => {
   const state = bedScheduleState({
     status,
     now: NOW,
+    config: LONG_CADENCE,
     bedDeadlineAt: minutesFromNow(30),
   });
 
   assert.equal(state.due, true);
   assert.equal(state.ready, true);
-  assert.equal(state.intervalDueAt, NOW + 420 * 60_000);
+  assert.equal(state.intervalDueAt, NOW + 180 * 60_000);
   assert.equal(state.deadlineDueAt, NOW - 45 * 60_000);
   assert.equal(decideScheduledMode({
     status,
     now: NOW,
+    config: LONG_CADENCE,
     bedDeadlineAt: minutesFromNow(30),
   }), "beds");
 });
@@ -123,6 +250,7 @@ test("a bed deadline outside the safety lead does not force an early refresh", (
   assert.equal(decideScheduledMode({
     status,
     now: NOW,
+    config: LONG_CADENCE,
     bedDeadlineAt: minutesFromNow(76),
   }), null);
 });
@@ -140,6 +268,7 @@ test("a successful refresh consumes an unchanged near-expiry source deadline", (
   const state = bedScheduleState({
     status,
     now: NOW,
+    config: LONG_CADENCE,
     bedDeadlineAt: deadlineAt,
     bedDeadlineFingerprint: "same-source",
   });
@@ -161,6 +290,7 @@ test("an early manual or interval refresh does not consume a later deadline", ()
   const state = bedScheduleState({
     status,
     now: NOW,
+    config: LONG_CADENCE,
     bedDeadlineAt: deadlineAt,
     bedDeadlineFingerprint: "same-source",
   });
@@ -181,6 +311,7 @@ test("small deadline movement is one consumed observation rather than an API loo
   const state = bedScheduleState({
     status,
     now: NOW,
+    config: LONG_CADENCE,
     bedDeadlineAt: minutesFromNow(30.1),
     bedDeadlineFingerprint: "same-source",
   });
@@ -203,6 +334,7 @@ test("repeated stalled source observations use bounded exponential backoff", () 
   const state = bedScheduleState({
     status,
     now: NOW,
+    config: LONG_CADENCE,
     bedDeadlineAt: deadlineAt,
     bedDeadlineFingerprint: "same-source",
   });
@@ -336,15 +468,58 @@ test("deadline retry leaves one beds timeout plus promotion margin before expiry
 test("full does not start when beds will need the only worker soon", () => {
   const status = {
     schedulerStartedAt: minutesAgo(2_000),
-    lastBedsSuccessAt: minutesAgo(479),
+    lastBedsSuccessAt: minutesAgo(119),
     lastFullSuccessAt: minutesAgo(25 * 60),
   };
 
-  assert.equal(decideScheduledMode({ status, now: NOW }), null);
+  assert.equal(decideScheduledMode({ status, now: NOW, config: LONG_CADENCE }), null);
   assert.equal(decideScheduledMode({
-    status: { ...status, lastBedsSuccessAt: minutesAgo(300) },
+    status: { ...status, lastBedsSuccessAt: minutesAgo(100) },
+    now: NOW,
+    config: LONG_CADENCE,
+  }), "full");
+});
+
+test("short bed cadence still allows a due daily full refresh between bed runs", () => {
+  const status = {
+    schedulerStartedAt: minutesAgo(2_000),
+    lastBedsSuccessAt: new Date(NOW).toISOString(),
+    lastFullSuccessAt: minutesAgo(25 * 60),
+  };
+
+  assert.equal(decideScheduledMode({ status, now: NOW }), "full");
+});
+
+test("short cadence waits for a fresh beds handoff before starting full", () => {
+  const waiting = {
+    schedulerStartedAt: minutesAgo(2_000),
+    lastBedsSuccessAt: minutesAgo(9),
+    lastFullSuccessAt: minutesAgo(25 * 60),
+  };
+
+  assert.equal(decideScheduledMode({ status: waiting, now: NOW }), null);
+  assert.equal(decideScheduledMode({
+    status: { ...waiting, lastBedsSuccessAt: minutesAgo(10) },
+    now: NOW,
+  }), "beds");
+  assert.equal(decideScheduledMode({
+    status: { ...waiting, lastBedsSuccessAt: new Date(NOW).toISOString() },
     now: NOW,
   }), "full");
+});
+
+test("an earlier source deadline blocks the short-cadence full handoff", () => {
+  const status = {
+    schedulerStartedAt: minutesAgo(2_000),
+    lastBedsSuccessAt: new Date(NOW).toISOString(),
+    lastFullSuccessAt: minutesAgo(25 * 60),
+  };
+
+  assert.equal(decideScheduledMode({
+    status,
+    now: NOW,
+    bedDeadlineAt: minutesFromNow(76),
+  }), null);
 });
 
 test("full and beds retry cooldowns are independent", () => {

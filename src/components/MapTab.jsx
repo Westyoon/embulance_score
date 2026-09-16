@@ -174,7 +174,7 @@ export default function MapTab({ data }) {
                 </div>
                 <span className="flex items-center gap-1.5" style={{ fontSize: 10.5, flexShrink: 0, whiteSpace: "nowrap" }}>
                   <span style={{ width: 7, height: 7, borderRadius: 99, background: bedStatusColor[h.status] }} />
-                  <span style={{ color: bedStatusColor[h.status] }}>{h.status}</span>
+                  <span style={{ color: bedStatusColor[h.status] }}>{h.status}{h.bedDataStale ? " · 이전값" : ""}</span>
                   <ChevronRight size={12} color="#94a3b8" />
                 </span>
               </div>

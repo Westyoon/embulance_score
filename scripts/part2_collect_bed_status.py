@@ -33,6 +33,7 @@ RETRYABLE_RESULT_CODES = {"01", "02", "04", "05", "21", "22", "99"}
 QUOTA_CIRCUIT_RESULT_CODES = {"21", "22"}
 DEFAULT_BED_SOURCE_MAX_AGE_HOURS = 12.0
 MAX_BED_SOURCE_FUTURE_SKEW_MINUTES = 5.0
+FALLBACK_COLUMNS = ["기관코드", "가용병상", "전체병상", "API기준시각", "수집시각"]
 
 
 class RegionFailure(str):
@@ -141,6 +142,34 @@ def bed_source_timestamp_text(values: pd.Series) -> pd.Series:
     return integral.astype("Int64").astype("string").str.zfill(14)
 
 
+def bed_source_timestamps(values: pd.Series) -> pd.Series:
+    text = bed_source_timestamp_text(values)
+    parsed = pd.to_datetime(text, format="%Y%m%d%H%M%S", errors="coerce")
+    return parsed.dt.tz_localize(
+        "Asia/Seoul",
+        ambiguous="NaT",
+        nonexistent="NaT",
+    ).dt.tz_convert("UTC")
+
+
+def valid_bed_source_mask(
+    values: pd.Series,
+    *,
+    reference: pd.Timestamp | datetime | None = None,
+    max_future_skew_minutes: float = MAX_BED_SOURCE_FUTURE_SKEW_MINUTES,
+) -> pd.Series:
+    """Return parseable source timestamps that are not implausibly future-dated."""
+    now = pd.Timestamp.now(tz="UTC") if reference is None else pd.Timestamp(reference)
+    if now.tzinfo is None:
+        now = now.tz_localize("UTC")
+    else:
+        now = now.tz_convert("UTC")
+    parsed = bed_source_timestamps(values)
+    return parsed.notna() & parsed.le(
+        now + pd.Timedelta(minutes=max_future_skew_minutes)
+    )
+
+
 def fresh_bed_source_mask(
     values: pd.Series,
     *,
@@ -157,13 +186,7 @@ def fresh_bed_source_mask(
         now = now.tz_localize("UTC")
     else:
         now = now.tz_convert("UTC")
-    text = bed_source_timestamp_text(values)
-    parsed = pd.to_datetime(text, format="%Y%m%d%H%M%S", errors="coerce")
-    parsed = parsed.dt.tz_localize(
-        "Asia/Seoul",
-        ambiguous="NaT",
-        nonexistent="NaT",
-    ).dt.tz_convert("UTC")
+    parsed = bed_source_timestamps(values)
     return (
         parsed.notna()
         & parsed.ge(now - pd.Timedelta(hours=age_limit))
@@ -182,18 +205,28 @@ def fresh_bed_source_at_collection_mask(
     age_limit = bed_source_max_age_hours() if max_age_hours is None else max_age_hours
     if not math.isfinite(age_limit) or age_limit <= 0:
         raise RuntimeError("BED_SOURCE_MAX_AGE_HOURS는 양수여야 합니다.")
-    text = bed_source_timestamp_text(values)
-    source = pd.to_datetime(text, format="%Y%m%d%H%M%S", errors="coerce")
-    source = source.dt.tz_localize(
-        "Asia/Seoul",
-        ambiguous="NaT",
-        nonexistent="NaT",
-    ).dt.tz_convert("UTC")
+    source = bed_source_timestamps(values)
     collected = pd.to_datetime(collected_values, errors="coerce", utc=True)
     return (
         source.notna()
         & collected.notna()
         & source.ge(collected - pd.Timedelta(hours=age_limit))
+        & source.le(collected + pd.Timedelta(minutes=max_future_skew_minutes))
+    )
+
+
+def valid_bed_source_at_collection_mask(
+    values: pd.Series,
+    collected_values: pd.Series,
+    *,
+    max_future_skew_minutes: float = MAX_BED_SOURCE_FUTURE_SKEW_MINUTES,
+) -> pd.Series:
+    """Validate timestamps without expiring an otherwise usable old value."""
+    source = bed_source_timestamps(values)
+    collected = pd.to_datetime(collected_values, errors="coerce", utc=True)
+    return (
+        source.notna()
+        & collected.notna()
         & source.le(collected + pd.Timedelta(minutes=max_future_skew_minutes))
     )
 
@@ -381,6 +414,85 @@ def previous_response_count(previous: pd.DataFrame | None) -> int:
     return int(previous[value_columns].notna().any(axis=1).sum())
 
 
+def previous_bed_fallback(
+    previous: pd.DataFrame | None,
+    hospital_codes: set[str],
+    *,
+    reference: pd.Timestamp | datetime,
+) -> tuple[pd.DataFrame, dict[str, int]]:
+    """Return validated previous rows without changing their source timestamps."""
+    requested_codes = {
+        str(code).strip()
+        for code in hospital_codes
+        if pd.notna(code) and str(code).strip()
+    }
+    empty = pd.DataFrame(columns=FALLBACK_COLUMNS)
+    empty_audit = {
+        "candidateHospitals": 0,
+        "freshHospitals": 0,
+        "staleHospitals": 0,
+        "retainedHospitals": 0,
+    }
+    if not requested_codes or previous is None or previous.empty:
+        return empty, empty_audit
+
+    fallback = previous.copy()
+    for column in FALLBACK_COLUMNS:
+        if column not in fallback.columns:
+            fallback[column] = pd.NA
+    fallback["기관코드"] = fallback["기관코드"].astype("string").str.strip()
+    fallback = fallback[
+        fallback["기관코드"].isin(requested_codes)
+    ][FALLBACK_COLUMNS].drop_duplicates("기관코드", keep="last")
+    fallback["가용병상"] = pd.to_numeric(fallback["가용병상"], errors="coerce")
+    fallback["전체병상"] = pd.to_numeric(fallback["전체병상"], errors="coerce")
+    fallback[["가용병상", "전체병상"]] = fallback[["가용병상", "전체병상"]].replace(
+        [math.inf, -math.inf],
+        pd.NA,
+    )
+
+    reference_timestamp = pd.Timestamp(reference)
+    if reference_timestamp.tzinfo is None:
+        reference_timestamp = reference_timestamp.tz_localize("UTC")
+    else:
+        reference_timestamp = reference_timestamp.tz_convert("UTC")
+    collected = pd.to_datetime(fallback["수집시각"], errors="coerce", utc=True)
+    collection_valid = collected.notna() & collected.le(
+        reference_timestamp
+        + pd.Timedelta(minutes=MAX_BED_SOURCE_FUTURE_SKEW_MINUTES)
+    )
+    source_fresh = fresh_bed_source_mask(
+        fallback["API기준시각"],
+        reference=reference_timestamp,
+    )
+    source_valid = (
+        valid_bed_source_mask(
+            fallback["API기준시각"],
+            reference=reference_timestamp,
+        )
+        & valid_bed_source_at_collection_mask(
+            fallback["API기준시각"],
+            fallback["수집시각"],
+        )
+        & collection_valid
+    )
+    values_valid = (
+        fallback["전체병상"].gt(0)
+        & fallback["가용병상"].ge(0)
+        & source_valid
+    )
+    # Preserve the original API/collection timestamps. Consumers use them to
+    # label retained values as last-known instead of mistaking them for a new
+    # observation.
+    fallback.loc[~values_valid, ["가용병상", "전체병상"]] = pd.NA
+    return fallback, {
+        "candidateHospitals": len(fallback),
+        "freshHospitals": int((values_valid & source_fresh).sum()),
+        "staleHospitals": int((values_valid & ~source_fresh).sum()),
+        "retainedHospitals": int(values_valid.sum()),
+    }
+
+
 def failed_region_fallback(
     master: pd.DataFrame,
     previous: pd.DataFrame | None,
@@ -388,13 +500,14 @@ def failed_region_fallback(
     *,
     reference: pd.Timestamp | datetime,
 ) -> tuple[pd.DataFrame, dict[str, int]]:
-    columns = ["기관코드", "가용병상", "전체병상", "API기준시각", "수집시각"]
     failed_keys = {(failure.province, failure.district) for failure in failures}
     if not failed_keys:
-        return pd.DataFrame(columns=columns), {
+        return pd.DataFrame(columns=FALLBACK_COLUMNS), {
             "failedRegionHospitals": 0,
             "fallbackCandidateHospitals": 0,
             "freshFallbackHospitals": 0,
+            "staleFallbackHospitals": 0,
+            "retainedFallbackHospitals": 0,
             "maskedFailedRegionHospitals": 0,
         }
 
@@ -404,38 +517,60 @@ def failed_region_fallback(
     ]
     failed_codes = set(failed_master["기관코드"].astype("string"))
     failed_hospitals = len(failed_codes)
-    if previous is None or previous.empty:
-        return pd.DataFrame(columns=columns), {
-            "failedRegionHospitals": failed_hospitals,
-            "fallbackCandidateHospitals": 0,
-            "freshFallbackHospitals": 0,
-            "maskedFailedRegionHospitals": failed_hospitals,
-        }
-
-    fallback = previous.copy()
-    for column in columns:
-        if column not in fallback.columns:
-            fallback[column] = pd.NA
-    fallback = fallback[
-        fallback["기관코드"].astype("string").isin(failed_codes)
-    ][columns].drop_duplicates("기관코드", keep="last")
-    fallback["기관코드"] = fallback["기관코드"].astype("string").str.strip()
-    fallback["가용병상"] = pd.to_numeric(fallback["가용병상"], errors="coerce")
-    fallback["전체병상"] = pd.to_numeric(fallback["전체병상"], errors="coerce")
-
-    source_fresh = fresh_bed_source_mask(
-        fallback["API기준시각"],
+    fallback, fallback_audit = previous_bed_fallback(
+        previous,
+        failed_codes,
         reference=reference,
     )
-    values_valid = fallback["전체병상"].gt(0) & fallback["가용병상"].ge(0)
-    usable_fallback = source_fresh & values_valid
-    fallback.loc[~usable_fallback, ["가용병상", "전체병상"]] = pd.NA
-    fresh_fallback_hospitals = int(usable_fallback.sum())
+    retained_fallback_hospitals = fallback_audit["retainedHospitals"]
     return fallback, {
         "failedRegionHospitals": failed_hospitals,
-        "fallbackCandidateHospitals": len(fallback),
-        "freshFallbackHospitals": fresh_fallback_hospitals,
-        "maskedFailedRegionHospitals": failed_hospitals - fresh_fallback_hospitals,
+        "fallbackCandidateHospitals": fallback_audit["candidateHospitals"],
+        "freshFallbackHospitals": fallback_audit["freshHospitals"],
+        "staleFallbackHospitals": fallback_audit["staleHospitals"],
+        "retainedFallbackHospitals": retained_fallback_hospitals,
+        "maskedFailedRegionHospitals": failed_hospitals - retained_fallback_hospitals,
+    }
+
+
+def missing_response_fallback(
+    master: pd.DataFrame,
+    previous: pd.DataFrame | None,
+    failures: list[RegionFailure],
+    response_codes: set[str],
+    *,
+    reference: pd.Timestamp | datetime,
+) -> tuple[pd.DataFrame, dict[str, int]]:
+    """Retain previous rows omitted from otherwise successful region responses."""
+    failed_keys = {(failure.province, failure.district) for failure in failures}
+    master_regions = master[["시도", "시군구"]].astype("string")
+    successful_master = master[
+        ~master_regions.apply(tuple, axis=1).isin(failed_keys)
+    ]
+    expected_codes = {
+        str(code).strip()
+        for code in successful_master["기관코드"]
+        if pd.notna(code) and str(code).strip()
+    }
+    normalized_response_codes = {
+        str(code).strip()
+        for code in response_codes
+        if pd.notna(code) and str(code).strip()
+    }
+    missing_codes = expected_codes - normalized_response_codes
+    fallback, fallback_audit = previous_bed_fallback(
+        previous,
+        missing_codes,
+        reference=reference,
+    )
+    retained = fallback_audit["retainedHospitals"]
+    return fallback, {
+        "missingResponseHospitals": len(missing_codes),
+        "missingResponseFallbackCandidateHospitals": fallback_audit["candidateHospitals"],
+        "freshMissingResponseFallbackHospitals": fallback_audit["freshHospitals"],
+        "staleMissingResponseFallbackHospitals": fallback_audit["staleHospitals"],
+        "retainedMissingResponseFallbackHospitals": retained,
+        "maskedMissingResponseHospitals": len(missing_codes) - retained,
     }
 
 
@@ -474,13 +609,54 @@ def build_bed_snapshot(
             f"matched={live_matches}, required>={minimum_matches}, previous={previous_live_matches}"
         )
 
-    fallback, fallback_audit = failed_region_fallback(
+    failed_fallback, failed_fallback_audit = failed_region_fallback(
         master,
         previous,
         failures,
         reference=timestamp,
     )
-    fallback = fallback[~fallback["기관코드"].isin(set(new_bed["기관코드"]))]
+    missing_fallback, missing_fallback_audit = missing_response_fallback(
+        master,
+        previous,
+        failures,
+        set(new_bed["기관코드"]),
+        reference=timestamp,
+    )
+    fallback_frames = [
+        frame for frame in (failed_fallback, missing_fallback) if not frame.empty
+    ]
+    fallback = (
+        pd.concat(fallback_frames, ignore_index=True)
+        if fallback_frames
+        else pd.DataFrame(columns=FALLBACK_COLUMNS)
+    )
+    fallback = fallback[
+        ~fallback["기관코드"].isin(set(new_bed["기관코드"]))
+    ].drop_duplicates("기관코드", keep="last")
+    fallback_audit = {
+        **failed_fallback_audit,
+        **missing_fallback_audit,
+        "fallbackCandidateHospitals": (
+            failed_fallback_audit["fallbackCandidateHospitals"]
+            + missing_fallback_audit["missingResponseFallbackCandidateHospitals"]
+        ),
+        "freshFallbackHospitals": (
+            failed_fallback_audit["freshFallbackHospitals"]
+            + missing_fallback_audit["freshMissingResponseFallbackHospitals"]
+        ),
+        "staleFallbackHospitals": (
+            failed_fallback_audit["staleFallbackHospitals"]
+            + missing_fallback_audit["staleMissingResponseFallbackHospitals"]
+        ),
+        "retainedFallbackHospitals": (
+            failed_fallback_audit["retainedFallbackHospitals"]
+            + missing_fallback_audit["retainedMissingResponseFallbackHospitals"]
+        ),
+        "maskedFallbackHospitals": (
+            failed_fallback_audit["maskedFailedRegionHospitals"]
+            + missing_fallback_audit["maskedMissingResponseHospitals"]
+        ),
+    }
     bed = (
         new_bed.copy()
         if fallback.empty
@@ -492,10 +668,14 @@ def build_bed_snapshot(
         bed["API기준시각"],
         reference=timestamp,
     )
+    source_valid = valid_bed_source_mask(
+        bed["API기준시각"],
+        reference=timestamp,
+    )
     stale_source_records = int((~source_fresh).sum())
-    bed.loc[~source_fresh, ["가용병상", "전체병상"]] = pd.NA
+    bed.loc[~source_valid, ["가용병상", "전체병상"]] = pd.NA
     bed["포화율"] = ((bed["전체병상"] - bed["가용병상"]) / bed["전체병상"] * 100).clip(0, 100)
-    valid = bed["전체병상"].gt(0) & bed["가용병상"].ge(0)
+    valid = bed["전체병상"].gt(0) & bed["가용병상"].ge(0) & source_valid
     bed.loc[~valid, "포화율"] = pd.NA
     bed["상태"] = pd.cut(
         bed["포화율"],
@@ -506,7 +686,7 @@ def build_bed_snapshot(
     usable_matches = int(master["기관코드"].isin(set(bed.loc[valid, "기관코드"])).sum())
     if usable_matches < minimum_live_matches:
         raise RuntimeError(
-            "원천 기준시각까지 유효한 병상 기관 수가 검토 기준보다 적어 기존 산출물을 보존합니다: "
+            "사용 가능한 병상 기관 수가 검토 기준보다 적어 기존 산출물을 보존합니다: "
             f"usable={usable_matches}, required>={minimum_live_matches}, "
             f"stale_source={stale_source_records}"
         )
@@ -516,7 +696,7 @@ def build_bed_snapshot(
     result["상태"] = result["상태"].fillna("결측")
     requested_regions = len(master[["시도", "시군구"]].dropna().drop_duplicates())
     audit = {
-        "schemaVersion": 1,
+        "schemaVersion": 3,
         "collectedAt": timestamp.isoformat(timespec="seconds"),
         "requestedRegions": requested_regions,
         "successfulRegions": requested_regions - len(failures),
@@ -556,7 +736,17 @@ def main() -> None:
             "Partial bed refresh: "
             f"failed_regions={len(failures)}, "
             f"fresh_fallback_hospitals={audit['freshFallbackHospitals']}, "
+            f"stale_fallback_hospitals={audit['staleFallbackHospitals']}, "
             f"masked_failed_region_hospitals={audit['maskedFailedRegionHospitals']}",
+            flush=True,
+        )
+
+    if audit["missingResponseHospitals"]:
+        print(
+            "Partial hospital response: "
+            f"missing_hospitals={audit['missingResponseHospitals']}, "
+            f"retained_missing_hospitals={audit['retainedMissingResponseFallbackHospitals']}, "
+            f"masked_missing_hospitals={audit['maskedMissingResponseHospitals']}",
             flush=True,
         )
 
@@ -576,9 +766,9 @@ def main() -> None:
     print(
         f"Saved {len(result):,} hospitals "
         f"({audit['newResponseHospitals']:,} new responses, "
-        f"{audit['freshFallbackHospitals']:,} fresh fallbacks, "
+        f"{audit['retainedFallbackHospitals']:,} retained fallbacks, "
         f"{audit['usableHospitals']:,} usable, "
-        f"{audit['staleSourceHospitals']:,} stale-source excluded): {OUTPUT}"
+        f"{audit['staleSourceHospitals']:,} stale-source retained): {OUTPUT}"
     )
 
 

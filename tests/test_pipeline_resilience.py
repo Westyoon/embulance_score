@@ -135,15 +135,17 @@ class BedSnapshotReuseTests(unittest.TestCase):
                 "reused": True,
                 "snapshotCollectedAt": "2026-08-31T09:00:00+00:00",
                 "snapshotAgeMinutes": 60.0,
+                "snapshotStale": False,
                 "usableHospitals": 2,
                 "staleSourceHospitals": 0,
+                "retainedStaleSourceHospitals": 0,
                 "sanitizedSourceHospitals": 0,
                 "maxAgeHours": 6,
                 "sourceMaxAgeHours": 12.0,
             },
         )
 
-    def test_stale_upstream_timestamp_is_cleared_before_reuse(self) -> None:
+    def test_stale_upstream_timestamp_is_retained_with_audit_metadata(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             master_path, bed_path = write_bed_reuse_fixture(Path(directory))
             beds = pd.read_csv(bed_path)
@@ -160,13 +162,14 @@ class BedSnapshotReuseTests(unittest.TestCase):
             )
 
         stale = rebased.loc[rebased["기관코드"].eq("B")].iloc[0]
-        self.assertTrue(pd.isna(stale["가용병상"]))
-        self.assertTrue(pd.isna(stale["전체병상"]))
-        self.assertTrue(pd.isna(stale["포화율"]))
-        self.assertEqual(stale["상태"], "결측")
-        self.assertEqual(audit["usableHospitals"], 1)
+        self.assertEqual(stale["가용병상"], 2)
+        self.assertEqual(stale["전체병상"], 20)
+        self.assertEqual(stale["포화율"], 90)
+        self.assertEqual(stale["상태"], "포화")
+        self.assertEqual(audit["usableHospitals"], 2)
         self.assertEqual(audit["staleSourceHospitals"], 1)
-        self.assertEqual(audit["sanitizedSourceHospitals"], 1)
+        self.assertEqual(audit["retainedStaleSourceHospitals"], 1)
+        self.assertEqual(audit["sanitizedSourceHospitals"], 0)
 
         with tempfile.TemporaryDirectory() as directory:
             master_path, bed_path = write_bed_reuse_fixture(Path(directory))
@@ -181,22 +184,26 @@ class BedSnapshotReuseTests(unittest.TestCase):
             )
 
         self.assertEqual(second_audit["staleSourceHospitals"], 1)
+        self.assertEqual(second_audit["retainedStaleSourceHospitals"], 1)
         self.assertEqual(second_audit["sanitizedSourceHospitals"], 0)
 
-    def test_stale_snapshot_fails_closed(self) -> None:
+    def test_stale_snapshot_is_retained_and_marked_stale(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             master_path, bed_path = write_bed_reuse_fixture(
                 Path(directory),
                 collected_at="2026-08-30T23:59:59+00:00",
             )
-            with self.assertRaisesRegex(RuntimeError, "너무 오래되었습니다"):
-                run_pipeline.validate_reusable_bed_snapshot(
-                    master_path,
-                    bed_path,
-                    max_age_hours=6,
-                    minimum_usable_hospitals=2,
-                    now=self.NOW,
-                )
+            rebased, audit = run_pipeline.validate_reusable_bed_snapshot(
+                master_path,
+                bed_path,
+                max_age_hours=6,
+                minimum_usable_hospitals=2,
+                now=self.NOW,
+            )
+
+        self.assertEqual(rebased["가용병상"].tolist(), [2.0, 5.0])
+        self.assertTrue(audit["snapshotStale"])
+        self.assertGreater(audit["snapshotAgeMinutes"], 6 * 60)
 
     def test_master_code_set_mismatch_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

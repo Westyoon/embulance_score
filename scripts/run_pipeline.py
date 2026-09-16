@@ -12,7 +12,11 @@ from uuid import uuid4
 import pandas as pd
 
 from common import ROOT, read_csv, save_csv
-from part2_collect_bed_status import bed_source_max_age_hours, fresh_bed_source_mask
+from part2_collect_bed_status import (
+    bed_source_max_age_hours,
+    fresh_bed_source_mask,
+    valid_bed_source_mask,
+)
 
 LIVE_DATA = Path(os.getenv("PIPELINE_LIVE_DATA_DIR", ROOT / "data")).resolve()
 LIVE_BOUNDARY = Path(
@@ -137,9 +141,17 @@ def validate_reusable_bed_snapshot(
         max_age_hours=source_age_limit,
         max_future_skew_minutes=max_future_skew_minutes,
     )
+    source_timestamp_valid = valid_bed_source_mask(
+        beds["API기준시각"],
+        reference=reference,
+        max_future_skew_minutes=max_future_skew_minutes,
+    )
     api_timestamp_text = beds["API기준시각"].astype("string").str.strip()
     source_observed = api_timestamp_text.notna() & api_timestamp_text.ne("")
-    usable = source_valid & saturation_sane & source_fresh
+    # Reuse the last known numerically valid values even after their freshness
+    # window. Their original timestamps remain untouched so the dashboard can
+    # identify them as previous data instead of silently treating them as live.
+    usable = source_valid & saturation_sane & source_timestamp_valid
     usable_hospitals = int(usable.sum())
     if usable_hospitals < minimum_usable_hospitals:
         raise RuntimeError(
@@ -165,17 +177,10 @@ def validate_reusable_bed_snapshot(
         )
     snapshot_collected_at = present_timestamps.min()
     snapshot_age = reference - snapshot_collected_at
-    if snapshot_age > pd.Timedelta(hours=max_age_hours):
-        raise RuntimeError(
-            "재사용 병상 스냅샷이 너무 오래되었습니다. 병상 API를 대신 호출하지 않고 종료합니다: "
-            f"oldest={snapshot_collected_at.isoformat()}, age={snapshot_age}, "
-            f"max={max_age_hours}h"
-        )
+    snapshot_stale = snapshot_age > pd.Timedelta(hours=max_age_hours)
 
     beds = beds.copy()
     beds["기관코드"] = bed_codes
-    beds.loc[~source_fresh, ["가용병상", "전체병상", "포화율"]] = pd.NA
-    beds.loc[~source_fresh, "상태"] = "결측"
     master = master.copy()
     master["기관코드"] = master_codes
     rebased = master[BED_COLUMNS[:5]].merge(
@@ -188,9 +193,15 @@ def validate_reusable_bed_snapshot(
         "reused": True,
         "snapshotCollectedAt": snapshot_collected_at.isoformat(),
         "snapshotAgeMinutes": round(max(snapshot_age.total_seconds(), 0.0) / 60, 3),
+        "snapshotStale": snapshot_stale,
         "usableHospitals": usable_hospitals,
-        "staleSourceHospitals": int((source_observed & ~source_fresh).sum()),
-        "sanitizedSourceHospitals": int((source_valid & ~source_fresh).sum()),
+        "staleSourceHospitals": int(
+            (source_observed & source_timestamp_valid & ~source_fresh).sum()
+        ),
+        "retainedStaleSourceHospitals": int(
+            (source_valid & saturation_sane & source_timestamp_valid & ~source_fresh).sum()
+        ),
+        "sanitizedSourceHospitals": 0,
         "maxAgeHours": max_age_hours,
         "sourceMaxAgeHours": source_age_limit,
     }
@@ -457,8 +468,8 @@ def main() -> None:
         run([python, "scripts/part3_collect_kakao_routes.py"], environment)
         reuse_sanitized_sources = 0
         if reuse_beds:
-            # HIRA/Kakao 수집 중 새로 만료된 원천 병상값을 점수 계산 전에 다시
-            # 제거한다. 전역 유효기관 하한을 통과하지 못하면 기존 운영본을 유지한다.
+            # HIRA/Kakao 수집 뒤에도 병상 스냅샷의 구조와 수치 일관성을 다시
+            # 확인한다. 오래된 값은 원래 시각을 보존한 채 이전 값으로 재사용한다.
             rebased_beds, pre_analysis_audit = validate_reusable_bed_snapshot(
                 staged_data / "hospital_master.csv",
                 staged_data / "bed_status.csv",
@@ -476,18 +487,13 @@ def main() -> None:
         run([node, "scripts/validate_frontend_data.mjs"], environment)
         reuse_audit = None
         if reuse_beds:
-            # 긴 전체 파이프라인 동안 오래된 스냅샷이 승격되지 않도록 승격 직전에 다시 확인한다.
+            # 승격 직전에도 구조와 수치 일관성을 다시 확인한다. freshness는
+            # 차단 조건이 아니라 화면에 전달할 품질 메타데이터다.
             _, reuse_audit = validate_reusable_bed_snapshot(
                 staged_data / "hospital_master.csv",
                 staged_data / "bed_status.csv",
                 max_age_hours=reuse_max_age_hours,
             )
-            newly_stale_sources = int(reuse_audit["sanitizedSourceHospitals"])
-            if newly_stale_sources:
-                raise RuntimeError(
-                    "전체 갱신 실행 중 병원 원천 병상 기준시각이 만료되었습니다. "
-                    f"newly_stale={newly_stale_sources}; 새 병상 갱신 후 다시 실행하세요."
-                )
             reuse_audit["sanitizedSourceHospitals"] = reuse_sanitized_sources
         if reuse_audit is not None:
             write_bed_reuse_marker(reuse_audit)

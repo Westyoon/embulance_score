@@ -93,7 +93,7 @@ function region(key, { missing, risk, bedRiskValidUntil, hospitals }) {
   };
 }
 
-test("freshness masks current scores but preserves a labeled analysis snapshot", async () => {
+test("freshness preserves last-known values and labels them as stale", async () => {
   const { applyDashboardFreshness } = await loadSnapshotModule();
   const now = Date.parse("2026-09-01T00:00:00.000Z");
   const expired = "2026-08-31T23:59:59.000Z";
@@ -139,7 +139,7 @@ test("freshness masks current scores but preserves a labeled analysis snapshot",
       result.regionsByKey.B.bedDataHospitals,
       result.regionsByKey.C.bedDataHospitals,
     ],
-    [0, 1, 1],
+    [1, 2, 1],
   );
   assert.deepEqual(
     [
@@ -149,20 +149,54 @@ test("freshness masks current scores but preserves a labeled analysis snapshot",
     ],
     [2, 2, 1],
   );
-  assert.equal(result.regionsByKey.A.bedDataQuality, "결측");
-  assert.equal(result.regionsByKey.B.bedDataQuality, "부분응답");
-  assert.equal(result.regionsByKey.B.bedDataCoverage, 0.5);
+  assert.deepEqual(
+    [
+      result.regionsByKey.A.bedDataCurrentHospitals,
+      result.regionsByKey.B.bedDataCurrentHospitals,
+      result.regionsByKey.C.bedDataCurrentHospitals,
+    ],
+    [0, 1, 1],
+  );
+  assert.deepEqual(
+    [
+      result.regionsByKey.A.bedDataStaleHospitals,
+      result.regionsByKey.B.bedDataStaleHospitals,
+      result.regionsByKey.C.bedDataStaleHospitals,
+    ],
+    [1, 1, 0],
+  );
+  assert.equal(result.regionsByKey.A.bedDataQuality, "부분응답");
+  assert.equal(result.regionsByKey.A.bedDataCoverage, 0.5);
+  assert.equal(result.regionsByKey.B.bedDataQuality, "전체응답");
+  assert.equal(result.regionsByKey.B.bedDataCoverage, 1);
   assert.equal(result.regionsByKey.C.bedDataQuality, "전체응답");
-  assert.equal(result.regionIndex["geo-b"].bedDataHospitals, 1);
-  assert.deepEqual([...result.clusterProfile], []);
-  assert.deepEqual([...result.clusterIds], []);
-  assert.deepEqual({ ...result.clusterMetaById }, {});
-  assert.deepEqual([...result.correlation], []);
-  assert.deepEqual([...result.regression.coef], []);
-  assert.equal(result.regression.r2, null);
-  assert.equal(result.regionsByKey.C.cluster, null);
-  assert.equal(result.ranked.length, 1);
-  assert.equal(result.ranked[0].key, "C");
+  assert.equal(result.regionIndex["geo-b"].bedDataHospitals, 2);
+  assert.equal(result.regionsByKey.A.missing, false);
+  assert.equal(result.regionsByKey.A.risk, 70);
+  assert.equal(result.regionsByKey.A.bedRiskStale, true);
+  assert.equal(result.regionsByKey.A.bedRiskFreshness, "last-known");
+  assert.equal(result.regionsByKey.C.bedRiskStale, false);
+  assert.equal(result.allHospitals.find((row) => row.orgCode === "A1").saturation, 80);
+  assert.equal(result.allHospitals.find((row) => row.orgCode === "A1").status, "주의");
+  assert.equal(result.allHospitals.find((row) => row.orgCode === "A1").bedDataStale, true);
+  assert.equal(result.allHospitals.find((row) => row.orgCode === "A2").bedDataFreshness, "current");
+  assert.deepEqual([...result.clusterProfile], data.clusterProfile);
+  assert.deepEqual([...result.clusterIds], data.clusterIds);
+  assert.equal(result.clusterMetaById[1].label, "기존 군집");
+  assert.deepEqual([...result.correlation], data.correlation);
+  assert.deepEqual([...result.regression.coef], data.regression.coef);
+  assert.equal(result.regression.r2, 0.8);
+  assert.equal(result.regionsByKey.C.cluster, 1);
+  assert.equal(result.ranked.length, 2);
+  assert.deepEqual([...result.ranked].map((row) => row.key), ["A", "C"]);
+  assert.equal(result.currentRiskAvailable, true);
+  assert.equal(result.currentFreshRiskAvailable, true);
+  assert.equal(result.bedRiskCurrentRegions, 1);
+  assert.equal(result.bedRiskLastKnownRegions, 1);
+  assert.equal(result.bedRiskStaleRegions, result.bedRiskExpiredRegions);
+  assert.equal(result.bedRiskStaleHospitals, result.bedRiskExpiredHospitals);
+  assert.equal(result.kpi.complete, 2);
+  assert.equal(result.kpi.avg, 50);
   assert.equal(result.analysisSnapshot.sourceComplete, 2);
   assert.equal(result.analysisSnapshot.currentComplete, 1);
   assert.equal(result.analysisSnapshot.sourceMissing, 1);
@@ -217,10 +251,19 @@ test("all expired current scores still retain the last calculated risk scores", 
 
   const result = applyDashboardFreshness(data, now).data;
 
-  assert.equal(result.currentRiskAvailable, false);
-  assert.equal(result.kpi.complete, 0);
-  assert.equal(result.kpi.avg, null);
-  assert.equal(result.ranked.length, 0);
+  assert.equal(result.currentRiskAvailable, true);
+  assert.equal(result.currentFreshRiskAvailable, false);
+  assert.equal(result.kpi.complete, 1);
+  assert.equal(result.kpi.avg, 70);
+  assert.equal(result.ranked.length, 1);
+  assert.equal(result.ranked[0].risk, 70);
+  assert.equal(result.ranked[0].bedRiskStale, true);
+  assert.equal(result.regionsByKey.A.missing, false);
+  assert.equal(result.regionsByKey.A.risk, 70);
+  assert.equal(result.allHospitals[0].saturation, 80);
+  assert.equal(result.allHospitals[0].bedDataStale, true);
+  assert.equal(result.clusterProfile.length, 1);
+  assert.equal(result.correlation.length, 1);
   assert.equal(result.analysisSnapshot.sourceComplete, 1);
   assert.equal(result.analysisSnapshot.currentComplete, 0);
   assert.equal(result.analysisSnapshot.expiredRegions, 1);
@@ -231,7 +274,7 @@ test("all expired current scores still retain the last calculated risk scores", 
   assert.equal(result.analysisSnapshot.ranked[0].sourcePolicyValidAtCalculation, false);
 });
 
-test("an unparseable calculation timestamp never exposes fallback analysis scores", async () => {
+test("an unparseable calculation timestamp keeps values without fabricating snapshot metadata", async () => {
   const { applyDashboardFreshness } = await loadSnapshotModule();
   const expired = "2026-08-31T23:59:59.000Z";
   const now = Date.parse("2026-09-01T00:00:00.000Z");
@@ -257,8 +300,13 @@ test("an unparseable calculation timestamp never exposes fallback analysis score
   const result = applyDashboardFreshness(data, now).data;
 
   assert.equal(result.analysisSnapshot, null);
-  assert.equal(result.ranked.length, 0);
-  assert.equal(result.correlation.length, 0);
+  assert.equal(result.ranked.length, 1);
+  assert.equal(result.ranked[0].risk, 70);
+  assert.equal(result.ranked[0].scoreExpired, true);
+  assert.equal(result.allHospitals[0].saturation, 80);
+  assert.equal(result.allHospitals[0].bedDataFreshness, "last-known");
+  assert.equal(result.correlation.length, 1);
+  assert.equal(result.regression.r2, 0.8);
 });
 
 test("dashboard version changes with bed freshness policy and build identity", async () => {
@@ -277,6 +325,18 @@ test("dashboard version changes with bed freshness policy and build identity", a
 
   assert.notEqual(twelveHours.dashboardVersion(), twentyFourHours.dashboardVersion());
   assert.notEqual(twelveHours.dashboardVersion(), nextBuild.dashboardVersion());
+});
+
+test("health API exposes stale aliases alongside compatibility fields", () => {
+  const healthRoute = fs.readFileSync(
+    path.join(ROOT, "src", "app", "api", "health", "route.js"),
+    "utf-8",
+  );
+
+  assert.match(healthRoute, /bedRiskStaleRegions: snapshot\.bedRiskStaleRegions/);
+  assert.match(healthRoute, /bedRiskStaleHospitals: snapshot\.bedRiskStaleHospitals/);
+  assert.match(healthRoute, /bedRiskExpiredRegions: snapshot\.bedRiskExpiredRegions/);
+  assert.match(healthRoute, /bedRiskExpiredHospitals: snapshot\.bedRiskExpiredHospitals/);
 });
 
 test("popup selections are stored as identifiers and missing regions retain coverage UI", () => {

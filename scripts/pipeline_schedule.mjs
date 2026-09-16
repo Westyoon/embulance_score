@@ -4,7 +4,11 @@ const MINUTE_MILLISECONDS = 60_000;
 const HOUR_MILLISECONDS = 60 * MINUTE_MILLISECONDS;
 
 export const DEFAULT_SCHEDULE_CONFIG = Object.freeze({
-  fastIntervalMinutes: 480,
+  refreshTimeZone: "Asia/Seoul",
+  coreRefreshStartHour: 21,
+  coreRefreshEndHour: 9,
+  coreRefreshIntervalMinutes: 2,
+  offHoursRefreshIntervalMinutes: 10,
   fullIntervalHours: 24,
   bedsFailureRetryMinutes: 45,
   fullFailureRetryMinutes: 1440,
@@ -25,6 +29,90 @@ function positiveNumber(value, name) {
     throw new RangeError(`${name} must be a positive number`);
   }
   return number;
+}
+
+function scheduleHour(value, name) {
+  const number = Number(value);
+  if (!Number.isInteger(number) || number < 0 || number > 23) {
+    throw new RangeError(`${name} must be an integer from 0 through 23`);
+  }
+  return number;
+}
+
+const hourFormatters = new Map();
+
+function normalizedTimeZone(value) {
+  const timeZone = String(value ?? "").trim();
+  if (!timeZone) throw new RangeError("refreshTimeZone must be a valid IANA time zone");
+  try {
+    if (!hourFormatters.has(timeZone)) {
+      hourFormatters.set(timeZone, new Intl.DateTimeFormat("en-GB-u-nu-latn", {
+        timeZone,
+        hour: "2-digit",
+        hourCycle: "h23",
+      }));
+    }
+    hourFormatters.get(timeZone).format(new Date(0));
+  } catch {
+    throw new RangeError("refreshTimeZone must be a valid IANA time zone");
+  }
+  return timeZone;
+}
+
+function localHourAt(timestamp, timeZone) {
+  const hourPart = hourFormatters.get(timeZone)
+    .formatToParts(new Date(timestamp))
+    .find(({ type }) => type === "hour")?.value;
+  const hour = Number(hourPart);
+  if (!Number.isInteger(hour)) {
+    throw new RangeError(`could not determine the local hour in ${timeZone}`);
+  }
+  return hour;
+}
+
+function isCoreHour(hour, policy) {
+  const start = policy.coreRefreshStartHour;
+  const end = policy.coreRefreshEndHour;
+  if (start === end) return true;
+  if (start < end) return hour >= start && hour < end;
+  return hour >= start || hour < end;
+}
+
+function cadenceAtMillis(nowMillis, policy) {
+  const core = isCoreHour(localHourAt(nowMillis, policy.refreshTimeZone), policy);
+  return {
+    window: core ? "core" : "off-hours",
+    intervalMinutes: core
+      ? policy.coreRefreshIntervalMinutes
+      : policy.offHoursRefreshIntervalMinutes,
+  };
+}
+
+function nextCoreWindowStartMillis(nowMillis, policy) {
+  if (cadenceAtMillis(nowMillis, policy).window === "core") return null;
+
+  const firstWholeMinute = Math.ceil(nowMillis / MINUTE_MILLISECONDS)
+    * MINUTE_MILLISECONDS;
+  const coarseStep = 15 * MINUTE_MILLISECONDS;
+  const searchLimit = nowMillis + 72 * HOUR_MILLISECONDS;
+  for (
+    let coarse = firstWholeMinute;
+    coarse <= searchLimit;
+    coarse += coarseStep
+  ) {
+    if (cadenceAtMillis(coarse, policy).window !== "core") continue;
+    const fineStart = Math.max(firstWholeMinute, coarse - coarseStep);
+    for (
+      let candidate = fineStart;
+      candidate <= coarse;
+      candidate += MINUTE_MILLISECONDS
+    ) {
+      if (cadenceAtMillis(candidate, policy).window === "core") return candidate;
+    }
+  }
+  throw new RangeError(
+    `could not find the next core refresh window in ${policy.refreshTimeZone}`,
+  );
 }
 
 function timestampMillis(value) {
@@ -116,9 +204,26 @@ function latestTimestamp(status, fields, fallback) {
 
 export function normalizeScheduleConfig(config = {}) {
   return {
-    fastIntervalMinutes: positiveNumber(
-      config.fastIntervalMinutes ?? DEFAULT_SCHEDULE_CONFIG.fastIntervalMinutes,
-      "fastIntervalMinutes",
+    refreshTimeZone: normalizedTimeZone(
+      config.refreshTimeZone ?? DEFAULT_SCHEDULE_CONFIG.refreshTimeZone,
+    ),
+    coreRefreshStartHour: scheduleHour(
+      config.coreRefreshStartHour ?? DEFAULT_SCHEDULE_CONFIG.coreRefreshStartHour,
+      "coreRefreshStartHour",
+    ),
+    coreRefreshEndHour: scheduleHour(
+      config.coreRefreshEndHour ?? DEFAULT_SCHEDULE_CONFIG.coreRefreshEndHour,
+      "coreRefreshEndHour",
+    ),
+    coreRefreshIntervalMinutes: positiveNumber(
+      config.coreRefreshIntervalMinutes
+        ?? DEFAULT_SCHEDULE_CONFIG.coreRefreshIntervalMinutes,
+      "coreRefreshIntervalMinutes",
+    ),
+    offHoursRefreshIntervalMinutes: positiveNumber(
+      config.offHoursRefreshIntervalMinutes
+        ?? DEFAULT_SCHEDULE_CONFIG.offHoursRefreshIntervalMinutes,
+      "offHoursRefreshIntervalMinutes",
     ),
     fullIntervalHours: positiveNumber(
       config.fullIntervalHours ?? DEFAULT_SCHEDULE_CONFIG.fullIntervalHours,
@@ -189,7 +294,10 @@ export function bedsRetryCeilingMinutes(config = {}) {
   );
   const freshnessBudget = (
     freshnessWindow
-    - policy.fastIntervalMinutes
+    - Math.max(
+      policy.coreRefreshIntervalMinutes,
+      policy.offHoursRefreshIntervalMinutes,
+    )
     - policy.bedRefreshSafetyLeadMinutes
   );
   if (freshnessBudget < 1) {
@@ -198,6 +306,20 @@ export function bedsRetryCeilingMinutes(config = {}) {
     );
   }
   return Math.floor(freshnessBudget);
+}
+
+export function bedRefreshCadenceAt(now = Date.now(), config = {}) {
+  const nowMillis = normalizedNow(now);
+  const policy = normalizeScheduleConfig(config);
+  const cadence = cadenceAtMillis(nowMillis, policy);
+  const nextCoreWindowAt = cadence.window === "core"
+    ? null
+    : nextCoreWindowStartMillis(nowMillis, policy);
+  return {
+    ...cadence,
+    timeZone: policy.refreshTimeZone,
+    nextCoreWindowAt,
+  };
 }
 
 export function boundedBedsFailureRetryMinutes(config = {}) {
@@ -304,7 +426,20 @@ export function bedScheduleState({
     ["lastBedsSuccessAt", "schedulerStartedAt"],
     nowMillis,
   );
-  const intervalDueAt = anchor + policy.fastIntervalMinutes * MINUTE_MILLISECONDS;
+  const cadence = cadenceAtMillis(nowMillis, policy);
+  const nextCoreWindowAt = cadence.window === "core"
+    ? null
+    : nextCoreWindowStartMillis(nowMillis, policy);
+  const anchorCadence = cadenceAtMillis(anchor, policy);
+  const firstCoreWindowAfterAnchor = anchorCadence.window === "core"
+    ? null
+    : nextCoreWindowStartMillis(anchor, policy);
+  const cadenceDueAt = anchor + cadence.intervalMinutes * MINUTE_MILLISECONDS;
+  const intervalDueAt = Math.min(
+    cadenceDueAt,
+    nextCoreWindowAt ?? Number.POSITIVE_INFINITY,
+    firstCoreWindowAfterAnchor ?? Number.POSITIVE_INFINITY,
+  );
   const deadline = timestampMillis(bedDeadlineAt);
   const attemptedDeadline = timestampMillis(status?.lastBedsAttemptedDeadlineAt);
   const attemptedFingerprint = status?.lastBedsAttemptedDeadlineFingerprint || null;
@@ -390,6 +525,9 @@ export function bedScheduleState({
     cooldownElapsed,
     dueAt: scheduledDueAt,
     intervalDueAt,
+    activeRefreshWindow: cadence.window,
+    activeRefreshIntervalMinutes: cadence.intervalMinutes,
+    nextCoreWindowAt,
     deadlineDueAt,
     deadlineConsumed,
     stalledSourceRetryMinutes,
@@ -437,8 +575,12 @@ export function fullScheduleState({
 
 /**
  * Select at most one scheduled job. A due beds job reserves the single worker
- * even while its own retry cooldown is active, so a long full job cannot cross
- * the next beds retry/deadline.
+ * even while its own retry cooldown is active. When the configured bed cadence
+ * is shorter than the full-job guard, no gap can ever fit a full refresh. In
+ * that case, a full job that was already due may start only in the one-minute
+ * handoff window after a successful beds run and only when no earlier source
+ * deadline or retry is pending. The single pending slot then coalesces bed work
+ * while full is running.
  */
 export function decideScheduledMode({
   status = {},
@@ -458,9 +600,25 @@ export function decideScheduledMode({
 
   const full = fullScheduleState({ status, now, config });
   const policy = normalizeScheduleConfig(config);
-  const bedsWorkerGuardAt = normalizedNow(now)
+  const nowMillis = normalizedNow(now);
+  const bedsWorkerGuardAt = nowMillis
     + policy.fullStartGuardMinutes * MINUTE_MILLISECONDS;
-  return full.ready && beds.nextAttemptAt > bedsWorkerGuardAt ? "full" : null;
+  const cadenceCannotFitFullGuard = (
+    beds.activeRefreshIntervalMinutes <= policy.fullStartGuardMinutes
+  );
+  const lastBedsSuccessAt = timestampMillis(status?.lastBedsSuccessAt);
+  const recentBedsHandoff = (
+    cadenceCannotFitFullGuard
+    && lastBedsSuccessAt != null
+    && nowMillis >= lastBedsSuccessAt
+    && nowMillis - lastBedsSuccessAt <= MINUTE_MILLISECONDS
+    && full.dueAt <= lastBedsSuccessAt
+    && beds.dueAt === beds.intervalDueAt
+    && beds.nextAttemptAt === beds.intervalDueAt
+  );
+  return full.ready && (
+    beds.nextAttemptAt > bedsWorkerGuardAt || recentBedsHandoff
+  ) ? "full" : null;
 }
 
 /**

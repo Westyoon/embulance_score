@@ -113,7 +113,7 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCodes, s
             const m = hospitalMarker;
             return (
               <g
-                onMouseEnter={(e) => setHoverInfo({ type: "hospital", name: m.name, status: m.status, x: e.clientX, y: e.clientY })}
+                onMouseEnter={(e) => setHoverInfo({ type: "hospital", name: m.name, status: m.status, stale: m.bedDataStale, x: e.clientX, y: e.clientY })}
                 onMouseMove={(e) => setHoverInfo((h) => (h ? { ...h, x: e.clientX, y: e.clientY } : h))}
                 onMouseLeave={() => setHoverInfo(null)}>
                 <circle cx={m.x} cy={m.y} r={r * 1.9} fill="none" stroke={bedStatusColor[m.status]} strokeWidth={1.2 / view.scale} opacity={0.5}>
@@ -132,7 +132,7 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCodes, s
       {hoverInfo && hoverInfo.type === "hospital" && (
         <div style={{ position: "fixed", left: hoverInfo.x + 14, top: hoverInfo.y + 10, background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 8, boxShadow: "0 2px 6px rgba(15,23,42,0.1)",
           padding: "6px 10px", fontSize: 11.5, pointerEvents: "none", zIndex: 40, whiteSpace: "nowrap" }}>
-          <b>{hoverInfo.name}</b> <span style={{ color: bedStatusColor[hoverInfo.status] }}>· {hoverInfo.status}</span>
+          <b>{hoverInfo.name}</b> <span style={{ color: bedStatusColor[hoverInfo.status] }}>· {hoverInfo.status}{hoverInfo.stale ? " · 이전값" : ""}</span>
         </div>
       )}
       {hoverInfo && !hoverInfo.type && (
@@ -170,7 +170,7 @@ export default function KoreaMap({ geo, regionIndex, onSelect, highlightCodes, s
             <div className="flex items-center gap-2" style={{ fontSize: 10.5 }}>
               <span style={{ width: 8, height: 8, borderRadius: 2, background: bedStatusColor[hospitalMarker.status], display: "inline-block" }} />
               <span style={{ fontWeight: 600 }}>{hospitalMarker.name}</span>
-              <span style={{ color: bedStatusColor[hospitalMarker.status] }}>· {hospitalMarker.status}</span>
+              <span style={{ color: bedStatusColor[hospitalMarker.status] }}>· {hospitalMarker.status}{hospitalMarker.bedDataStale ? " · 이전값" : ""}</span>
             </div>
           </>
         )}
