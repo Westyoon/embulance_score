@@ -53,6 +53,15 @@ test("dashboard and details clearly label retained values instead of hiding them
   assert.match(hospitalPopup, /마지막 수집 응급실 병상/);
 });
 
+test("update notice is expanded by default and remains keyboard-toggleable", () => {
+  assert.match(dashboard, /const \[updateNoticeExpanded, setUpdateNoticeExpanded\] = useState\(true\)/);
+  assert.match(dashboard, /onClick=\{\(\) => setUpdateNoticeExpanded\(\(expanded\) => !expanded\)\}/);
+  assert.match(dashboard, /aria-expanded=\{updateNoticeExpanded\}/);
+  assert.match(dashboard, /aria-controls="update-notice-details"/);
+  assert.match(dashboard, /hidden=\{!updateNoticeExpanded\}/);
+  assert.match(dashboard, /updateNoticeExpanded \? "접기" : "펼치기"/);
+});
+
 test("missing region guidance names both missing and available component data", () => {
   assert.match(regionPopup, /const availableComponents = COMPONENTS/);
   assert.match(regionPopup, /\.filter\(\(\{ key \}\) => isFiniteNumber\(region\[key\]\)\)/);
