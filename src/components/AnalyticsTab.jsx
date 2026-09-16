@@ -111,9 +111,6 @@ export default function AnalyticsTab({ data }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       {(isHistoricalSnapshot || unavailableCount > 0) && (
         <div role="alert" style={{ color: "#92400e", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 12, padding: "12px 14px", fontSize: 11.5, lineHeight: 1.6 }}>
-          <div style={{ fontWeight: 700, marginBottom: 2 }}>
-            {isHistoricalSnapshot ? "마지막 수집·계산된 위험도 점수를 표시 중입니다." : "산출된 위험도 점수는 계속 표시합니다."}
-          </div>
           {isHistoricalSnapshot ? (
             <>
               아래 평균·순위·차트는 <b>{formatAsOf(analysisAsOf)} 기준 {sourceComplete}개 지역</b>의 마지막 계산값입니다.

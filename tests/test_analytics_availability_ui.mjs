@@ -27,7 +27,8 @@ test("last-known analysis snapshot keeps risk scores visible safely", () => {
   assert.match(analytics, /const isHistoricalSnapshot = expiredCount > 0/);
   assert.match(analytics, /ranked: rankedRows = \[\]/);
   assert.match(analytics, /rankedRows\.filter\(\(region\) => Number\.isFinite\(region\.risk\)\)/);
-  assert.match(analytics, /마지막 수집·계산된 위험도 점수를 표시 중입니다/);
+  assert.doesNotMatch(analytics, /마지막 수집·계산된 위험도 점수를 표시 중입니다/);
+  assert.doesNotMatch(analytics, /산출된 위험도 점수는 계속 표시합니다/);
   assert.match(analytics, /마지막 계산값을 포함합니다/);
   assert.match(analytics, /기준시각 경과·결측·원천기준 주의 지역 보기/);
   assert.match(analytics, /averageRisk == null \? "-" : averageRisk\.toFixed\(1\)/);
@@ -39,13 +40,12 @@ test("dashboard and details clearly label retained values instead of hiding them
   assert.match(dashboard, /최종 업데이트:/);
   assert.match(dashboard, /color: "#2563eb"/);
   assert.match(dashboard, /pipeline\?\.finishedAt/);
-  assert.match(dashboard, /pipeline\?\.nextBedsAttemptAt/);
   assert.match(dashboard, /timeZone: "Asia\/Seoul"/);
   assert.doesNotMatch(dashboard, /마지막 업데이트/);
   assert.match(analytics, /label="최종 업데이트"/);
   assert.doesNotMatch(analytics, /점수 기준 시각/);
-  assert.match(dashboard, /다음 업데이트 시각은/);
-  assert.match(dashboard, /마지막 성공 수집값을 유지하고 있습니다/);
+  assert.doesNotMatch(dashboard, /다음 업데이트 시각은/);
+  assert.doesNotMatch(dashboard, /마지막 성공 수집값을 유지하고 있습니다/);
   assert.doesNotMatch(dashboard, /최근 갱신 실패/);
   assert.doesNotMatch(dashboard, /숨겼습니다/);
   assert.match(mapTab, /h\.bedDataStale \? " · 이전값"/);
@@ -55,13 +55,11 @@ test("dashboard and details clearly label retained values instead of hiding them
   assert.match(hospitalPopup, /마지막 수집 응급실 병상/);
 });
 
-test("update notice is expanded by default and remains keyboard-toggleable", () => {
-  assert.match(dashboard, /const \[updateNoticeExpanded, setUpdateNoticeExpanded\] = useState\(true\)/);
-  assert.match(dashboard, /onClick=\{\(\) => setUpdateNoticeExpanded\(\(expanded\) => !expanded\)\}/);
-  assert.match(dashboard, /aria-expanded=\{updateNoticeExpanded\}/);
-  assert.match(dashboard, /aria-controls="update-notice-details"/);
-  assert.match(dashboard, /hidden=\{!updateNoticeExpanded\}/);
-  assert.match(dashboard, /updateNoticeExpanded \? "접기" : "펼치기"/);
+test("only the selected analytics notice content remains", () => {
+  assert.doesNotMatch(dashboard, /updateNoticeExpanded/);
+  assert.doesNotMatch(dashboard, /update-notice-details/);
+  assert.match(analytics, /아래 평균·순위·차트는/);
+  assert.match(analytics, /기준시각 경과·결측·원천기준 주의 지역 보기/);
 });
 
 test("missing region guidance names both missing and available component data", () => {

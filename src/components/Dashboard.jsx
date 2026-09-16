@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ChevronDown, Map as MapIcon, LayoutDashboard } from "lucide-react";
+import { Map as MapIcon, LayoutDashboard } from "lucide-react";
 import { pageBg, mutedText, TabGroup } from "./shared";
 import MapTab from "./MapTab";
 import AnalyticsTab from "./AnalyticsTab";
@@ -48,14 +48,6 @@ function formatUpdateTimestamp(iso) {
   return `${parts.month}.${parts.day}. ${parts.hour}:${parts.minute}`;
 }
 
-function formatNextUpdateTime(iso) {
-  const parts = timestampParts(iso);
-  if (!parts) return null;
-  return parts.minute === "00"
-    ? `${parts.hour}시`
-    : `${parts.hour}시 ${parts.minute}분`;
-}
-
 function liveIndicator(liveStatus, lastUpdateLabel) {
   const health = liveStatus?.health;
   const pipeline = health?.pipeline;
@@ -92,17 +84,7 @@ function liveIndicator(liveStatus, lastUpdateLabel) {
 
 export default function Dashboard({ data, liveStatus = null }) {
   const [tab, setTab] = useState("map");
-  const [updateNoticeExpanded, setUpdateNoticeExpanded] = useState(true);
   const pipeline = liveStatus?.health?.pipeline;
-  const expiredRegions = liveStatus?.health?.bedRiskStaleRegions
-    ?? data.bedRiskStaleRegions
-    ?? liveStatus?.health?.bedRiskExpiredRegions
-    ?? data.bedRiskExpiredRegions
-    ?? 0;
-  const stale = liveStatus?.health?.dataStale
-    ?? data.lastKnownDataDisplayed
-    ?? data.analyticsStale
-    ?? false;
   const dataAsOf = liveStatus?.health?.scoreAsOf
     ?? liveStatus?.health?.dataAsOf
     ?? data.kpi?.asOf;
@@ -115,10 +97,7 @@ export default function Dashboard({ data, liveStatus = null }) {
     pipeline?.lastSuccessAt,
     dataAsOf,
   );
-  const nextUpdateAt = pipeline?.nextBedsAttemptAt ?? null;
   const lastUpdateLabel = formatUpdateTimestamp(lastUpdateAt);
-  const nextUpdateLabel = formatNextUpdateTime(nextUpdateAt);
-  const asOfLabel = formatUpdateTimestamp(dataAsOf);
   const indicator = liveIndicator(liveStatus, lastUpdateLabel);
   return (
     <div style={pageBg}>
@@ -137,78 +116,6 @@ export default function Dashboard({ data, liveStatus = null }) {
           </div>
           <TabGroup options={TABS} active={tab} onChange={setTab} />
         </div>
-
-        {(stale || expiredRegions > 0) && (
-          <div
-            role="alert"
-            style={{
-              marginBottom: 14,
-              padding: "10px 14px",
-              border: "1px solid #fde68a",
-              borderRadius: 10,
-              background: "#fffbeb",
-              color: "#92400e",
-              fontSize: 12.5,
-              lineHeight: 1.5,
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setUpdateNoticeExpanded((expanded) => !expanded)}
-              aria-expanded={updateNoticeExpanded}
-              aria-controls="update-notice-details"
-              style={{
-                width: "100%",
-                padding: 0,
-                border: 0,
-                background: "none",
-                color: "inherit",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                font: "inherit",
-                lineHeight: "inherit",
-                textAlign: "left",
-              }}
-            >
-              <span style={{ fontWeight: 700 }}>
-                최종 업데이트:{" "}
-                {lastUpdateAt
-                  ? <time dateTime={lastUpdateAt}>{lastUpdateLabel}</time>
-                  : "확인 중"}
-              </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 4, flexShrink: 0, fontWeight: 700 }}>
-                {updateNoticeExpanded ? "접기" : "펼치기"}
-                <ChevronDown
-                  size={15}
-                  aria-hidden="true"
-                  style={{
-                    transform: updateNoticeExpanded ? "rotate(180deg)" : "none",
-                    transition: "transform 0.15s ease",
-                  }}
-                />
-              </span>
-            </button>
-            <div id="update-notice-details" hidden={!updateNoticeExpanded} style={{ marginTop: 2 }}>
-              <div>
-                {pipeline?.state === "running"
-                  ? "현재 데이터를 업데이트 중입니다."
-                  : pipeline?.schedulerEnabled === false
-                    ? "자동 업데이트가 꺼져 있습니다."
-                    : nextUpdateLabel
-                      ? <>다음 업데이트 시각은 <b><time dateTime={nextUpdateAt}>{nextUpdateLabel}</time></b> 입니다.</>
-                      : "다음 업데이트 시각을 확인 중입니다."}
-              </div>
-              {asOfLabel && (
-                <div style={{ marginTop: 2 }}>
-                  현재 화면은 <b><time dateTime={dataAsOf}>{asOfLabel}</time></b> 기준의 마지막 성공 수집값을 유지하고 있습니다.
-                </div>
-              )}
-            </div>
-          </div>
-        )}
 
         <div>
           {tab === "map" ? (
